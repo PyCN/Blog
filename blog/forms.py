@@ -4,8 +4,14 @@ from .models import Article, BlogComment
 
 
 class UserForm(forms.Form): 
-    username = forms.EmailField(label='用户名')
-    password = forms.CharField(label='密码',widget=forms.PasswordInput())
+    username = forms.EmailField(required=True, label='用户名', error_messages={'required':'请输入用户名'})
+    password = forms.CharField(required=True, label='密码',widget=forms.PasswordInput())
+    
+    def clean(self):
+        if not self.is_valid():
+            raise forms.ValidationError('用户名和密码为必填项')
+        else:
+            cleaned_data = super(UserForm, self).clean()
     
 
 class BlogCommentForm(forms.ModelForm):

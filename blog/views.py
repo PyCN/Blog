@@ -1,12 +1,19 @@
 #coding:utf-8
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, FormView
+from django.contrib import auth
+from django.template.context import RequestContext
+from django.contrib.auth.decorators import login_required
+
+
+
 from blog.models import Article, Category, Tag
 import markdown2
 from .models import BlogComment
-from .forms import BlogCommentForm
+from .forms import BlogCommentForm, UserForm
+
 
 
 # Create your views here.
@@ -113,8 +120,31 @@ class CommentPostView(FormView):
             'comment_list': target_article.blogcomment_set.all(),
         })
         
-class Login(FormView):
-    template_name = 'blog/login.html'
+        
+def login(request):
+    if request.method == 'GET':
+        form = UserForm()
+        return render_to_response('blog/login.html', RequestContext(request, {'form':form}))
+    else:
+        form = UserForm(request.POST)
+        if form.is_valid():
+            username = request.POST.get('username', '')
+            password = request.POST.get('password', '')
+            user = auth.authenticate(username=username, password=password)
+            if user is not None and user.is_active:
+                auth.login(request, user)
+                return render_to_response('blog/index.html', RequestContext(request))
+            else:
+                return render_to_response('blog/login.html', RequestContext(request, {'form': form,'password_is_wrong':True}))
+        else:
+            return render_to_response('blog/login.html', RequestContext(request, {'form': form,}))
+            
+            
+            
+            
+            
+#class Login(FormView):
+#    template_name = 'blog/login.html'
      
 class Regist(FormView):
     template_name = 'blog/regist.html'
