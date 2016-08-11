@@ -139,7 +139,10 @@ def login(request):
         else:
             return render_to_response('blog/login.html', RequestContext(request, {'form': form,}))
             
-            
+@login_required
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect("/accounts/login/")            
             
             
             
