@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Retrieve</title>
+    <meta name="author" content="caitinggui">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <div class="well">
+        <h1>Retrieve</h1>
+        <form class="form-horizontal" action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p class="form-actions">
+                <input type="submit" value="找回密码" class="btn btn-primary">
+                <a href="{% url 'blog:login'  %}"><input type="button" value="已有账号?" class="btn btn-danger"></a>
+                <!--<a href="/contactme/"><input type="button" value="新员工？" class="btn btn-success"></a>-->
+            </p>
+        </form>
+        {{ retrieve_info }}
+    </div>
+    
+
+</body>
+</html>
+
+
