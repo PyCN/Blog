@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 
 
-from blog.models import Article, Category, Tag
+from blog.models import Article, Category, Tag, User
 import markdown2
 from .models import BlogComment
 from .forms import BlogCommentForm, UserForm
@@ -120,7 +120,20 @@ class CommentPostView(FormView):
             'comment_list': target_article.blogcomment_set.all(),
         })
         
-        
+def regist(request):
+    if request.method == 'GET':
+        form = UserForm()
+        return render_to_response('blog/regist.html', RequestContext(request, {'form':form}))
+    else:
+        form = UserForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            User.objects.create(username= username,password=password)
+            return render_to_response('blog/regist.html', RequestContext(request, {'form': form,'regist_ok':True}))
+        else:
+            return render_to_response('blog/regist.html', RequestContext(request, {'form': form,}))
+    
 def login(request):
     if request.method == 'GET':
         form = UserForm()
@@ -128,8 +141,8 @@ def login(request):
     else:
         form = UserForm(request.POST)
         if form.is_valid():
-            username = request.POST.get('username', '')
-            password = request.POST.get('password', '')
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
             user = auth.authenticate(username=username, password=password)
             if user is not None and user.is_active:
                 auth.login(request, user)
@@ -142,7 +155,7 @@ def login(request):
 @login_required
 def logout(request):
     auth.logout(request)
-    return HttpResponseRedirect("/accounts/login/")            
+    return HttpResponseRedirect("/blog/index/")            
             
             
             

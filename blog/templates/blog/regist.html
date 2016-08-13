@@ -1,40 +1,48 @@
-<?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
+{% load url from future %}
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <title>regist</title>
+    <meta name="description" content="">
+    <meta name="author" content="caitinggui">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
+    
+    {% block extra_head %}{% endblock %}
+</head>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<body>
 
-        <title>
-        注册</title>
-
-        </head>
-
-
-        <body>
-        
-        <h1>
-        注册页面：</h1>
-
-        <form method = 'post' enctype="multipart/form-data">
-
+    {% if regist_ok %}
+        <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <h4>OK</h4>
+        </div>
+    {% endif %}   
+    <div class="well">
+        <h1>regist</h1>
+        <p>&nbsp;</p>
+        <form class="form-horizontal" action="" method="post">
             {% csrf_token %}
-                {{uf.as_p}}
-                    <input type="submit" value = "ok" />
-
-                    </form>
-
-                    <br>
-                    
-                    <a href="http://127.0.0.1:8000/online/login/">
-登陆</a>
+            {{ form }}
+            <p class="form-actions">
+                <input type="submit" value="注册" class="btn btn-primary">
+                <a href="/contactme/"><input type="button" value="忘记密码" class="btn btn-danger"></a>
+                <a href="/contactme/"><input type="button" value="新员工？" class="btn btn-success"></a>
+            </p>
+        </form>
+    </div>
 
 </body>
-
 </html>
-
-
 
 

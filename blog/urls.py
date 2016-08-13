@@ -9,5 +9,5 @@ urlpatterns = [
     url(r'^archive/(?P<year>\d+)/(?P<month>\d+)$', views.ArchiveView.as_view(), name='archive'),
     url(r'^article/(?P<article_id>\d+)/comment/$', views.CommentPostView.as_view(), name='comment'),
     url(r'^login$', views.login, name='login'),
-    url(r'^regist$', views.Regist.as_view(), name='regist'),
+    url(r'^regist$', views.regist, name='regist'),
 ]
