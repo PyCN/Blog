@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^article/(?P<article_id>\d+)/comment/$', views.CommentPostView.as_view(), name='comment'),
     url(r'^login$', views.login, name='login'),
     url(r'^regist$', views.regist, name='regist'),
+    url(r'^retrieve$', views.retrieve, name='retrieve')
 ]

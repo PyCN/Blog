@@ -6,13 +6,14 @@ from django.views.generic.edit import CreateView, FormView
 from django.contrib import auth
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 
-from blog.models import Article, Category, Tag, User
+from blog.models import Article, Category, Tag
 import markdown2
-from .models import BlogComment
-from .forms import BlogCommentForm, UserForm
+from .models import BlogComment, UserProfile
+from .forms import BlogCommentForm, UserForm, RegistForm, RetrieveForm
 
 
 
@@ -121,20 +122,47 @@ class CommentPostView(FormView):
         })
         
 def regist(request):
+    regist_info = ''
     if request.method == 'GET':
-        form = UserForm()
+        form = RegistForm()
+        # context, content, contents are the same(变量名不影响使用)
+        contents = {'form':form}
+        
+        # those are the same
+        return render(request, 'blog/regist.html', contents)
+        return render(request, 'blog/regist.html', {'form':form})
         return render_to_response('blog/regist.html', RequestContext(request, {'form':form}))
     else:
-        form = UserForm(request.POST)
+        form = RegistForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            User.objects.create(username= username,password=password)
-            return render_to_response('blog/regist.html', RequestContext(request, {'form': form,'regist_ok':True}))
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+            phone     = form.cleaned_data['phone']
+            if password1 == password2:
+                user_filter_result = User.objects.filter(username=username) 
+                if len(user_filter_result)>0:  
+                    regist_info = "用户名已存在"
+                    return render_to_response("blog/regist.html", RequestContext(request,{'form':form, 'regist_info':regist_info}))  
+                else:
+                    user = User.objects.create_user(username= username,password=password1)
+                    #user.is_active=True  
+                    user.save
+                    user_profile = UserProfile()
+                    user_profile.user_id = user.id
+                    user_profile.phone = phone
+                    user_profile.save()
+                    regist_info = '注册成功'
+                    return render_to_response('blog/regist.html', RequestContext(request, {'form': form,'regist_info':regist_info}))
+            else:
+                regist_info = "两次输入的密码不一致!" 
+                return render_to_response("blog/regist.html", RequestContext(request,{'form':form, 'regist_info':regist_info}))  
         else:
-            return render_to_response('blog/regist.html', RequestContext(request, {'form': form,}))
+            regist_info = 'input error'
+            return render_to_response('blog/regist.html', RequestContext(request, {'form': form, 'regist_info':regist_info}))
     
 def login(request):
+    login_info = ''
     if request.method == 'GET':
         form = UserForm()
         return render_to_response('blog/login.html', RequestContext(request, {'form':form}))
@@ -144,19 +172,60 @@ def login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = auth.authenticate(username=username, password=password)
+            print user
             if user is not None and user.is_active:
                 auth.login(request, user)
-                return render_to_response('blog/index.html', RequestContext(request))
+                return render_to_response('blog/index.html', RequestContext(request, {'username':username}))
             else:
-                return render_to_response('blog/login.html', RequestContext(request, {'form': form,'password_is_wrong':True}))
+                login_info = "Username or password is error"
+                return render_to_response('blog/login.html', RequestContext(request, {'form': form,'login_info':login_info}))
         else:
-            return render_to_response('blog/login.html', RequestContext(request, {'form': form,}))
+            login_info = 'input error'
+            return render_to_response('blog/login.html', RequestContext(request, {'form': form, 'login_info':login_info}))
             
 @login_required
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect("/blog/index/")            
-            
+ 
+def retrieve(request):
+    retrieve_info = ''
+    user_not_exist = False
+    if request.method == 'GET':
+        form = RetrieveForm()
+        return render_to_response('blog/retrieve.html', RequestContext(request, {'form':form}))
+    else:
+        form = RetrieveForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            phone     = form.cleaned_data['phone']
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+            try:
+                user = get_object_or_404(User, username=username)
+            except:
+                user_not_exist = True
+            if  user_not_exist or not user.is_active:  
+                retrieve_info = "用户名不存在"
+                return render_to_response("blog/retrieve.html", RequestContext(request,{'form':form, 'retrieve_info':retrieve_info}))  
+            else:
+                user_profile = get_object_or_404(UserProfile, user_id=user.id)
+                phone_db = user_profile.phone
+                if phone_db == phone:
+                    if password1 == password2:
+                        user.set_password(password1)
+                        user.save()
+                        retrieve_info = '密码修改成功'
+                    else:
+                        retrieve_info = "两次输入的密码不一致!" 
+                else:
+                    retrieve_info = "手机号有误"
+                return render_to_response('blog/retrieve.html', RequestContext(request, {'form': form,'retrieve_info':retrieve_info}))
+                    
+        else:
+            retrieve_info = 'input error'
+            return render_to_response('blog/retrieve.html', RequestContext(request, {'form': form, 'retrieve_info':retrieve_info}))
+    
             
             
 #class Login(FormView):

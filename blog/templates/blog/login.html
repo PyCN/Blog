@@ -1,45 +1,32 @@
 <!DOCTYPE html>
-
-{% load url from future %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>数据库脚本发布系统</title>
-    <meta name="description" content="">
-    <meta name="author" content="朱显杰">
+    <title>login</title>
+    <meta name="author" content="caitinggui">
     <style type="text/css">
         body {
             padding-top: 60px;
         }
     </style>
-    <!--[if lt IE 9]>
-    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
     
     {% block extra_head %}{% endblock %}
 </head>
 
-<body>
-
-    {% if password_is_wrong %}
-        <div class="alert alert-error">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <h4>错误!</h4>用户名或密码错误
-        </div>
-    {% endif %}   
+<body> 
     <div class="well">
-        <h1>数据库脚本发布系统</h1>
+        <h1>login</h1>
         <p>&nbsp;</p>
         <form class="form-horizontal" action="" method="post">
             {% csrf_token %}
-            {{ form }}
+            {{ form.as_p }}
             <p class="form-actions">
                 <input type="submit" value="登录" class="btn btn-primary">
-                <a href="/contactme/"><input type="button" value="忘记密码" class="btn btn-danger"></a>
-                <a href="/contactme/"><input type="button" value="新员工？" class="btn btn-success"></a>
+                <a href="{% url 'blog:retrieve'  %}"><input type="button" value="忘记密码" class="btn btn-danger"></a>
+                <a href="{% url 'blog:regist'  %}"><input type="button" value="注册账号?" class="btn btn-success"></a>
             </p>
         </form>
+        {{ login_info }}
     </div>
 
 </body>

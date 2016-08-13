@@ -1,46 +1,35 @@
 <!DOCTYPE html>
 
-{% load url from future %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <title>regist</title>
-    <meta name="description" content="">
     <meta name="author" content="caitinggui">
     <style type="text/css">
         body {
             padding-top: 60px;
         }
     </style>
-    <!--[if lt IE 9]>
-    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
     
     {% block extra_head %}{% endblock %}
 </head>
 
 <body>
 
-    {% if regist_ok %}
-        <div class="alert alert-error">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <h4>OK</h4>
-        </div>
-    {% endif %}   
     <div class="well">
         <h1>regist</h1>
-        <p>&nbsp;</p>
         <form class="form-horizontal" action="" method="post">
             {% csrf_token %}
-            {{ form }}
+            {{ form.as_p }}
             <p class="form-actions">
                 <input type="submit" value="注册" class="btn btn-primary">
-                <a href="/contactme/"><input type="button" value="忘记密码" class="btn btn-danger"></a>
-                <a href="/contactme/"><input type="button" value="新员工？" class="btn btn-success"></a>
+                <a href="{% url 'blog:login'  %}"><input type="button" value="已有账号?" class="btn btn-danger"></a>
+                <!--<a href="/contactme/"><input type="button" value="新员工？" class="btn btn-success"></a>-->
             </p>
         </form>
+        {{ regist_info }}
     </div>
+    
 
 </body>
 </html>
