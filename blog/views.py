@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView, FormView
 from django.contrib import auth
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 
 
@@ -100,11 +101,20 @@ class ArchiveView(ListView):
         return super(ArchiveView, self).get_context_data(**kwargs)
 
 
-# 第五周新增
-class CommentPostView(FormView):
+class LoginRequiredMixin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view)
+    
+class CommentPostView(LoginRequiredMixin, FormView):
     form_class = BlogCommentForm
     template_name = 'blog/detail.html'
 
+    def get_alertnum(self,user):
+        return Alert.objects.filter(read=False, for_user=user).count()
+
+    #@method_decorator(login_required)
     def form_valid(self, form):
         target_article = get_object_or_404(Article, pk=self.kwargs['article_id'])
         comment = form.save(commit=False)
