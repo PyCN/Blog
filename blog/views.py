@@ -47,7 +47,7 @@ class ArticleDetailView(DetailView):
         obj.body = markdown2.markdown(obj.body, extras=['fenced-code-blocks'], )
         return obj
 
-    # 第五周新增
+    
     def get_context_data(self, **kwargs):
         kwargs['comment_list'] = self.object.blogcomment_set.all()
         kwargs['form'] = BlogCommentForm()
@@ -111,10 +111,7 @@ class CommentPostView(LoginRequiredMixin, FormView):
     form_class = BlogCommentForm
     template_name = 'blog/detail.html'
 
-    def get_alertnum(self,user):
-        return Alert.objects.filter(read=False, for_user=user).count()
 
-    #@method_decorator(login_required)
     def form_valid(self, form):
         target_article = get_object_or_404(Article, pk=self.kwargs['article_id'])
         comment = form.save(commit=False)
@@ -130,7 +127,52 @@ class CommentPostView(LoginRequiredMixin, FormView):
             'article': target_article,
             'comment_list': target_article.blogcomment_set.all(),
         })
+
+class LoginView(FormView):
+    form_class = UserForm
+    template_name = 'blog/login.html'
+    
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user = auth.authenticate(username=username, password=password)
+        print user
+        if user is not None and user.is_active:
+            auth.login(self.request, user)
+            self.request.session['username'] = username
+            return HttpResponseRedirect('/')
+            return render_to_response('blog/index.html', RequestContext(self.request, {'username':username}))
+        else:
+            login_info = "Username or password is error"
+            return render(self.request, 'blog/login.html', {'form': form,'login_info':login_info})
+            return render_to_response('blog/login.html', RequestContext(self.request, {'form': form,'login_info':login_info}))
+    
+    def form_invalid(self, form):
+        login_info = 'input error'
+        return render_to_response('blog/login.html', RequestContext(self.request, {'form': form, 'login_info':login_info}))
         
+def login(request):
+    login_info = ''
+    if request.method == 'GET':
+        form = UserForm()
+        return render_to_response('blog/login.html', RequestContext(request, {'form':form}))
+    else:
+        form = UserForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = auth.authenticate(username=username, password=password)
+            print user
+            if user is not None and user.is_active:
+                auth.login(request, user)
+                return render_to_response('blog/index.html', RequestContext(request, {'username':username}))
+            else:
+                login_info = "Username or password is error"
+                return render_to_response('blog/login.html', RequestContext(request, {'form': form,'login_info':login_info}))
+        else:
+            login_info = 'input error'
+            return render_to_response('blog/login.html', RequestContext(request, {'form': form, 'login_info':login_info}))
+            
 def regist(request):
     regist_info = ''
     if request.method == 'GET':
@@ -170,33 +212,11 @@ def regist(request):
         else:
             regist_info = 'input error'
             return render_to_response('blog/regist.html', RequestContext(request, {'form': form, 'regist_info':regist_info}))
-    
-def login(request):
-    login_info = ''
-    if request.method == 'GET':
-        form = UserForm()
-        return render_to_response('blog/login.html', RequestContext(request, {'form':form}))
-    else:
-        form = UserForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = auth.authenticate(username=username, password=password)
-            print user
-            if user is not None and user.is_active:
-                auth.login(request, user)
-                return render_to_response('blog/index.html', RequestContext(request, {'username':username}))
-            else:
-                login_info = "Username or password is error"
-                return render_to_response('blog/login.html', RequestContext(request, {'form': form,'login_info':login_info}))
-        else:
-            login_info = 'input error'
-            return render_to_response('blog/login.html', RequestContext(request, {'form': form, 'login_info':login_info}))
-            
+        
 @login_required
 def logout(request):
     auth.logout(request)
-    return HttpResponseRedirect("/blog/index/")            
+    return HttpResponseRedirect("/")            
  
 def retrieve(request):
     retrieve_info = ''
