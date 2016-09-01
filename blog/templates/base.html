@@ -15,6 +15,16 @@
         <ul id="header-nav">
             <li><a href="{% url 'blog:index' %}">首页</a></li>
         </ul>
+        <div id='header-middle' class='qrcode'>
+            <form method='post' action='{% url "blog:qrcode" %}'>
+               {% csrf_token %}
+                <p>
+                    <label for='target_url'>要转换的url</label>
+                    <input name='target_url' type='text' value="if leave empty, it will be current url">
+                    <input class='btn btn-primary' type='submit' value="生成二维码">
+                </p>
+            </form>
+        </div>
         <div id="header-right" class="login">
             <div id="user">
             <!-- 不可使用request.session['username'], 模板中的语句都不带参数-->

@@ -1,4 +1,6 @@
 #coding:utf-8
+import re
+
 from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -8,11 +10,13 @@ from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 
-
+import qrcode
+from cStringIO import StringIO
+import markdown2
 
 from blog.models import Article, Category, Tag
-import markdown2
 from .models import BlogComment, UserProfile
 from .forms import BlogCommentForm, UserForm, RegistForm, RetrieveForm
 
@@ -136,7 +140,7 @@ class LoginView(FormView):
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
         user = auth.authenticate(username=username, password=password)
-        print user
+        # print user
         if user is not None and user.is_active:
             auth.login(self.request, user)
             self.request.session['username'] = username
@@ -162,7 +166,7 @@ def login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = auth.authenticate(username=username, password=password)
-            print user
+            # print user
             if user is not None and user.is_active:
                 auth.login(request, user)
                 return render_to_response('blog/index.html', RequestContext(request, {'username':username}))
@@ -237,6 +241,7 @@ def retrieve(request):
                 user_not_exist = True
             if  user_not_exist or not user.is_active:  
                 retrieve_info = "用户名不存在"
+                # 这里在template中可以直接调用form或者retrieve_info
                 return render_to_response("blog/retrieve.html", RequestContext(request,{'form':form, 'retrieve_info':retrieve_info}))  
             else:
                 user_profile = get_object_or_404(UserProfile, user_id=user.id)
@@ -257,7 +262,26 @@ def retrieve(request):
             return render_to_response('blog/retrieve.html', RequestContext(request, {'form': form, 'retrieve_info':retrieve_info}))
     
             
-            
+def generate_qrcode(request):
+    # print 'url_data:' + url_data
+    # print request.get_full_path()
+    # print request.path
+    # print request.get_host()
+    if request.method == 'POST':
+        url_data = request.POST['target_url']
+        # url_data = request.POST.get('name')
+        if url_data == "if leave empty, it will be current url":
+            img = qrcode.make(request.get_host()+request.path)
+        else:
+            img = qrcode.make(url_data)
+        buf = StringIO()
+        img.save(buf)
+        image_stream = buf.getvalue()
+
+        response = HttpResponse(image_stream, content_type='image/png')
+        return response
+    else:
+        return HttpResponseRedirect('/')            
 #class Login(FormView):
 #    template_name = 'blog/login.html'
      

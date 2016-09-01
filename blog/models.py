@@ -45,7 +45,7 @@ class Article(models.Model):
     class Meta:
         ordering = ['-last_modified_time']
 
-    # 第五周：新增 get_absolute_url 方法
+    
     def get_absolute_url(self):
         return reverse('blog:detail', kwargs={'article_id': self.pk})
 
@@ -68,7 +68,7 @@ class Tag(models.Model):
         return self.name
 
 
-# # 第五周：新增评论
+
 class BlogComment(models.Model):
     user_name = models.CharField('评论者名字', max_length=100)
     user_email = models.EmailField('评论者邮箱', max_length=255)
