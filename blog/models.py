@@ -2,10 +2,10 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from collections import defaultdict
+from django.utils import timezone
 
 from django.contrib.auth.models import User  
 
-import datetime
 
 
 # Create your models here.
@@ -28,8 +28,8 @@ class Article(models.Model):
 
     title = models.CharField('标题', max_length=70)
     body = models.TextField('正文')
-    created_time = models.DateTimeField('创建时间')
-    last_modified_time = models.DateTimeField('修改时间')
+    created_time = models.DateTimeField('创建时间', default=timezone.now)
+    last_modified_time = models.DateTimeField('修改时间', default=timezone.now)
     status = models.CharField('文章状态', max_length=1, choices=STATUS_CHOICES)
     abstract = models.CharField('摘要', max_length=54, blank=True, null=True, help_text="可选，如若为空将摘取正文的前54个字符")
     views = models.PositiveIntegerField('浏览量', default=0)
@@ -44,11 +44,6 @@ class Article(models.Model):
 
     class Meta:
         ordering = ['-last_modified_time']
-
-    
-    #def get_absolute_url(self):
-    #    return reverse('blog:detail', kwargs={'article_id': self.pk})
-
 
 class Category(models.Model):
     name = models.CharField('类名', max_length=20)

@@ -31,7 +31,7 @@
                                 class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
                         </div>
                         <div class="post-bd">
-                            {{ article.body |safe }}
+                            {{ article.body |safe|linebreaks }}
                         </div>
                     </div>
                 </div>

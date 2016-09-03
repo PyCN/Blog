@@ -1,5 +1,4 @@
 #coding:utf-8
-import re
 
 from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect
 from django.views.generic.list import ListView
@@ -14,7 +13,7 @@ from django.http import HttpResponse
 
 import qrcode
 from cStringIO import StringIO
-import markdown2
+import markdown,markdown2
 
 from blog.models import Article, Category, Tag
 from .models import BlogComment, UserProfile
@@ -29,8 +28,6 @@ class IndexView(ListView):
 
     def get_queryset(self):
         article_list = Article.objects.filter(status='p')
-        for article in article_list:
-            article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
         return article_list
 
     def get_context_data(self, **kwargs):
@@ -48,7 +45,7 @@ class ArticleDetailView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super(ArticleDetailView, self).get_object()
-        obj.body = markdown2.markdown(obj.body, extras=['fenced-code-blocks'], )
+        obj.body = markdown2.markdown(obj.body,['codehilite'], extras=['fenced-code-blocks'])
         return obj
 
     
@@ -102,6 +99,7 @@ class ArchiveView(ListView):
 
     def get_context_data(self, **kwargs):
         kwargs['tag_list'] = Tag.objects.all().order_by('name')
+        kwargs['date_archive'] = Article.objects.archive()
         return super(ArchiveView, self).get_context_data(**kwargs)
 
 
