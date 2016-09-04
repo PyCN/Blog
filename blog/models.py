@@ -19,6 +19,7 @@ class ArticleManage(models.Manager):
 
 
 class Article(models.Model):
+    # 'd':表示数据库的实际值;'Draft':表示模板列表中显示的值
     STATUS_CHOICES = (
         ('d', 'Draft'),
         ('p', 'Published'),
