@@ -27,7 +27,8 @@ class IndexView(ListView):
     context_object_name = "article_list"
 
     def get_queryset(self):
-        article_list = Article.objects.filter(status='p')
+        # 置顶的要在前面
+        article_list = Article.objects.filter(status='p').order_by('-topped')
         return article_list
 
     def get_context_data(self, **kwargs):
