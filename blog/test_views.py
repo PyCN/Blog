@@ -36,3 +36,35 @@ class IndexViewTests(TestCase):
         response = self.client.get(reverse('blog:index'))
         time_now = timezone.now()
         self.assertQuerysetEqual(response.context[1]['date_archive'],['(%s, [%s])' % (time_now.year, time_now.month)])
+        
+class ArticleDetaiilViewTests(TestCase):
+    def setUp(self):
+        category1 = Category.objects.create(name='category1')
+        tag1 = Tag.objects.create(name='tag1')
+        body_with_markdown = '''
+            ```python
+            def justcode(args):
+                if args:
+                    print 'Func has args'
+                else:
+                    print 'Func does\'t have args
+            ```
+        '''
+        body_without_markdown = '''
+            def justcode(args):
+                if args:
+                    print 'Func has args'
+                else:
+                    print 'Func does\'t have args
+        '''
+        self.article1 = Article.objects.create(title='title1', body=body_with_markdown, status='p', category=category1)
+        article2 = Article.objects.create(title='title2', body='article',status='p')
+        # 多对多的数据要用add添加
+        article2.tags.add(tag1)
+        article3 = Article.objects.create(title='title3', body=body_without_markdown, status='p', category=category1)
+        article3.tags.add(tag1)
+        article4 = Article.objects.create(title='title4', body='article', status='p')
+    def test_get_object(self):
+        response = self.client.get(reverse('blog:detail',args=(self.article1.id,)))
+        print response
+        self.assertQuerysetEqual(response.context[2]['article_list'],['<Article: title3>', '<Article: title4>','<Article: title1>', '<Article: title2>'])

@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.utils import timezone
 
 import qrcode
 from cStringIO import StringIO
@@ -28,7 +29,7 @@ class IndexView(ListView):
 
     def get_queryset(self):
         # 置顶的要在前面
-        article_list = Article.objects.filter(status='p').order_by('-topped')
+        article_list = Article.objects.filter(created_time__lte=timezone.now()).filter(status='p').order_by('-topped')
         return article_list
 
     def get_context_data(self, **kwargs):
