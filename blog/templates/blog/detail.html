@@ -10,7 +10,7 @@
                             <li>&gt;</li>
                             <li>
                                 <ul class="post-categories">
-                                    <li><a href="" title=""
+                                    <li><a href="{% url 'blog:category' article.category.id %}" title=""
                                            rel="category">{{ article.category.name }}</a>
                                     </li>
                                 </ul>

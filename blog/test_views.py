@@ -96,3 +96,32 @@ class CategoryViewTests(TestCase):
     def test_get_context_data(self):
         response = self.client.get(reverse('blog:category',args=(self.category2.id,)))
         self.assertQuerysetEqual(response.context_data['category_list'],['<Category: another_category2>', '<Category: category1>'])
+
+class TarviewTests(TestCase):
+    def setUp(self):
+        self.tag1 = Tag.objects.create(name='tag1')
+        self.tag2 = Tag.objects.create(name='tag2')
+        self.tag3 = Tag.objects.create(name='tag3')
+        self.tag4 = Tag.objects.create(name='tag4')
+        self.article1 = Article.objects.create(title='title1', body='body', status='p')
+        self.article2 = Article.objects.create(title='title2', body='body', status='p')
+        self.article3 = Article.objects.create(title='title3', body='body', status='d')
+        self.article1.tags.add(self.tag1)
+        self.article1.tags.add(self.tag4)
+        self.article2.tags.add(self.tag2)
+        self.article3.tags.add(self.tag3)
+    
+
+    def test_get_queryset(self):
+        response = self.client.get(reverse('blog:tag',args=(self.tag1.id,)))
+        self.assertQuerysetEqual(response.context[1]['article_list'],['<Article: title1>']) 
+        response = self.client.get(reverse('blog:tag',args=(self.tag4.id,)))
+        self.assertQuerysetEqual(response.context[1]['article_list'],['<Article: title1>']) 
+        response = self.client.get(reverse('blog:tag',args=(self.tag2.id,)))
+        self.assertQuerysetEqual(response.context[1]['article_list'],['<Article: title2>']) 
+        response = self.client.get(reverse('blog:tag',args=(self.tag3.id,)))
+        self.assertQuerysetEqual(response.context[1]['article_list'],[]) 
+
+    def test_get_context_data(self):
+        response = self.client.get(reverse('blog:tag',args=(self.tag2.id,)))
+        self.assertQuerysetEqual(response.context_data['tag_list'],['<Tag: tag1>', '<Tag: tag2>', '<Tag: tag3>', '<Tag: tag4>'])

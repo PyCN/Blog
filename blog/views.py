@@ -63,8 +63,8 @@ class CategoryView(ListView):
 
     def get_queryset(self):
         article_list = Article.objects.filter(category=self.kwargs['cate_id'], status='p')
-        for article in article_list:
-            article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
+        # for article in article_list:
+            # article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
         return article_list
 
     def get_context_data(self, **kwargs):
@@ -78,11 +78,12 @@ class TagView(ListView):
 
     def get_queryset(self):
         article_list = Article.objects.filter(tags=self.kwargs['tag_id'], status='p')
-        for article in article_list:
-            article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
+        # for article in article_list:
+            # article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
         return article_list
 
     def get_context_data(self, **kwargs):
+        kwargs['category_list'] = Category.objects.all().order_by('name')
         kwargs['tag_list'] = Tag.objects.all().order_by('name')
         return super(TagView, self).get_context_data(**kwargs)
 
@@ -95,11 +96,12 @@ class ArchiveView(ListView):
         year = int(self.kwargs['year'])
         month = int(self.kwargs['month'])
         article_list = Article.objects.filter(created_time__year=year, created_time__month=month)
-        for article in article_list:
-            article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
+        # for article in article_list:
+            # article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
         return article_list
 
     def get_context_data(self, **kwargs):
+        kwargs['category_list'] = Category.objects.all().order_by('name')
         kwargs['tag_list'] = Tag.objects.all().order_by('name')
         kwargs['date_archive'] = Article.objects.archive()
         return super(ArchiveView, self).get_context_data(**kwargs)
