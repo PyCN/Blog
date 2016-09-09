@@ -9,6 +9,7 @@ from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.utils import timezone
 
@@ -129,7 +130,7 @@ class CommentPostView(LoginRequiredMixin, FormView):
         comment = form.save(commit=False)
         comment.article = target_article
         comment.save()
-        self.success_url = target_article.get_absolute_url()
+        self.success_url = reverse('blog:detail', args=(target_article.id,))
         return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form):
