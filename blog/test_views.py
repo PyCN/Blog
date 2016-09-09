@@ -129,3 +129,19 @@ class TarviewTests(TestCase):
     def test_get_context_data(self):
         response = self.client.get(reverse('blog:tag',args=(self.tag2.id,)))
         self.assertQuerysetEqual(response.context_data['tag_list'],['<Tag: tag1>', '<Tag: tag2>', '<Tag: tag3>', '<Tag: tag4>'])
+        
+class ArchiveViewTests(TestCase):
+
+    def setUp(self):
+        article1 = Article.objects.create(title='title1', body='article',status='p')
+        article2 = Article.objects.create(title='title2', body='article',status='d', topped=True)
+        time_3  = timezone.now() - timezone.timedelta(seconds=20)
+        article3 = Article.objects.create(title='title3', body='article',created_time=time_3,last_modified_time=time_3, status='p', topped=True)
+
+    def test_get_queryset(self):
+        '''
+        测试未发表的文章是否会被过滤出来，且过滤出来的文章顺序是否正确
+        '''
+        response = self.client.get(reverse('blog:archive', args=(timezone.now().year, timezone.now().month,)))
+        self.assertQuerysetEqual(response.context[2]['article_list'],['<Article: title1>','<Article: title3>'])
+

@@ -102,7 +102,7 @@ class ArchiveView(ListView):
     def get_queryset(self):
         year = int(self.kwargs['year'])
         month = int(self.kwargs['month'])
-        article_list = Article.objects.filter(created_time__year=year, created_time__month=month)
+        article_list = Article.objects.filter(status='p', created_time__year=year, created_time__month=month)
         # for article in article_list:
             # article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
         return article_list
