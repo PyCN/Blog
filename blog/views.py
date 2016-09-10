@@ -1,6 +1,6 @@
 #coding:utf-8
 
-from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect, Http404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, FormView
@@ -48,6 +48,9 @@ class ArticleDetailView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super(ArticleDetailView, self).get_object()
+        # 未发表文章不能显示
+        if obj.status == 'd':
+            raise Http404
         obj.body = markdown2.markdown(obj.body,['codehilite'], extras=['fenced-code-blocks'])
         return obj
 
