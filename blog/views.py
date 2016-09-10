@@ -31,12 +31,6 @@ class IndexView(ListView):
     def get_queryset(self):
         # 置顶的要在前面,要排列多个顺序是，以此添加进去即可
         article_list = Article.objects.filter(created_time__lte=timezone.now()).filter(status='p').order_by('-topped', '-created_time', '-last_modified_time')
-        for article in article_list:
-            if not article.abstract:
-                if len(article.body) < 54:
-                    article.abstract = article.body
-                else:
-                    article.abstract = article.body[:54]
         return article_list
 
     def get_context_data(self, **kwargs):

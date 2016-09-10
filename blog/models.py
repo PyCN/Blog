@@ -43,6 +43,14 @@ class Article(models.Model):
     def __unicode__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if not self.abstract:
+            if len(self.body) < 54:
+                self.abstract = self.body
+            else:
+                self.abstract = self.body[:54]
+        super(Article, self).save(*args, **kwargs)    
+
     class Meta:
         ordering = ['-last_modified_time']
 
