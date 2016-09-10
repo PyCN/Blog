@@ -1,8 +1,12 @@
 #coding=utf-8
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.test import TestCase
+from django.contrib.auth.models import User
 
 try:
     import pytz
@@ -67,7 +71,7 @@ class ArticleDetaiilViewTests(TestCase):
                     print "Func does't have args"
         '''
         self.article1 = Article.objects.create(title='title1', body=body_with_markdown, status='p', category=self.category1)
-        self.article2 = Article.objects.create(title='title2', body='article',status='p')
+        self.article2 = Article.objects.create(title='title2', body='article',status='d', category=self.category1)
         # 多对多的数据要用add添加
         self.article2.tags.add(tag1)
         self.article3 = Article.objects.create(title='title3', body=body_without_markdown, status='p', category=self.category1)
@@ -76,6 +80,8 @@ class ArticleDetaiilViewTests(TestCase):
     def test_get_object(self):
         response = self.client.get(reverse('blog:detail',args=(self.article1.id,)))
         self.assertContains(response,self.category1,status_code=200)
+        response = self.client.get(reverse('blog:detail',args=(self.article2.id,)))
+        self.assertContains(response, 'Page not found', status_code=404)
         # self.assertEqual(response.context_data['article'].body,[u'<pre><code>        ```python\n        def justcode(args):\n            if args:\n                print "Func has args"\n            else:\n                print "Func does\'t have args"\n        ```\n</code></pre>\n'])
 
     def test_get_context_data(self):
@@ -155,14 +161,37 @@ class CommentPostViewTests(TestCase):
         self.article1.tags.add(tag1)
         self.article2 = Article.objects.create(title='title2', body='article',status='d', category=category1)
 
+        self.name = '1029645297@qq.com'
+        self.password='password'
+        user = User.objects.create_user(username=self.name, password=self.password)
+
     def test_form_valid_without_login(self):
         response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'body':'111'}, follow=True)
         self.assertContains(response, '111@qq.com', status_code=200)
 
     def test_form_valid_with_login(self):
-        pass
+        self.assertTrue(self.client.login(username=self.name, password=self.password))
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'body':'111'}, follow=True)
+        self.assertContains(response, '111@qq.com', status_code=200)
+        self.assertEqual(response.context[2]['comment_nums'], 1)
 
     def test_form_valid_without_published(self):
         response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'body':'111'}, follow=True)
         self.assertEqual(response.redirect_chain[0], ('http://testserver/', 302))
 
+    def test_form_invalid_without_login(self):
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body':'111'}, follow=True)
+        self.assertContains(response, u'0条评论', status_code=200)
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'user_body':'111'}, follow=True)
+        self.assertContains(response, u'0条评论', status_code=200)
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body':'111', 'oter':'useless'}, follow=True)
+        self.assertContains(response, u'0条评论', status_code=200)
+
+    def test_form_invalid_with_login(self):
+        self.assertTrue(self.client.login(username=self.name, password=self.password))
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body':'111'}, follow=True)
+        self.assertContains(response, u'0条评论', status_code=200)
+
+    def test_form_invalid_without_published(self):
+        response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body':'111'}, follow=True)
+        self.assertContains(response, u'0条评论', status_code=200)

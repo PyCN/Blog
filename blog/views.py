@@ -147,6 +147,7 @@ class CommentPostView(FormView):
             'form': form,
             'article': target_article,
             'comment_list': target_article.blogcomment_set.all(),
+            'comment_nums': target_article.blogcomment_set.count()
         })
 
 class LoginView(FormView):
