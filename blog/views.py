@@ -54,6 +54,7 @@ class ArticleDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         kwargs['comment_list'] = self.object.blogcomment_set.all()
+        kwargs['comment_nums'] = self.object.blogcomment_set.count()
         kwargs['form'] = BlogCommentForm()
         return super(ArticleDetailView, self).get_context_data(**kwargs)
 
@@ -97,6 +98,14 @@ class ArchiveView(ListView):
         year = int(self.kwargs['year'])
         month = int(self.kwargs['month'])
         article_list = Article.objects.filter(status='p', created_time__year=year, created_time__month=month)
+        # 保存文章摘要，现已在models中添加save方法
+        # for article in article_list:
+        #     if not article.abstract:
+        #         if len(article.body) < 54:
+        #             article.abstract = article.body
+        #         else:
+        #             article.abstract = article.body[:54]
+        #     article.save()
         # for article in article_list:
             # article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
         return article_list
@@ -114,13 +123,15 @@ class LoginRequiredMixin(object):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
     
-class CommentPostView(LoginRequiredMixin, FormView):
+class CommentPostView(FormView):
     form_class = BlogCommentForm
     template_name = 'blog/detail.html'
 
 
     def form_valid(self, form):
         target_article = get_object_or_404(Article, pk=self.kwargs['article_id'])
+        if target_article.status == 'd':
+            return HttpResponseRedirect('/')
         comment = form.save(commit=False)
         comment.article = target_article
         comment.save()

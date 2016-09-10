@@ -81,7 +81,8 @@ class ArticleDetaiilViewTests(TestCase):
     def test_get_context_data(self):
         response = self.client.get(reverse('blog:detail',args=(self.article1.id,)))
         self.assertQuerysetEqual(response.context_data['comment_list'],[])
-        print response.context_data['form']
+        self.assertContains(response, u'我来评两句', status_code=200)
+        
 
 class CategoryViewTests(TestCase):
     def setUp(self):
@@ -144,4 +145,24 @@ class ArchiveViewTests(TestCase):
         '''
         response = self.client.get(reverse('blog:archive', args=(timezone.now().year, timezone.now().month,)))
         self.assertQuerysetEqual(response.context[2]['article_list'],['<Article: title1>','<Article: title3>'])
+
+class CommentPostViewTests(TestCase):
+
+    def setUp(self):
+        category1 = Category.objects.create(name='category1')
+        self.article1 = Article.objects.create(title='title1', body='article',status='p', category=category1)
+        tag1 = Tag.objects.create(name='tag1')
+        self.article1.tags.add(tag1)
+        self.article2 = Article.objects.create(title='title2', body='article',status='d', category=category1)
+
+    def test_form_valid_without_login(self):
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'body':'111'}, follow=True)
+        self.assertContains(response, '111@qq.com', status_code=200)
+
+    def test_form_valid_with_login(self):
+        pass
+
+    def test_form_valid_without_published(self):
+        response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'body':'111'}, follow=True)
+        self.assertEqual(response.redirect_chain[0], ('http://testserver/', 302))
 
