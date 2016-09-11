@@ -159,7 +159,7 @@ class LoginView(FormView):
         password = form.cleaned_data['password']
         user = auth.authenticate(username=username, password=password)
         # print user
-        if user is not None and user.is_active:
+        if user and user.is_active:
             auth.login(self.request, user)
             self.request.session['username'] = username
             return HttpResponseRedirect('/')
@@ -219,7 +219,7 @@ def regist(request):
                     regist_info = "用户名已存在"
                     return render_to_response("blog/regist.html", RequestContext(request,{'form':form, 'regist_info':regist_info}))  
                 else:
-                    user = User.objects.create_user(username= username,password=password1)
+                    user = User.objects.create_user(username=username,password=password1)
                     #user.is_active=True  
                     user.save
                     user_profile = UserProfile()
@@ -262,7 +262,12 @@ def retrieve(request):
                 # 这里在template中可以直接调用form或者retrieve_info
                 return render_to_response("blog/retrieve.html", RequestContext(request,{'form':form, 'retrieve_info':retrieve_info}))  
             else:
-                user_profile = get_object_or_404(UserProfile, user_id=user.id)
+                try:
+                    user_profile = get_object_or_404(UserProfile, user_id=user.id)
+                except Http404:
+                    retrieve_info = "该用户不可修改密码"
+                    return render_to_response("blog/retrieve.html", RequestContext(request,{'form':form, 'retrieve_info':retrieve_info}))  
+                    
                 phone_db = user_profile.phone
                 if phone_db == phone:
                     if password1 == password2:
@@ -274,19 +279,19 @@ def retrieve(request):
                 else:
                     retrieve_info = "手机号有误"
                 return render_to_response('blog/retrieve.html', RequestContext(request, {'form': form,'retrieve_info':retrieve_info}))
-                    
         else:
             retrieve_info = 'input error'
             return render_to_response('blog/retrieve.html', RequestContext(request, {'form': form, 'retrieve_info':retrieve_info}))
     
             
 def generate_qrcode(request):
-    # print 'url_data:' + url_data
-    # print request.get_full_path()
-    # print request.path
-    # print request.get_host()
+
     if request.method == 'POST':
-        url_data = request.POST['target_url']
+        try:
+            url_data = request.POST['target_url']
+        except:
+            return HttpResponseRedirect('/')            
+            
         # url_data = request.POST.get('name')
         if url_data == "if leave empty, it will be current url":
             img = qrcode.make(request.get_host()+request.path)

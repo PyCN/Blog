@@ -195,3 +195,105 @@ class CommentPostViewTests(TestCase):
     def test_form_invalid_without_published(self):
         response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body':'111'}, follow=True)
         self.assertContains(response, u'0条评论', status_code=200)
+
+class RegistTests(TestCase):
+
+    def test_regist_with_get(self):
+        response = self.client.get(reverse('blog:regist'))
+        self.assertContains(response, u'确认密码', status_code=200)
+
+    def test_regist_with_valid_form(self):
+        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'password1':'password', 'password2':'password', 'phone':'111'})
+        self.assertEqual(response.context['regist_info'], u'注册成功')
+        self.assertTrue(self.client.login(username='111@qq.com', password='password'))
+
+    def test_regist_with_existed_account(self):
+        user = User.objects.create_user(username='111@qq.com',password='111')
+        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'password1':'password', 'password2':'password', 'phone':'111'})
+        self.assertContains(response, '111@qq.com')
+        self.assertEqual(response.context['regist_info'], u'用户名已存在')
+
+    def test_regist_with_different_password(self):
+        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'password1':'111', 'password2':'password', 'phone':'111'})
+        self.assertContains(response, '111@qq.com')
+        self.assertEqual(response.context['regist_info'], '两次输入的密码不一致!')
+
+    def test_regist_with_invalid_form(self):
+        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'password1':'password', 'password':'password', 'phone':'111'})
+        self.assertContains(response, '111@qq.com')
+        self.assertEqual(response.context['regist_info'], 'input error')
+
+
+class LogoutTests(TestCase):
+
+    def test_logout_with_login(self):
+        user = User.objects.create_user(username='111@qq.com',password='111')
+        self.client.login(username='111@qq.com', password='111')
+        response = self.client.get(reverse('blog:logout'), follow=True)
+        self.assertEqual(response.redirect_chain, [('http://testserver/', 302)])
+
+    def test_logout_without_login(self):
+        response = self.client.get(reverse('blog:logout'), follow=True)
+        self.assertEqual(response.redirect_chain, [('http://testserver/accounts/login/?next=/logout', 302)])
+
+class RetrieveTests(TestCase):
+
+    def setUp(self):
+        user = User.objects.create_user(username='111@qq.com',password='111') 
+        user_profile = UserProfile()
+        user_profile.user_id = user.id
+        user_profile.phone = '111'
+        user_profile.save()
+        user = User.objects.create_user(username='222@qq.com',password='222') 
+
+    def test_retrieve_with_get(self):
+        response = self.client.get(reverse('blog:retrieve'))
+        self.assertContains(response, u'修改密码', status_code=200)
+
+    def test_retrieve_with_valid_form(self):
+        response = self.client.post(reverse('blog:retrieve'), {'username':'111@qq.com', 'password1':'password', 'password2':'password', 'phone':'111'})
+        self.assertEqual(response.context['retrieve_info'], u'密码修改成功')
+        self.assertTrue(self.client.login(username='111@qq.com', password='password'))
+
+    def test_retrieve_with_no_existed_account(self):
+        response = self.client.post(reverse('blog:retrieve'), {'username':'333@qq.com', 'password1':'password', 'password2':'password', 'phone':'111'})
+        self.assertContains(response, '333@qq.com')
+        self.assertEqual(response.context['retrieve_info'], u'用户名不存在')
+
+    def test_retrieve_with_different_password(self):
+        response = self.client.post(reverse('blog:retrieve'), {'username':'111@qq.com', 'password1':'111', 'password2':'password', 'phone':'111'})
+        self.assertContains(response, '111@qq.com')
+        self.assertEqual(response.context['retrieve_info'], '两次输入的密码不一致!')
+
+    def test_retrieve_with_no_phone_account(self):
+        response = self.client.post(reverse('blog:retrieve'), {'username':'222@qq.com', 'password1':'password', 'password2':'password', 'phone':'222'})
+        self.assertContains(response, '222@qq.com')
+        self.assertEqual(response.context['retrieve_info'], u'该用户不可修改密码')
+
+    def test_retrieve_with_wrong_phone(self):
+        response = self.client.post(reverse('blog:retrieve'), {'username':'111@qq.com', 'password1':'111', 'password2':'password', 'phone':'222'}) 
+        self.assertContains(response, '111@qq.com')
+        self.assertEqual(response.context['retrieve_info'], '手机号有误')
+
+    def test_retrieve_with_invalid_form(self):
+        response = self.client.post(reverse('blog:retrieve'), {'username':'111@qq.com', 'password1':'password', 'password':'password', 'phone':'111'})
+        self.assertContains(response, '111@qq.com')
+        self.assertEqual(response.context['retrieve_info'], 'input error')
+
+
+class GenerateQrcodeTests(TestCase):
+
+    def test_qrcode_with_get(self):
+        response = self.client.get(reverse('blog:qrcode'), follow=True)
+        self.assertEqual(response.redirect_chain, [('http://testserver/', 302)])
+
+    def test_qrcode_without_target_url(self):
+        response = self.client.post(reverse('blog:qrcode'), follow=True)
+        self.assertEqual(response.redirect_chain, [('http://testserver/', 302)])
+
+    def test_qrcode_with_none_target_url(self):
+        response = self.client.post(reverse('blog:qrcode'), {'target_url':'www.baidu.com'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+
+
