@@ -82,7 +82,6 @@ class ArticleDetaiilViewTests(TestCase):
         self.assertContains(response,self.category1,status_code=200)
         response = self.client.get(reverse('blog:detail',args=(self.article2.id,)))
         self.assertContains(response, 'Page not found', status_code=404)
-        # self.assertEqual(response.context_data['article'].body,[u'<pre><code>        ```python\n        def justcode(args):\n            if args:\n                print "Func has args"\n            else:\n                print "Func does\'t have args"\n        ```\n</code></pre>\n'])
 
     def test_get_context_data(self):
         response = self.client.get(reverse('blog:detail',args=(self.article1.id,)))
@@ -96,9 +95,13 @@ class CategoryViewTests(TestCase):
         self.article1 = Article.objects.create(title='title1', body='body', status='p', category=self.category1)
         self.article2 = Article.objects.create(title='title2', body='body', status='p', category=self.category1)
         self.category2 = Category.objects.create(name='another_category2')
+        self.article3 = Article.objects.create(title='title3', body='body', status='d', category=self.category2)
     
 
     def test_get_queryset(self):
+        '''
+        测试未发表的文章是否会被过滤出来，且过滤出来的文章顺序是否正确
+        '''
         response = self.client.get(reverse('blog:category',args=(self.category1.id,)))
         self.assertQuerysetEqual(response.context[1]['article_list'],['<Article: title2>', '<Article: title1>']) 
         response = self.client.get(reverse('blog:category',args=(self.category2.id,)))
@@ -108,7 +111,7 @@ class CategoryViewTests(TestCase):
         response = self.client.get(reverse('blog:category',args=(self.category2.id,)))
         self.assertQuerysetEqual(response.context_data['category_list'],['<Category: another_category2>', '<Category: category1>'])
 
-class TarviewTests(TestCase):
+class TagviewTests(TestCase):
     def setUp(self):
         self.tag1 = Tag.objects.create(name='tag1')
         self.tag2 = Tag.objects.create(name='tag2')
@@ -124,6 +127,9 @@ class TarviewTests(TestCase):
     
 
     def test_get_queryset(self):
+        '''
+        测试未发表的文章是否会被过滤出来，且过滤出来的文章顺序是否正确
+        '''
         response = self.client.get(reverse('blog:tag',args=(self.tag1.id,)))
         self.assertQuerysetEqual(response.context[1]['article_list'],['<Article: title1>']) 
         response = self.client.get(reverse('blog:tag',args=(self.tag4.id,)))
@@ -150,7 +156,7 @@ class ArchiveViewTests(TestCase):
         测试未发表的文章是否会被过滤出来，且过滤出来的文章顺序是否正确
         '''
         response = self.client.get(reverse('blog:archive', args=(timezone.now().year, timezone.now().month,)))
-        self.assertQuerysetEqual(response.context[2]['article_list'],['<Article: title1>','<Article: title3>'])
+        self.assertQuerysetEqual(response.context[2]['article_list'],['<Article: title3>','<Article: title1>'])
 
 class CommentPostViewTests(TestCase):
 

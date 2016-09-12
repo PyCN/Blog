@@ -15,10 +15,9 @@ from django.utils import timezone
 
 import qrcode
 from cStringIO import StringIO
-import markdown,markdown2
+import markdown2
 
-from blog.models import Article, Category, Tag
-from .models import BlogComment, UserProfile
+from blog.models import Article, Category, Tag, BlogComment, UserProfile
 from .forms import BlogCommentForm, UserForm, RegistForm, RetrieveForm
 
 
@@ -29,14 +28,15 @@ class IndexView(ListView):
     context_object_name = "article_list"
 
     def get_queryset(self):
-        # 置顶的要在前面,要排列多个顺序是，以此添加进去即可
-        article_list = Article.objects.filter(created_time__lte=timezone.now()).filter(status='p').order_by('-topped', '-created_time', '-last_modified_time')
+        # 置顶的要在前面,要排列多个顺序是，依次添加进去即可
+        article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p').order_by('-topped', '-created_time', '-last_modified_time')
         return article_list
 
     def get_context_data(self, **kwargs):
-        kwargs['category_list'] = Category.objects.all().order_by('name')
+        # models中已经定义了meta类，所以可以不用.order_by('name')
+        kwargs['category_list'] = Category.objects.all()
         kwargs['date_archive'] = Article.objects.archive()
-        kwargs['tag_list'] = Tag.objects.all().order_by('name')
+        kwargs['tag_list'] = Tag.objects.all()
         return super(IndexView, self).get_context_data(**kwargs)
 
 
@@ -68,12 +68,12 @@ class CategoryView(ListView):
 
     def get_queryset(self):
         article_list = Article.objects.filter(category=self.kwargs['cate_id'], status='p')
-        # for article in article_list:
-            # article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
         return article_list
 
     def get_context_data(self, **kwargs):
-        kwargs['category_list'] = Category.objects.all().order_by('name')
+        kwargs['category_list'] = Category.objects.all()
+        kwargs['date_archive'] = Article.objects.archive()
+        kwargs['tag_list'] = Tag.objects.all()
         return super(CategoryView, self).get_context_data(**kwargs)
 
 
@@ -88,8 +88,9 @@ class TagView(ListView):
         return article_list
 
     def get_context_data(self, **kwargs):
-        kwargs['category_list'] = Category.objects.all().order_by('name')
-        kwargs['tag_list'] = Tag.objects.all().order_by('name')
+        kwargs['category_list'] = Category.objects.all()
+        kwargs['tag_list'] = Tag.objects.all()
+        kwargs['date_archive'] = Article.objects.archive()
         return super(TagView, self).get_context_data(**kwargs)
 
 
@@ -109,13 +110,11 @@ class ArchiveView(ListView):
         #         else:
         #             article.abstract = article.body[:54]
         #     article.save()
-        # for article in article_list:
-            # article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
         return article_list
 
     def get_context_data(self, **kwargs):
-        kwargs['category_list'] = Category.objects.all().order_by('name')
-        kwargs['tag_list'] = Tag.objects.all().order_by('name')
+        kwargs['category_list'] = Category.objects.all()
+        kwargs['tag_list'] = Tag.objects.all()
         kwargs['date_archive'] = Article.objects.archive()
         return super(ArchiveView, self).get_context_data(**kwargs)
 

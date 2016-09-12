@@ -36,7 +36,6 @@ class BlogCommentForm(forms.ModelForm):
         model = BlogComment
         fields = ['user_name', 'user_email', 'body']
         widgets = {
-            # <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
             'user_name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': "请输入昵称",

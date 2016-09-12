@@ -52,7 +52,7 @@ class Article(models.Model):
         super(Article, self).save(*args, **kwargs)    
 
     class Meta:
-        ordering = ['-last_modified_time']
+        ordering = ['-topped', '-created_time', '-last_modified_time']
 
 class Category(models.Model):
     name = models.CharField('类名', max_length=20)
