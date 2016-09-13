@@ -5,11 +5,12 @@ from .models import Article, BlogComment
 
 class RegistForm(forms.Form):
     username = forms.EmailField(required=True, label='用户名 ', error_messages={'required':'请输入用户名'})
+    nickname = forms.CharField(required=True, label='昵称 ', error_messages={'required':'请输入昵称'})
     password1 = forms.CharField(required=True, label='密码   ',widget=forms.PasswordInput(),\
                                error_messages={'required':'请输入密码'})
     password2 = forms.CharField(required=True, label='确认密码',widget=forms.PasswordInput(),\
                                error_messages={'required':'请再次输入密码'})
-    phone     = forms.CharField(required=False, label='手机')
+    phone     = forms.CharField(required=True, label='手机')
     
 class UserForm(forms.Form): 
     username = forms.EmailField(required=True, label='用户名', error_messages={'required':'请输入用户名'})
@@ -34,7 +35,9 @@ class RetrieveForm(forms.Form):
 class BlogCommentForm(forms.ModelForm):
     class Meta:
         model = BlogComment
-        fields = ['user_name', 'user_email', 'body']
+        fields = ['body']
+        widgets = {'body': forms.Textarea(attrs={'placeholder': '我来评两句~'})}
+        '''
         widgets = {
             'user_name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -48,3 +51,4 @@ class BlogCommentForm(forms.ModelForm):
             }),
             'body': forms.Textarea(attrs={'placeholder': '我来评两句~'}),
         }
+        '''

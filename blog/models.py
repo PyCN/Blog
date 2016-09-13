@@ -78,10 +78,11 @@ class Tag(models.Model):
 
 
 class BlogComment(models.Model):
-    user_name = models.CharField('评论者名字', max_length=100)
-    user_email = models.EmailField('评论者邮箱', max_length=255)
+    # user_name = models.CharField('评论者名字', max_length=100)
+    # user_email = models.EmailField('评论者邮箱', max_length=255)
     body = models.TextField('评论内容')
     created_time = models.DateTimeField('评论发表时间', auto_now_add=True)
+    commentator = models.ForeignKey(User, verbose_name='用户', related_name='commentator_set', on_delete=models.CASCADE)
     article = models.ForeignKey('Article', verbose_name='评论所属文章', on_delete=models.CASCADE)
 
     def __unicode__(self):
@@ -90,5 +91,6 @@ class BlogComment(models.Model):
 class UserProfile(models.Model):  
     user=models.OneToOneField(User,unique=True,verbose_name=('用户')) 
     phone=models.CharField(max_length=20) 
+    nickname = models.CharField(max_length=255)
         
        

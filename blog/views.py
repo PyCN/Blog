@@ -125,7 +125,7 @@ class LoginRequiredMixin(object):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
     
-class CommentPostView(FormView):
+class CommentPostView(FormView, LoginRequiredMixin):
     form_class = BlogCommentForm
     template_name = 'blog/detail.html'
 
@@ -135,6 +135,7 @@ class CommentPostView(FormView):
         if target_article.status == 'd':
             return HttpResponseRedirect('/')
         comment = form.save(commit=False)
+        comment.commentator = self.request.user
         comment.article = target_article
         comment.save()
         self.success_url = reverse('blog:detail', args=(target_article.id,))
