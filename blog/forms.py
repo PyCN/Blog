@@ -4,7 +4,7 @@ from .models import Article, BlogComment
 
 
 class RegistForm(forms.Form):
-    username = forms.EmailField(required=True, label='用户名 ', error_messages={'required':'请输入用户名'})
+    username = forms.EmailField(required=True, label='邮箱', error_messages={'required':'请输入邮箱'})
     nickname = forms.CharField(required=True, label='昵称 ', error_messages={'required':'请输入昵称'})
     password1 = forms.CharField(required=True, label='密码   ',widget=forms.PasswordInput(),\
                                error_messages={'required':'请输入密码'})
@@ -13,7 +13,7 @@ class RegistForm(forms.Form):
     phone     = forms.CharField(required=True, label='手机')
     
 class UserForm(forms.Form): 
-    username = forms.EmailField(required=True, label='用户名', error_messages={'required':'请输入用户名'})
+    username = forms.EmailField(required=True, label='邮箱', error_messages={'required':'请输入邮箱'})
     password = forms.CharField(required=True, label='密码  ',widget=forms.PasswordInput(), \
                                error_messages={'required':'请输入密码'})
     
@@ -24,7 +24,7 @@ class UserForm(forms.Form):
     #        cleaned_data = super(UserForm, self).clean()
 
 class RetrieveForm(forms.Form):
-    username = forms.EmailField(required=True, label='用户名', error_messages={'required':'请输入用户名'})
+    username = forms.EmailField(required=True, label='邮箱', error_messages={'required':'请输入邮箱'})
     phone    = forms.CharField(required=True, label='手机', error_messages={'required':'请输入手机号'})
     password1 = forms.CharField(required=True, label='密码   ',widget=forms.PasswordInput(),\
                                error_messages={'required':'请输入新密码'})

@@ -209,23 +209,33 @@ class RegistTests(TestCase):
         self.assertContains(response, u'确认密码', status_code=200)
 
     def test_regist_with_valid_form(self):
-        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'password1':'password', 'password2':'password', 'phone':'111'})
+        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'nickname':'ctg', 'password1':'password', 'password2':'password', 'phone':'111'})
         self.assertEqual(response.context['regist_info'], u'注册成功')
         self.assertTrue(self.client.login(username='111@qq.com', password='password'))
 
-    def test_regist_with_existed_account(self):
+    def test_regist_with_existed_username(self):
         user = User.objects.create_user(username='111@qq.com',password='111')
-        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'password1':'password', 'password2':'password', 'phone':'111'})
+        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com','nickname':'ctg', 'password1':'password', 'password2':'password', 'phone':'111'})
         self.assertContains(response, '111@qq.com')
-        self.assertEqual(response.context['regist_info'], u'用户名已存在')
+        self.assertEqual(response.context['regist_info'], u'邮箱或昵称已存在')
+
+    def test_regist_with_existed_nickname(self):
+        user = User.objects.create_user(username='111@qq.com',password='111')
+        userprofile = UserProfile()
+        userprofile.user_id = user.id
+        userprofile.nickname = 'ctg'
+        userprofile.save()
+        response = self.client.post(reverse('blog:regist'), {'username':'222@qq.com', 'nickname':'ctg', 'password1':'password', 'password2':'password', 'phone':'222'})
+        self.assertContains(response, '222@qq.com')
+        self.assertEqual(response.context['regist_info'], u'邮箱或昵称已存在')
 
     def test_regist_with_different_password(self):
-        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'password1':'111', 'password2':'password', 'phone':'111'})
+        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'nickname':'ctg', 'password1':'111', 'password2':'password', 'phone':'111'})
         self.assertContains(response, '111@qq.com')
         self.assertEqual(response.context['regist_info'], '两次输入的密码不一致!')
 
     def test_regist_with_invalid_form(self):
-        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'password1':'password', 'password':'password', 'phone':'111'})
+        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'nickname':'ctg', 'password1':'password', 'password':'password', 'phone':'111'})
         self.assertContains(response, '111@qq.com')
         self.assertEqual(response.context['regist_info'], 'input error')
 

@@ -217,11 +217,13 @@ def regist(request):
             username = form.cleaned_data['username']
             password1 = form.cleaned_data['password1']
             password2 = form.cleaned_data['password2']
+            nickname = form.cleaned_data['nickname']
             phone     = form.cleaned_data['phone']
             if password1 == password2:
                 user_filter_result = User.objects.filter(username=username) 
-                if user_filter_result:  
-                    regist_info = "用户名已存在"
+                nickname_filter_result = UserProfile.objects.filter(nickname=nickname)
+                if user_filter_result or nickname_filter_result:  
+                    regist_info = "邮箱或昵称已存在"
                     return render_to_response("blog/regist.html", RequestContext(request,{'form':form, 'regist_info':regist_info}))  
                 else:
                     user = User.objects.create_user(username=username,password=password1)
