@@ -177,9 +177,7 @@ class CommentPostViewTests(TestCase):
 
     def test_form_valid_without_login(self):
         response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'body':'111'}, follow=True)
-        self.assertEqual(response.redirect_chain[0], ('http://testserver/', 302))
-        print response.redirect_chain[0]
-        self.assertContains(response, '111@qq.com', status_code=200)
+        self.assertEqual(response.redirect_chain[0], ('http://testserver/accounts/login/?next=/article/1/comment/', 302))
 
     def test_form_valid_with_login(self):
         self.assertTrue(self.client.login(username=self.name, password=self.password))
@@ -191,6 +189,11 @@ class CommentPostViewTests(TestCase):
         self.assertTrue(self.client.login(username=self.name, password=self.password))
         response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'body':'111'}, follow=True)
         self.assertEqual(response.redirect_chain[0], ('http://testserver/', 302))
+        
+    def test_form_valid_without_real_article(self):
+        self.assertTrue(self.client.login(username=self.name, password=self.password))
+        response = self.client.post((reverse('blog:comment', args=(100,))), {'body':'111'}, follow=True)
+        self.assertContains(response, 'Page not found', status_code=404)
 
     def test_form_invalid_without_login(self):
         response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body_false':'111'}, follow=True)
@@ -203,8 +206,7 @@ class CommentPostViewTests(TestCase):
     def test_form_invalid_without_published(self):
         self.assertTrue(self.client.login(username=self.name, password=self.password))
         response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body_false':'111'}, follow=True)
-        self.assertContains(response, u'0条评论', status_code=200)
-        print response.content
+        self.assertEqual(response.redirect_chain[0], ('http://testserver/', 302))
 
 class RegistTests(TestCase):
 

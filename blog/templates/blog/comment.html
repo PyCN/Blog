@@ -16,8 +16,11 @@
         <hr>
         {% for comment in comment_list %}
             <div class="main-content">
-{#                <img src="月英1.jpg" class="user-avatar">#}
-                <span class="user-nickname">{{ comment.commentator.userprofile.nickname }}</span>
+                {% if comment.commentator.userprofile.nickname %}
+                    <span class="user-nickname">{{ comment.commentator.userprofile.nickname }}</span>
+                {% else %}
+                    <span class="user-nickname">{{ comment.commentator}}</span>
+                {% endif %}
                 <time class="time">{{ comment.created_time }}</time>
                 <div class="comment-content">
                     {{ comment.body }}

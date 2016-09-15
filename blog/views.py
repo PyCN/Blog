@@ -136,14 +136,16 @@ class CommentPostView(LoginRequiredMixin, FormView):
         if target_article.status == 'd':
             return HttpResponseRedirect('/')
         comment = form.save(commit=False)
-        # comment.commentator = self.request.user
-        # comment.article = target_article
-        # comment.save()
+        comment.commentator = self.request.user
+        comment.article = target_article
+        comment.save()
         self.success_url = reverse('blog:detail', args=(target_article.id,))
         return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form):
         target_article = get_object_or_404(Article, pk=self.kwargs['article_id'])
+        if target_article.status == 'd':
+            return HttpResponseRedirect('/')
         return render(self.request, 'blog/detail.html', {
             'form': form,
             'article': target_article,
