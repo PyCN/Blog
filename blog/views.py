@@ -125,7 +125,8 @@ class LoginRequiredMixin(object):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
     
-class CommentPostView(FormView, LoginRequiredMixin):
+# 多重继承时有先后顺序，从右开始，广度优先    
+class CommentPostView(LoginRequiredMixin, FormView):
     form_class = BlogCommentForm
     template_name = 'blog/detail.html'
 
@@ -135,9 +136,9 @@ class CommentPostView(FormView, LoginRequiredMixin):
         if target_article.status == 'd':
             return HttpResponseRedirect('/')
         comment = form.save(commit=False)
-        comment.commentator = self.request.user
-        comment.article = target_article
-        comment.save()
+        # comment.commentator = self.request.user
+        # comment.article = target_article
+        # comment.save()
         self.success_url = reverse('blog:detail', args=(target_article.id,))
         return HttpResponseRedirect(self.success_url)
 

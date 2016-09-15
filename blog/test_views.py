@@ -170,37 +170,41 @@ class CommentPostViewTests(TestCase):
         self.name = '1029645297@qq.com'
         self.password='password'
         user = User.objects.create_user(username=self.name, password=self.password)
+        userprofile = UserProfile()
+        userprofile.user_id = user.id
+        userprofile.nickname = 'ctg'
+        userprofile.save()
 
     def test_form_valid_without_login(self):
-        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'body':'111'}, follow=True)
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'body':'111'}, follow=True)
+        self.assertEqual(response.redirect_chain[0], ('http://testserver/', 302))
+        print response.redirect_chain[0]
         self.assertContains(response, '111@qq.com', status_code=200)
 
     def test_form_valid_with_login(self):
         self.assertTrue(self.client.login(username=self.name, password=self.password))
-        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'body':'111'}, follow=True)
-        self.assertContains(response, '111@qq.com', status_code=200)
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'body':'111'}, follow=True)
+        self.assertContains(response, 'ctg', status_code=200)
         self.assertEqual(response.context[2]['comment_nums'], 1)
 
     def test_form_valid_without_published(self):
-        response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'body':'111'}, follow=True)
+        self.assertTrue(self.client.login(username=self.name, password=self.password))
+        response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'body':'111'}, follow=True)
         self.assertEqual(response.redirect_chain[0], ('http://testserver/', 302))
 
     def test_form_invalid_without_login(self):
-        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body':'111'}, follow=True)
-        self.assertContains(response, u'0条评论', status_code=200)
-        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111@qq.com', 'user_body':'111'}, follow=True)
-        self.assertContains(response, u'0条评论', status_code=200)
-        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body':'111', 'oter':'useless'}, follow=True)
-        self.assertContains(response, u'0条评论', status_code=200)
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body_false':'111'}, follow=True)
 
     def test_form_invalid_with_login(self):
         self.assertTrue(self.client.login(username=self.name, password=self.password))
-        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body':'111'}, follow=True)
+        response = self.client.post((reverse('blog:comment', args=(self.article1.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body_false':'111'}, follow=True)
         self.assertContains(response, u'0条评论', status_code=200)
 
     def test_form_invalid_without_published(self):
-        response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body':'111'}, follow=True)
+        self.assertTrue(self.client.login(username=self.name, password=self.password))
+        response = self.client.post((reverse('blog:comment', args=(self.article2.id,))), {'user_name':'111@qq.com', 'user_email':'111', 'body_false':'111'}, follow=True)
         self.assertContains(response, u'0条评论', status_code=200)
+        print response.content
 
 class RegistTests(TestCase):
 
