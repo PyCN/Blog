@@ -20,6 +20,7 @@
             {# 不可使用request.session['username'], 模板中的语句都不带参数 #}
             {% if request.session.username %}
                 <a href="{% url 'blog:logout' %}">{{ request.session.username }}</a>
+                <a href="{% url 'blog:account' %}">评论过的文章</a>
             {% else %}
                 <a href="{% url 'blog:regist' %}">注册</a>
                 <a href="{% url 'blog:login' %}">登陆</a>
@@ -31,7 +32,7 @@
                {% csrf_token %}
                 <p>
                     <label for='target_url'>要转换的url</label>
-                    <input name='target_url' type='text' value="if leave empty, it will be current url">
+                    <input name='target_url' type='text' placeholder="if leave empty, it will be current url">
                     <input class='btn btn-primary' type='submit' value="生成二维码">
                 </p>
             </form>

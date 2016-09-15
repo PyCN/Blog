@@ -35,15 +35,17 @@ class AccountView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # 置顶的要在前面,要排列多个顺序是，依次添加进去即可
-        article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p').order_by('-topped', '-created_time', '-last_modified_time')
+        article_list = Article.objects.filter(comment__commentator__username=self.request.user.username, status='p')
         return article_list
 
+    
     def get_context_data(self, **kwargs):
         # models中已经定义了meta类，所以可以不用.order_by('name')
         kwargs['category_list'] = Category.objects.all()
         kwargs['date_archive'] = Article.objects.archive()
         kwargs['tag_list'] = Tag.objects.all()
-        return super(IndexView, self).get_context_data(**kwargs)
+        return super(AccountView, self).get_context_data(**kwargs)
+    
 
 class IndexView(ListView):
     template_name = "blog/index.html"
@@ -51,7 +53,7 @@ class IndexView(ListView):
 
     def get_queryset(self):
         # 置顶的要在前面,要排列多个顺序是，依次添加进去即可
-        article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p').order_by('-topped', '-created_time', '-last_modified_time')
+        article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p')
         return article_list
 
     def get_context_data(self, **kwargs):
@@ -319,7 +321,7 @@ def generate_qrcode(request):
             return HttpResponseRedirect('/')            
             
         if url_data == "if leave empty, it will be current url":
-            img = qrcode.make(request.get_host()+request.path)
+            img = qrcode.make(request.get_host())
         else:
             img = qrcode.make(url_data)
         buf = StringIO()
