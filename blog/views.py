@@ -22,7 +22,29 @@ from .forms import BlogCommentForm, UserForm, RegistForm, RetrieveForm
 
 
 
-# Create your views here.
+class LoginRequiredMixin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view)
+    
+
+class AccountView(LoginRequiredMixin, ListView):
+    template_name = "blog/index.html"
+    context_object_name = "article_list"
+
+    def get_queryset(self):
+        # 置顶的要在前面,要排列多个顺序是，依次添加进去即可
+        article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p').order_by('-topped', '-created_time', '-last_modified_time')
+        return article_list
+
+    def get_context_data(self, **kwargs):
+        # models中已经定义了meta类，所以可以不用.order_by('name')
+        kwargs['category_list'] = Category.objects.all()
+        kwargs['date_archive'] = Article.objects.archive()
+        kwargs['tag_list'] = Tag.objects.all()
+        return super(IndexView, self).get_context_data(**kwargs)
+
 class IndexView(ListView):
     template_name = "blog/index.html"
     context_object_name = "article_list"
@@ -56,8 +78,8 @@ class ArticleDetailView(DetailView):
 
     
     def get_context_data(self, **kwargs):
-        kwargs['comment_list'] = self.object.blogcomment_set.all()
-        kwargs['comment_nums'] = self.object.blogcomment_set.count()
+        kwargs['comment_list'] = self.object.comment.all()
+        kwargs['comment_nums'] = self.object.comment.count()
         kwargs['form'] = BlogCommentForm()
         return super(ArticleDetailView, self).get_context_data(**kwargs)
 
@@ -118,12 +140,6 @@ class ArchiveView(ListView):
         kwargs['date_archive'] = Article.objects.archive()
         return super(ArchiveView, self).get_context_data(**kwargs)
 
-
-class LoginRequiredMixin(object):
-    @classmethod
-    def as_view(cls, **initkwargs):
-        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(view)
     
 # 多重继承时有先后顺序，从右开始，广度优先    
 class CommentPostView(LoginRequiredMixin, FormView):
@@ -149,8 +165,8 @@ class CommentPostView(LoginRequiredMixin, FormView):
         return render(self.request, 'blog/detail.html', {
             'form': form,
             'article': target_article,
-            'comment_list': target_article.blogcomment_set.all(),
-            'comment_nums': target_article.blogcomment_set.count()
+            'comment_list': target_article.comment.all(),
+            'comment_nums': target_article.comment.count()
         })
 
 class LoginView(FormView):

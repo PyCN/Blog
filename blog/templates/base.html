@@ -17,7 +17,7 @@
         </ul>
         <div id="header-right" class="login">
             <div id="user">
-            <!-- 不可使用request.session['username'], 模板中的语句都不带参数-->
+            {# 不可使用request.session['username'], 模板中的语句都不带参数 #}
             {% if request.session.username %}
                 <a href="{% url 'blog:logout' %}">{{ request.session.username }}</a>
             {% else %}

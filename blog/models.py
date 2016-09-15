@@ -82,8 +82,8 @@ class BlogComment(models.Model):
     # user_email = models.EmailField('评论者邮箱', max_length=255)
     body = models.TextField('评论内容')
     created_time = models.DateTimeField('评论发表时间', auto_now_add=True)
-    commentator = models.ForeignKey(User, verbose_name='用户', related_name='commentator_set', on_delete=models.CASCADE)
-    article = models.ForeignKey('Article', verbose_name='评论所属文章', on_delete=models.CASCADE)
+    commentator = models.ForeignKey(User, verbose_name='用户', related_name='commentator', on_delete=models.CASCADE)
+    article = models.ForeignKey('Article', verbose_name='评论所属文章', related_name='comment', on_delete=models.CASCADE)
 
     def __unicode__(self):
         return self.body[:20]
