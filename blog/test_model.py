@@ -11,7 +11,7 @@ from models import Article, Category, Tag, BlogComment, UserProfile
 
 class ArticleTests(TestCase):
 
-    def test_meta(self):
+    def test_meta_order(self):
         delta_time_20s = timezone.timedelta(seconds=20)
         delta_time_30s = timezone.timedelta(seconds=30)
         time1 = timezone.now()

@@ -28,7 +28,7 @@ class LoginRequiredMixin(object):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
     
-
+#LoginRequiredMixin放最左边,多重继承时有先后顺序，从右开始，广度优先    
 class AccountView(LoginRequiredMixin, ListView):
     template_name = "blog/index.html"
     context_object_name = "article_list"
@@ -36,9 +36,6 @@ class AccountView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # 一篇文章多个评论，只能过滤出一个文章, distinct无参数,如果需要过滤具体的不重复参数（如不重复的title）,可以.values('title').distince()
         article_list = Article.objects.filter(comment__commentator__username=self.request.user.username, status='p').distinct()
-        for i,article in enumerate(article_list):
-            if article in article_list[:i]:
-                articlelist.remove(article)
         return article_list
 
     
@@ -146,7 +143,6 @@ class ArchiveView(ListView):
         return super(ArchiveView, self).get_context_data(**kwargs)
 
     
-# 多重继承时有先后顺序，从右开始，广度优先    
 class CommentPostView(LoginRequiredMixin, FormView):
     form_class = BlogCommentForm
     template_name = 'blog/detail.html'
@@ -187,6 +183,7 @@ class LoginView(FormView):
         # print user
         if user and user.is_active:
             auth.login(self.request, user)
+            # 利用session传递信息给模板层
             self.request.session['username'] = username
             return HttpResponseRedirect('/')
             # 在模板中处理的session的用户信息，所以不用返回具体的user

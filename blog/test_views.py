@@ -15,10 +15,44 @@ except:
 
 from models import Article, ArticleManage, Category, Tag, BlogComment, UserProfile
 
-def create_article():
-    # time_2011_8 = datetime.datetime(2011, 8, 22, 11, 23, 45, 564, tzinfo=pytz.utc)
-    # article2 = Article.objects.create(title='title2', body='article',created_time=time_2011_8,\
-    pass
+class AccountViewTests(TestCase):
+    
+    def setUp(self):
+        category1 = Category.objects.create(name='category1')
+        user1 = User.objects.create_user(username='111@qq.com',password='111')
+        userprofile1 = UserProfile.objects.create(user=user1, nickname='ctg1', phone=111)
+        user2 = User.objects.create_user(username='222@qq.com',password='222')
+        userprofile2 = UserProfile.objects.create(user=user2, nickname='ctg2', phone=222)
+        article1 = Article.objects.create(title='title1', body='article',status='p', category=category1)
+        BlogComment.objects.create(body='body1_user1', commentator=user1, article=article1)
+        article2 = Article.objects.create(title='title2', body='article',status='p')
+        BlogComment.objects.create(body='body2_user2', commentator=user2, article=article2)
+        article3 = Article.objects.create(title='title3', body='article',status='p')
+        BlogComment.objects.create(body='body3_user2', commentator=user2, article=article3)
+        BlogComment.objects.create(body='body3_user2_2', commentator=user2, article=article3)
+        article4 = Article.objects.create(title='title4', body='article',status='p')
+        BlogComment.objects.create(body='body4_user2_2', commentator=user2, article=article3)
+        article4.status='d'
+        article4.save()
+        
+    def test_get_queryset_with_login(self):
+        '''
+        未发表的文章不能显示, 不能有重复的文章
+        '''
+        self.client.login(username='222@qq.com', password='222')
+        response = self.client.get(reverse('blog:account'))
+        self.assertQuerysetEqual(response.context[2]['article_list'],['<Article: title3>', '<Article: title2>'])
+        
+    def test_get_queryset_without_login(self):
+        response = self.client.get(reverse('blog:account'), follow=True)
+        self.assertEqual(response.redirect_chain, [('http://testserver/accounts/login/?next=/account', 302)])
+
+    def test_get_context_data(self):
+        self.client.login(username='222@qq.com', password='222')
+        response = self.client.get(reverse('blog:account'))
+        time_now = timezone.now()
+        self.assertQuerysetEqual(response.context[1]['date_archive'],['(%s, [%s])' % (time_now.year, time_now.month)])
+        self.assertQuerysetEqual(response.context[1]['category_list'],['<Category: category1>'])
 
 class IndexViewTests(TestCase):
     
@@ -251,6 +285,44 @@ class RegistTests(TestCase):
         self.assertContains(response, '111@qq.com')
         self.assertEqual(response.context['regist_info'], 'input error')
 
+        
+class LoginTests(TestCase):
+    
+    def setUp(self):
+        user1 = User.objects.create_user(username='111@qq.com', password='111') 
+        user_profile = UserProfile.objects.create(user=user1, phone=111, nickname='ctg1')
+        user2 = User.objects.create_user(username='222@qq.com', password='222')
+        user2.is_active=False
+        user2.save()
+    
+    def test_login_with_unexisted_account_and_wrond_username(self):
+        response = self.client.post(reverse('blog:login'), {'username':'333@qq.com', 'password':'111'}, follow=True)
+        self.assertEqual(response.context['login_info'], "Username or password is error")
+        
+    def test_login_with_wrong_password(self):
+        response = self.client.post(reverse('blog:login'), {'username':'111@qq.com', 'password':'222'}, follow=True)
+        self.assertEqual(response.context['login_info'], "Username or password is error")
+     
+    def test_login_with_right(self):
+        response = self.client.post(reverse('blog:login'), {'username':'111@qq.com', 'password':'111'}, follow=True)
+        self.assertContains(response, '111@qq.com')
+        self.assertContains(response, '评论过的文章')
+        
+    def test_login_with_unactive_account(self):
+        response = self.client.post(reverse('blog:login'), {'username':'222@qq.com', 'password':'222'}, follow=True)
+        self.assertEqual(response.context['login_info'], "Username or password is error")
+        
+    def test_login_with_invalid_form(self):
+        response = self.client.post(reverse('blog:login'), {'username':'111@qq.com', 'password_false':'222'}, follow=True)
+        self.assertEqual(response.context['login_info'], "input error")
+        self.assertContains(response, '111@qq.com')
+        response = self.client.post(reverse('blog:login'), {'username_false':'111@qq.com', 'password':'222'}, follow=True)
+        self.assertEqual(response.context['login_info'], "input error")
+        print response.content
+        print response.context
+        self.assertFalse('111@qq.com' in response.content)
+        
+    
 
 class LogoutTests(TestCase):
 
