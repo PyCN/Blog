@@ -16,7 +16,7 @@
         <hr>
         {% for comment in comment_list %}
             <div class="main-content">
-                {% if comment.commentator.userprofile.nickname %}
+                {% if comment.commentator %}
                     <span class="user-nickname">{{ comment.commentator.userprofile.nickname }}</span>
                 {% else %}
                     <span class="user-nickname">{{ comment.commentator}}</span>

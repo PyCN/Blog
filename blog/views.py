@@ -253,6 +253,7 @@ def regist(request):
                     user_profile = UserProfile()
                     user_profile.user_id = user.id
                     user_profile.phone = phone
+                    user_profile.nickname = nickname
                     user_profile.save()
                     regist_info = '注册成功'
                     return render_to_response('blog/regist.html', RequestContext(request, {'form': form,'regist_info':regist_info}))

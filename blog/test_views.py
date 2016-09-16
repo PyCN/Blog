@@ -218,6 +218,9 @@ class RegistTests(TestCase):
         response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'nickname':'ctg', 'password1':'password', 'password2':'password', 'phone':'111'})
         self.assertEqual(response.context['regist_info'], u'注册成功')
         self.assertTrue(self.client.login(username='111@qq.com', password='password'))
+        user = User.objects.get(id=1)
+        self.assertEqual(user.userprofile.nickname, 'ctg')
+        self.assertEqual(user.userprofile.phone, '111')
 
     def test_regist_with_existed_username(self):
         user = User.objects.create_user(username='111@qq.com',password='111')
@@ -242,6 +245,9 @@ class RegistTests(TestCase):
 
     def test_regist_with_invalid_form(self):
         response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'nickname':'ctg', 'password1':'password', 'password':'password', 'phone':'111'})
+        self.assertContains(response, '111@qq.com')
+        self.assertEqual(response.context['regist_info'], 'input error')
+        response = self.client.post(reverse('blog:regist'), {'username':'111@qq.com', 'nickname':'ctg', 'password1':'password', 'password2':'password'})
         self.assertContains(response, '111@qq.com')
         self.assertEqual(response.context['regist_info'], 'input error')
 
