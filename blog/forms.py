@@ -32,12 +32,16 @@ class RetrieveForm(forms.Form):
                                error_messages={'required':'请再次输入新密码'})
     
 
-class BlogCommentForm(forms.ModelForm):
-    class Meta:
+class BlogCommentForm(forms.Form):
+    body = forms.CharField(required=True, widget=forms.Textarea(attrs={'placeholder': '我来评两句~'}))
+    
+    '''class Meta:
         model = BlogComment
+        
         fields = ['body']
+        fields.is_required = True
         widgets = {'body': forms.Textarea(attrs={'placeholder': '我来评两句~'})}
-        '''
+        
         widgets = {
             'user_name': forms.TextInput(attrs={
                 'class': 'form-control',

@@ -34,8 +34,11 @@ class AccountView(LoginRequiredMixin, ListView):
     context_object_name = "article_list"
 
     def get_queryset(self):
-        # 置顶的要在前面,要排列多个顺序是，依次添加进去即可
-        article_list = Article.objects.filter(comment__commentator__username=self.request.user.username, status='p')
+        # 一篇文章多个评论，只能过滤出一个文章, distinct无参数,如果需要过滤具体的不重复参数（如不重复的title）,可以.values('title').distince()
+        article_list = Article.objects.filter(comment__commentator__username=self.request.user.username, status='p').distinct()
+        for i,article in enumerate(article_list):
+            if article in article_list[:i]:
+                articlelist.remove(article)
         return article_list
 
     
@@ -153,10 +156,12 @@ class CommentPostView(LoginRequiredMixin, FormView):
         target_article = get_object_or_404(Article, pk=self.kwargs['article_id'])
         if target_article.status == 'd':
             return HttpResponseRedirect('/')
-        comment = form.save(commit=False)
+        body = form.cleaned_data['body']
+        BlogComment.objects.create(commentator=self.request.user, body=body, article=target_article)
+        '''comment = form.save(commit=False)
         comment.commentator = self.request.user
         comment.article = target_article
-        comment.save()
+        comment.save()'''
         self.success_url = reverse('blog:detail', args=(target_article.id,))
         return HttpResponseRedirect(self.success_url)
 
