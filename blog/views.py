@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.utils import timezone
+# from django.views.decorators.cache import cache_page #缓存  
 
 import qrcode
 from cStringIO import StringIO
