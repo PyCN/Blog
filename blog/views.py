@@ -12,7 +12,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.utils import timezone
-# from django.views.decorators.cache import cache_page #缓存  
+# 缓存推荐在urls那里添加
+from django.views.decorators.cache import cache_page #缓存  
 
 import qrcode
 from cStringIO import StringIO
@@ -22,6 +23,11 @@ from blog.models import Article, Category, Tag, BlogComment, UserProfile
 from .forms import BlogCommentForm, UserForm, RegistForm, RetrieveForm
 
 
+class CachePageMixin(object):
+    @classmethod
+    def as_view(cls, **initkargs):
+        view = super(CachePageMixin, cls).as_view(**initkargs)
+        return cache_page(60 * 120)(view)
 
 class LoginRequiredMixin(object):
     @classmethod
@@ -53,7 +59,6 @@ class IndexView(ListView):
     context_object_name = "article_list"
 
     def get_queryset(self):
-        # 置顶的要在前面,要排列多个顺序是，依次添加进去即可
         article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p')
         return article_list
 

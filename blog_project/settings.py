@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'pygments',
 ]
 
-
+# 不要轻易缓存站点，不然登陆、登出等容易出问题
 MIDDLEWARE_CLASSES = [
-    'django.middleware.cache.UpdateCacheMiddleware',#缓存站点 增加 必须放最上  
+    #'django.middleware.cache.UpdateCacheMiddleware',#缓存站点 增加 必须放最上  
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,11 +53,11 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',#缓存站点 增加 必须放最后  
+    #'django.middleware.cache.FetchFromCacheMiddleware',#缓存站点 增加 必须放最后  
 ]
 
-CACHE_MIDDLEWARE_ALIAS = 'default'  #缓存站点 
-CACHE_MIDDLEWARE_SECONDS = 60 * 60 #缓存站点 失效的时间 秒  
+#CACHE_MIDDLEWARE_ALIAS = 'default'  #缓存站点 
+#CACHE_MIDDLEWARE_SECONDS = 60 * 60 #缓存站点 失效的时间 秒  
 
 ROOT_URLCONF = 'blog_project.urls'
 

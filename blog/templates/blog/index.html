@@ -36,6 +36,9 @@
                                     <a href="{% url 'blog:detail' article.id %}" class="more">阅读全文>></a>
                                     <i class="icon-date"></i>
                                     <span class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
+                                    <i class='icon-praise'></i>
+                                    <span>20</span>
+                                    <span>yueduliang</span>
                                 </div>
                             </div>
                         {% endfor %}
