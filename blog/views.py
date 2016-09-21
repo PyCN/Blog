@@ -113,8 +113,6 @@ class TagView(ListView):
 
     def get_queryset(self):
         article_list = Article.objects.filter(tags=self.kwargs['tag_id'], status='p')
-        # for article in article_list:
-            # article.body = markdown2.markdown(article.body, extras=['fenced-code-blocks'], )
         return article_list
 
     def get_context_data(self, **kwargs):
@@ -132,14 +130,6 @@ class ArchiveView(ListView):
         year = int(self.kwargs['year'])
         month = int(self.kwargs['month'])
         article_list = Article.objects.filter(status='p', created_time__year=year, created_time__month=month)
-        # 保存文章摘要，现已在models中添加save方法
-        # for article in article_list:
-        #     if not article.abstract:
-        #         if len(article.body) < 54:
-        #             article.abstract = article.body
-        #         else:
-        #             article.abstract = article.body[:54]
-        #     article.save()
         return article_list
 
     def get_context_data(self, **kwargs):
@@ -192,42 +182,15 @@ class LoginView(FormView):
             # 利用session传递信息给模板层
             self.request.session['username'] = username
             return HttpResponseRedirect('/')
-            # 在模板中处理的session的用户信息，所以不用返回具体的user
-            # return render_to_response('blog/index.html', RequestContext(self.request, {'username':username}))
         else:
             login_info = "Username or password is error"
             return render(self.request, 'blog/login.html', {'form': form,'login_info':login_info})
-            # render is beautiful
-            return render_to_response('blog/login.html', RequestContext(self.request, {'form': form,'login_info':login_info}))
     
     def form_invalid(self, form):
         login_info = 'input error'
         return render_to_response('blog/login.html', RequestContext(self.request, {'form': form, 'login_info':login_info}))
        
-        
-# 使用LoginView，此处函数不生效，仅供参考      
-def login(request):
-    login_info = ''
-    if request.method == 'GET':
-        form = UserForm()
-        return render_to_response('blog/login.html', RequestContext(request, {'form':form}))
-    else:
-        form = UserForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = auth.authenticate(username=username, password=password)
-            # print user
-            if user is not None and user.is_active:
-                auth.login(request, user)
-                return render_to_response('blog/index.html', RequestContext(request, {'username':username}))
-            else:
-                login_info = "Username or password is error"
-                return render_to_response('blog/login.html', RequestContext(request, {'form': form,'login_info':login_info}))
-        else:
-            login_info = 'input error'
-            return render_to_response('blog/login.html', RequestContext(request, {'form': form, 'login_info':login_info}))
-            
+           
             
 def regist(request):
     regist_info = ''
@@ -238,8 +201,6 @@ def regist(request):
         
         # thise are the same
         return render(request, 'blog/regist.html', contents)
-        return render(request, 'blog/regist.html', {'form':form})
-        return render_to_response('blog/regist.html', RequestContext(request, {'form':form}))
     else:
         form = RegistForm(request.POST)
         if form.is_valid():
