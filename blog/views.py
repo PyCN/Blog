@@ -81,6 +81,9 @@ class ArticleDetailView(DetailView):
         # 未发表文章不能显示
         if obj.status == 'd':
             raise Http404
+        obj.views += 1
+        print obj.views
+        obj.save()
         obj.body = markdown2.markdown(obj.body,['codehilite'], extras=['fenced-code-blocks'])
         return obj
 

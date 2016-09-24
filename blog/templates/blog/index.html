@@ -37,8 +37,8 @@
                                     <i class="icon-date"></i>
                                     <span class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
                                     <i class='icon-praise'></i>
-                                    <span>20</span>
-                                    <span>yueduliang</span>
+                                    <span>{{ article.likes}}</span>
+                                    <span>阅读量:{{ article.views}}</span>
                                 </div>
                             </div>
                         {% endfor %}
