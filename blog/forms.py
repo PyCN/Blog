@@ -32,6 +32,11 @@ class RetrieveForm(forms.Form):
                                error_messages={'required':'请再次输入新密码'})
     
 
+
+class SearchForm(forms.Form):
+    body_search = forms.CharField(required=True, widget=forms.Textarea(attrs={'placeholder': '输入可能的文章标题'}))
+
+
 class BlogCommentForm(forms.Form):
     body = forms.CharField(required=True, widget=forms.Textarea(attrs={'placeholder': '我来评两句~'}))
     

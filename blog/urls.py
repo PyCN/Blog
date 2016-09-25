@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'^logout$', views.logout, name='logout'),
     url(r'^regist$', cache_page(60)(views.regist), name='regist'),
     url(r'^retrieve$', views.retrieve, name='retrieve'),
+    url(r'^search$', views.search, name='search'),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'blog/login.html'}),
 ]

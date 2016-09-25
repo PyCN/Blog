@@ -57,10 +57,11 @@ class AccountViewTests(TestCase):
 class IndexViewTests(TestCase):
     
     def setUp(self):
+        category = Category.objects.create(name='category')
         self.body_with_53str = '12345678900987654321123456789009876543211234567890123'
         self.body_with_55str = '1234567890098765432112345678900987654321123456789012345'
         article1 = Article.objects.create(title='title1', body=self.body_with_53str,status='p')
-        article2 = Article.objects.create(title='title2', body=self.body_with_55str,status='p', topped=True)
+        self.article2 = Article.objects.create(title='title2', body=self.body_with_55str,status='p', topped=True, views=20, category=category)
         time_3  = timezone.now() - timezone.timedelta(seconds=20)
         article3 = Article.objects.create(title='title3', body='article',created_time=time_3,last_modified_time=time_3, status='p', topped=True)
         time_4 = timezone.now() - timezone.timedelta(seconds=30)
@@ -76,6 +77,13 @@ class IndexViewTests(TestCase):
         self.assertEqual(response.context[2]['article_list'][0].abstract,self.body_with_55str[:54])
         self.assertEqual(response.context[2]['article_list'][2].abstract,self.body_with_53str)
         self.assertQuerysetEqual(response.context[2]['article_list'],['<Article: title2>', '<Article: title3>','<Article: title1>', '<Article: title5>','<Article: title4>',])
+
+    def test_article_views(self):
+        # 获取两次页面以增加阅读量
+        response = self.client.get(reverse('blog:detail',args=(self.article2.id,)))
+        response = self.client.get(reverse('blog:detail',args=(self.article2.id,)))
+        response = self.client.get(reverse('blog:index'))
+        self.assertContains(response, 21)
 
     def test_get_context_data(self):
         response = self.client.get(reverse('blog:index'))
@@ -318,8 +326,6 @@ class LoginTests(TestCase):
         self.assertContains(response, '111@qq.com')
         response = self.client.post(reverse('blog:login'), {'username_false':'111@qq.com', 'password':'222'}, follow=True)
         self.assertEqual(response.context['login_info'], "input error")
-        print response.content
-        print response.context
         self.assertFalse('111@qq.com' in response.content)
         
     

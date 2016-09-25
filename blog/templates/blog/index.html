@@ -5,6 +5,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-9">
+                {% include 'blog/search.html' %}
                 <div id="category" class="noselect">
                     <div id="category-title">
                         <ul>
@@ -36,8 +37,8 @@
                                     <a href="{% url 'blog:detail' article.id %}" class="more">阅读全文>></a>
                                     <i class="icon-date"></i>
                                     <span class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
-                                    <i class='icon-praise'></i>
-                                    <span>{{ article.likes}}</span>
+                                    <!--i class='icon-praise'></i>-->
+                                    <span>点赞:{{ article.likes}}</span>
                                     <span>阅读量:{{ article.views}}</span>
                                 </div>
                             </div>

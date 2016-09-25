@@ -20,7 +20,7 @@ from cStringIO import StringIO
 import markdown2
 
 from blog.models import Article, Category, Tag, BlogComment, UserProfile
-from .forms import BlogCommentForm, UserForm, RegistForm, RetrieveForm
+from .forms import * 
 
 
 class CachePageMixin(object):
@@ -82,7 +82,6 @@ class ArticleDetailView(DetailView):
         if obj.status == 'd':
             raise Http404
         obj.views += 1
-        print obj.views
         obj.save()
         obj.body = markdown2.markdown(obj.body,['codehilite'], extras=['fenced-code-blocks'])
         return obj
@@ -194,6 +193,22 @@ class LoginView(FormView):
         return render_to_response('blog/login.html', RequestContext(self.request, {'form': form, 'login_info':login_info}))
        
            
+def search(request):
+
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        print 'search_post'
+        if form.is_valid():
+            body_search = form.cleaned_data['body_search']
+            article_list = Article.objects.filter(title__icontains=body_search).distinct()
+            return render(request, 'blog/index.html', {'article_list':article_list})
+        else:
+            return render(request, 'blog/index.html')
+    else:
+        form = SearchForm()
+        print 'search'
+        return render(request, 'blog/search.html', {'form':form})
+
             
 def regist(request):
     regist_info = ''
