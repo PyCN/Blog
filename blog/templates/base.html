@@ -12,6 +12,7 @@
 <div id="header">
     <div id="header-warp">
         <a href="/admin" title="第一个博客" id="logo"></a>
+        
         <ul id="header-nav">
             <li><a href="{% url 'blog:index' %}">首页</a></li>
         </ul>
@@ -26,17 +27,18 @@
                 <a href="{% url 'blog:login' %}">登陆</a>
             {% endif %}
             </div>
+            
         </div>
         <div id='header-middle' class='qrcode'>
             <form method='post' action='{% url "blog:qrcode" %}'>
                {% csrf_token %}
                 <p>
-                    <label for='target_url'>要转换的url</label>
                     <input name='target_url' type='text' placeholder="if leave empty, it will be current url">
-                    <input class='btn btn-primary' type='submit' value="生成二维码">
+                    <input class='generate_qrcode' type='submit' value="生成二维码">
                 </p>
             </form>
         </div>
+        {% include 'blog/search.html' %}
     </div>
 </div>
 

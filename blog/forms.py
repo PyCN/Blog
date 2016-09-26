@@ -34,7 +34,7 @@ class RetrieveForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    body_search = forms.CharField(required=True, widget=forms.Textarea(attrs={'placeholder': '输入可能的文章标题'}))
+    body_search = forms.CharField(required=True)
 
 
 class BlogCommentForm(forms.Form):

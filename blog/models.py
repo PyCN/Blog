@@ -93,10 +93,11 @@ class UserProfile(models.Model):
     phone=models.CharField(max_length=20) 
     nickname = models.CharField(max_length=255)
     
+'''    
 class Search(models.Model):
     body_search = models.CharField(max_length=255) 
     
     def __unicode__(self):
         return self.body_search
-        
+'''        
        
