@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 from django import template
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
@@ -45,7 +45,8 @@ def get_left(current_page, left, num_pages):
     if current_page == 1:
         return []
     elif current_page == num_pages:
-        l = [i - 1 for i in range(current_page, current_page - left, -1) if i - 1 > 1]
+        l = [i - 1 for i in range(current_page,
+                                  current_page - left, -1) if i - 1 > 1]
         l.sort()
         return l
     l = [i for i in range(current_page, current_page - left, -1) if i > 1]
