@@ -494,6 +494,33 @@ class RetrieveTests(TestCase):
         self.assertEqual(response.context['retrieve_info'], 'input error')
 
 
+class SearchTests(TestCase):
+
+    def setUp(self):
+        for i in range(20):
+            Article.objects.create(
+                title='title%s' % str(i), body='article', status='p')
+
+    def test_search_with_get(self):
+        response = self.client.get(reverse('blog:search'), follow=True)
+        self.assertEqual(response.redirect_chain, [
+                         ('http://testserver/', 302)])
+
+    def test_search_with_none(self):
+        response = self.client.post(reverse('blog:search'), follow=True)
+        self.assertEqual(response.redirect_chain, [
+                         ('http://testserver/', 302)])
+        response = self.client.post(
+            reverse('blog:search'), {'body_search':''}, follow=True)
+        self.assertEqual(response.redirect_chain, [
+                         ('http://testserver/', 302)])
+        
+    def test_search_with_all(self):
+        response = self.client.post(
+            reverse('blog:search'), {'body_search':'titile'}, follow=True)
+        print response.context
+        print response.content
+
 class GenerateQrcodeTests(TestCase):
 
     def test_qrcode_with_get(self):
@@ -502,7 +529,8 @@ class GenerateQrcodeTests(TestCase):
                          ('http://testserver/', 302)])
 
     def test_qrcode_without_target_url(self):
-        response = self.client.post(reverse('blog:qrcode'), follow=True)
+        response = self.client.post(reverse('blog:qrcode'), 
+                                    {'body_search':''}, follow=True)
         self.assertEqual(response.redirect_chain, [
                          ('http://testserver/', 302)])
 

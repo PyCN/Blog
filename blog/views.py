@@ -198,16 +198,14 @@ def search(request):
 
     if request.method == 'POST':
         form = SearchForm(request.POST)
-        print 'search_post'
         if form.is_valid():
             body_search = form.cleaned_data['body_search']
             article_list = Article.objects.filter(Q(title__icontains=body_search) | Q(body__icontains=body_search)).distinct()
             return render(request, 'blog/index.html', {'article_list':article_list})
         else:
-            return render(request, 'blog/index.html')
+            return HttpResponseRedirect('/')
     else:
-        form = SearchForm()
-        return render(request, 'blog/index.html', {'form':form})
+        return HttpResponseRedirect('/')
 
             
 def regist(request):
