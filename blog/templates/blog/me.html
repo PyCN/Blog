@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+{% load django_markdown %}
+
+{% block breadcrumb_nav %}
+<div class="scp-breadcrumb">
+    <ul class="breadcrumb">
+        <li><a href="{% url 'home' %}"><i>Home</i></a></li>
+        <li class="active"><i>Me</i></li>
+    </ul>
+</div>
+{% endblock breadcrumb_nav %}
+
+{% block main %}
+    <img src="media/{{ me.avator }}" class="img-responsive" alt="Responsive image" style="height: 500px;">
+    <p><i><b>Name: </b>{{ me.name }}</i></p>
+    {% if me.is_show_email %}
+      <p><i><b>Email: </b>{{ me.email }}</i></p>
+    {% endif %}
+    {% if me.is_show_github %}
+      <p><i><b>GitHub: </b>{{ me.github }}</i></p>
+    {% endif %}
+    {% if me.is_show_weibo %}
+      <p><i><b>Weibo: </b>{{ me.weibo }}</i></p>
+    {% endif %}
+    {% if me.is_show_idea %}
+      <p><i><b>Idea: </b>{{ me.idea }}</i></p>
+    {% endif %}
+{% endblock main %}

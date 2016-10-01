@@ -205,6 +205,8 @@ def search(request):
         else:
             return HttpResponseRedirect('/')
     else:
+        body_search = request.GET{'body_search'}
+        print body_search
         return HttpResponseRedirect('/')
 
             
