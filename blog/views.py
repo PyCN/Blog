@@ -19,6 +19,7 @@ from django.views.decorators.cache import cache_page #缓存
 import qrcode
 from cStringIO import StringIO
 import markdown2
+from haystack.views import SearchView
 
 from blog.models import Article, Category, Tag, BlogComment, UserProfile
 from .forms import * 
@@ -192,7 +193,15 @@ class LoginView(FormView):
     def form_invalid(self, form):
         login_info = 'input error'
         return render_to_response('blog/login.html', RequestContext(self.request, {'form': form, 'login_info':login_info}))
-       
+      
+class MySearchView(SearchView, ListView):
+    
+    template_name = 'search/search.html'
+    def extra_context(self):
+        context = super(MySearchView, self).extra_context()
+        side_list = Article.objects.filter(status='p')
+        context['side_list'] = side_list
+        return context
            
 def search(request):
 
@@ -208,7 +217,9 @@ def search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             body_search = form.cleaned_data['body_search']
-            article_list = Article.objects.filter(Q(title__icontains=body_search) | Q(body__icontains=body_search)).distinct()
+            #article_list = Article.objects.filter(Q(title__icontains=body_search) | Q(body__icontains=body_search)).distinct()
+            article_list = form.search()
+            print '----debug---'
             return render(request, 'blog/index.html', {'article_list':article_list})
         else:
             return HttpResponseRedirect('/')

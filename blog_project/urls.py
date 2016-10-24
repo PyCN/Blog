@@ -19,5 +19,6 @@ from blog import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'', include('blog.urls', namespace='blog', app_name='blog'))
+    url(r'^search/', include('haystack.urls', namespace='haystack', app_name='haystack')),  
+    url(r'', include('blog.urls', namespace='blog', app_name='blog')),
 ]
