@@ -54,6 +54,9 @@ class Article(models.Model):
                 self.abstract = self.body[:54]
         super(Article, self).save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse('blog:detail', kwargs={'article_id': self.pk})
+
     class Meta:
         ordering = ['-topped', '-created_time', '-last_modified_time']
 
