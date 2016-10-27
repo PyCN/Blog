@@ -9,9 +9,11 @@ __pycache__/
 
 # C extensions
 *.so
-
+whoosh_index/
 # Distribution / packaging
 .Python
+/
+datas/
 env/
 build/
 develop-eggs/
