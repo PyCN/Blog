@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Myblog</title>
+    <script type="text/javascript" src="{% static 'blog/js/jquery.js' %}"></script>
+    <script >
+        $(document).ready(function(){
+            $("p").css("backgroud-color", "red").slideUp(2000).slideDown(2000);
+        });
+    </script>
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'blog/css/pygments/github.css' %}">
     <link rel="stylesheet" href="{% static 'lib/css/bootstrap.min.css' %}">
