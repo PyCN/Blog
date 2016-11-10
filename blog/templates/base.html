@@ -4,15 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Myblog</title>
-    <script type="text/javascript" src="{% static 'blog/js/jquery.js' %}"></script>
-    <script >
-        $(document).ready(function(){
-            $("p").css("backgroud-color", "red").slideUp(2000).slideDown(2000);
-        });
-    </script>
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'blog/css/pygments/github.css' %}">
     <link rel="stylesheet" href="{% static 'lib/css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'blog/js/jquery-3.1.1.js' %}"></script>
+    <script type="text/javascript" src="{% static 'blog/js/django.js' %}"></script>
+    <script type="text/javascript">
+        function submit_qrcode(){
+            $.post('qrcode', {'target_url':'www'}, function(result){($('body').html(result))})
+        }
+        $(document).ready(function(){
+            $("p").css("backgroud-color", "red").slideUp(1000).slideDown(1000);
+            $('input.generate_qrcode').click(submit_qrcode);
+        });
+    </script>
 </head>
 <body>
 <div id="header">
@@ -36,12 +41,14 @@
             
         </div>
         <div id='header-middle' class='qrcode'>
-            <form method='post' action='{% url "blog:qrcode" %}'>
+            <!--form method='post' action='{% url "blog:qrcode" %}'-->
+            <form>
                {% csrf_token %}
-                <p>
-                    <input name='target_url' type='text' placeholder="if leave empty, it will be current url">
-                    <input class='generate_qrcode' type='submit' value="生成二维码">
-                </p>
+                <input name='target_url' type='text' placeholder="if leave empty, it will be current url">
+                <input type='button' class='generate_qrcode'value="生成二维码" >
+                <!--下面的方法会报错，ajaxStart状态出问题,因为button在firefox中默认type=submit,并且还漏了</button>
+                <button class='generate_qrcode'value="生成二维码" onclick='submit_qrcode()'>
+                -->
             </form>
         </div>
         {#% include 'search/search.html' %}
@@ -59,8 +66,5 @@
     </ul>
     <div id="copyright">&copy; djangoBlog</div>
 </div>
-<script type="text/javascript" src="{% static 'blog/js/jquery.js' %}"></script>
-
-<script type="text/javascript" src="{% static 'lib/js/bootstrap.min.js' %}"></script>
 </body>
 </html>
