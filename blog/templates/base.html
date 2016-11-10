@@ -50,8 +50,12 @@
                 <button class='generate_qrcode'value="生成二维码" onclick='submit_qrcode()'>
                 -->
             </form>
+            <form method='get' action='{% url "haystack:haystack_search" %}'>
+               {% csrf_token %}
+                <input name='q' id='id_q' placeholder="输入要搜索的关键字">
+                <input id='search' value="搜索" type='submit'>
+            </form>
         </div>
-        {#% include 'search/search.html' %}
     </div>
 </div>
 
