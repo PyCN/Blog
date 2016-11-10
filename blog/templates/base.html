@@ -7,16 +7,37 @@
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'blog/css/pygments/github.css' %}">
     <link rel="stylesheet" href="{% static 'lib/css/bootstrap.min.css' %}">
+    <style>
+        #tooltip{
+            position:absolute;
+            border:1px solid #ccc;
+            background:#333;
+            padding:2px;
+            display:none;
+            color:#fff;
+        }
+    </style>
     <script type="text/javascript" src="{% static 'blog/js/jquery-3.1.1.js' %}"></script>
     <script type="text/javascript" src="{% static 'blog/js/django.js' %}"></script>
     <script type="text/javascript">
-        function submit_qrcode(){
-            $.post('qrcode', {'target_url':'www'}, function(result){($('body').html(result))})
-        }
         $(document).ready(function(){
             $("p").css("backgroud-color", "red").slideUp(1000).slideDown(1000);
             $('input.generate_qrcode').click(submit_qrcode);
         });
+        function submit_qrcode(){
+            $.post(
+                'qrcode', 
+                {'target_url':'www'},
+                function(result){
+                    console.log('start');
+                    $('body').append('<div><img class="shrinkToFit" width="278" height="278"></div>').css({
+                        "top":'20px',
+                        "left":'20px'});
+                    $('img.shrinkToFit').attr("src", "data:image/png;base64," + result);
+                    console.log('end');
+                }
+            )
+        }
     </script>
 </head>
 <body>
@@ -42,10 +63,10 @@
         </div>
         <div id='header-middle' class='qrcode'>
             <!--form method='post' action='{% url "blog:qrcode" %}'-->
-            <form>
+            <form method='post' action='{% url "blog:qrcode" %}'>
                {% csrf_token %}
                 <input name='target_url' type='text' placeholder="if leave empty, it will be current url">
-                <input type='button' class='generate_qrcode'value="生成二维码" >
+                <input type='button' class='generate_qrcode' value="生成二维码" >
                 <!--下面的方法会报错，ajaxStart状态出问题,因为button在firefox中默认type=submit,并且还漏了</button>
                 <button class='generate_qrcode'value="生成二维码" onclick='submit_qrcode()'>
                 -->

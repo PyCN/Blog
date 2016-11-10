@@ -330,6 +330,8 @@ def generate_qrcode(request):
         buf = StringIO()
         img.save(buf)
         image_stream = buf.getvalue()
+        import base64
+        image_stream = base64.b64encode(image_stream)
 
         response = HttpResponse(image_stream, content_type='image/png')
         return response
