@@ -26,17 +26,20 @@
         });
         function submit_qrcode(){
             $.post(
-                'qrcode', 
-                {'target_url':'www'},
+                '/qrcode', 
+                {'target_url': $('input[name=target_url]').val()},
                 function(result){
-                    console.log('start');
-                    $('body').append('<div><img class="shrinkToFit" width="278" height="278"></div>').css({
-                        "top":'20px',
-                        "left":'20px'});
-                    $('img.shrinkToFit').attr("src", "data:image/png;base64," + result);
-                    console.log('end');
-                }
-            )
+                    var tooltip = "<div id='tooltip'><img class='qrcode' title='点击关闭二维码' alt='生成二维码'><\/div>";
+                    $("body").append(tooltip);	//把它追加到文档中	
+                    // 直接获取图片数据流，base64编码
+                    $('img.qrcode').attr("src", "data:image/png;base64," + result);			 
+                    $("#tooltip")
+                            .css({
+                                "top": "100px",
+                                "left":  "500px"
+                            }).show("fast");
+                    $("#tooltip").click(function(){$("#tooltip").remove();});
+                    })
         }
     </script>
 </head>
@@ -78,6 +81,7 @@
             </form>
         </div>
     </div>
+    
 </div>
 
 {% block content %}{% endblock %}
