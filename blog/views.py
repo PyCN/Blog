@@ -1,5 +1,7 @@
 #coding:utf-8
 
+import os
+
 from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect, Http404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -22,7 +24,7 @@ import markdown2
 from haystack.views import SearchView
 
 from blog.models import Article, Category, Tag, BlogComment, UserProfile
-from .forms import * 
+from .forms import RegistForm, UserForm, RetrieveForm, SearchForm, BlogCommentForm
 
 
 class CachePageMixin(object):
@@ -235,13 +237,14 @@ def regist(request):
         # thise are the same
         return render(request, 'blog/regist.html', contents)
     else:
-        form = RegistForm(request.POST)
+        form = RegistForm(request.POST, request.FILES)
         if form.is_valid():
             username = form.cleaned_data['username']
             password1 = form.cleaned_data['password1']
             password2 = form.cleaned_data['password2']
             nickname = form.cleaned_data['nickname']
             phone     = form.cleaned_data['phone']
+            userimg = form.cleaned_data['userimg']
             if password1 == password2:
                 user_filter_result = User.objects.filter(username=username) 
                 nickname_filter_result = UserProfile.objects.filter(nickname=nickname)
@@ -256,6 +259,12 @@ def regist(request):
                     user_profile.user_id = user.id
                     user_profile.phone = phone
                     user_profile.nickname = nickname
+                    user_profile.userimg = 'blog/static/blog/img/userimg/defaultuser.png'
+                    if userimg:
+                        imgpath = os.path.join('blog/static/blog/img/userimg', username)
+                        with open(imgpath, 'wb') as img:
+                            img.write(userimg.read())
+                        user_profile.userimg = imgpath
                     user_profile.save()
                     regist_info = '注册成功'
                     return render_to_response('blog/regist.html', RequestContext(request, {'form': form,'regist_info':regist_info}))
@@ -263,7 +272,7 @@ def regist(request):
                 regist_info = "两次输入的密码不一致!" 
                 return render_to_response("blog/regist.html", RequestContext(request,{'form':form, 'regist_info':regist_info}))  
         else:
-            regist_info = 'input error'
+            regist_info = '输入有误'
             return render_to_response('blog/regist.html', RequestContext(request, {'form': form, 'regist_info':regist_info}))
         
 @login_required
@@ -323,7 +332,7 @@ def generate_qrcode(request):
         except:
             return HttpResponseRedirect('/')            
             
-        if url_data == "if leave empty, it will be current url":
+        if url_data == '':
             img = qrcode.make(request.get_host())
         else:
             img = qrcode.make(url_data)

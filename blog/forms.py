@@ -12,7 +12,8 @@ class RegistForm(forms.Form):
                                 error_messages={'required': '请输入密码'})
     password2 = forms.CharField(required=True, label='确认密码', widget=forms.PasswordInput(),
                                 error_messages={'required': '请再次输入密码'})
-    phone = forms.CharField(required=True, label='手机')
+    phone = forms.CharField(required=True, label='手机', error_messages={'required': '请输入手机'})
+    userimg = forms.ImageField(required=False, label='头像')
 
 
 class UserForm(forms.Form):

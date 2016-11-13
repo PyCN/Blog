@@ -18,7 +18,7 @@
 
     <div class="well">
         <h1>regist</h1>
-        <form class="form-horizontal" action="" method="post">
+        <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <p class="form-actions">

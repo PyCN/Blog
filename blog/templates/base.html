@@ -25,9 +25,13 @@
             $('input.generate_qrcode').click(submit_qrcode);
         });
         function submit_qrcode(){
+            target_url = $('input[name=target_url]').val();
+            if (target_url == ''){
+                target_url = document.URL
+            }
             $.post(
                 '/qrcode', 
-                {'target_url': $('input[name=target_url]').val()},
+                {'target_url': target_url},
                 function(result){
                     var tooltip = "<div id='tooltip'><img class='qrcode' title='点击关闭二维码' alt='生成二维码'><\/div>";
                     $("body").append(tooltip);	//把它追加到文档中	
@@ -68,7 +72,7 @@
             <!--form method='post' action='{% url "blog:qrcode" %}'-->
             <form method='post' action='{% url "blog:qrcode" %}'>
                {% csrf_token %}
-                <input name='target_url' type='text' placeholder="if leave empty, it will be current url">
+                <input name='target_url' type='text' placeholder="默认为当前网址">
                 <input type='button' class='generate_qrcode' value="生成二维码" >
                 <!--下面的方法会报错，ajaxStart状态出问题,因为button在firefox中默认type=submit,并且还漏了</button>
                 <button class='generate_qrcode'value="生成二维码" onclick='submit_qrcode()'>
