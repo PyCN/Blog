@@ -16,6 +16,9 @@
             display:none;
             color:#fff;
         }
+        #userimg{
+            float: left;
+        }
     </style>
     <script type="text/javascript" src="{% static 'blog/js/jquery-3.1.1.js' %}"></script>
     <script type="text/javascript" src="{% static 'blog/js/django.js' %}"></script>
@@ -56,11 +59,14 @@
             <li><a href="{% url 'blog:index' %}">首页</a></li>
         </ul>
         <div id="header-right" class="login">
-            <div id="user">
+            <div class="user">
             {# 不可使用request.session['username'], 模板中的语句都不带参数 #}
             {% if request.session.username %}
-                <a href="{% url 'blog:logout' %}">{{ request.session.username }}</a>
-                <a href="{% url 'blog:account' %}">评论过的文章</a>
+                <div>
+                    <img id='userimg' src="{{ request.session.userimg }}" heigth='40' width='40'>
+                    <a id='username' href="{% url 'blog:logout' %}" float:left>{{ request.session.username }}</a>
+                    <a id='usercomment' href="{% url 'blog:account' %}">评论过的文章</a>
+                </div>
             {% else %}
                 <a href="{% url 'blog:regist' %}">注册</a>
                 <a href="{% url 'blog:login' %}">登陆</a>

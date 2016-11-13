@@ -187,6 +187,7 @@ class LoginView(FormView):
             auth.login(self.request, user)
             # 利用session传递信息给模板层
             self.request.session['username'] = username
+            self.request.session['userimg'] = user.userprofile.userimg
             return HttpResponseRedirect('/')
         else:
             login_info = "Username or password is error"
@@ -259,14 +260,20 @@ def regist(request):
                     user_profile.user_id = user.id
                     user_profile.phone = phone
                     user_profile.nickname = nickname
-                    user_profile.userimg = 'blog/static/blog/img/userimg/defaultuser.png'
+                    user_profile.userimg = 'static/blog/img/userimg/defaultuser.png'
                     if userimg:
                         imgpath = os.path.join('blog/static/blog/img/userimg', username)
                         with open(imgpath, 'wb') as img:
                             img.write(userimg.read())
-                        user_profile.userimg = imgpath
+                        user_profile.userimg = imgpath[5:]
                     user_profile.save()
                     regist_info = '注册成功'
+                    user = auth.authenticate(username=username, password=password1)
+                    auth.login(request, user)
+                    # 利用session传递信息给模板层
+                    request.session['username'] = username
+                    request.session['userimg'] = user.userprofile.userimg
+                    return HttpResponseRedirect('/')
                     return render_to_response('blog/regist.html', RequestContext(request, {'form': form,'regist_info':regist_info}))
             else:
                 regist_info = "两次输入的密码不一致!" 
