@@ -17,7 +17,13 @@
             color:#fff;
         }
         #userimg{
+            width: 100%;
+            heigth: 100%;
+        }
+        #userimgdiv{
             float: left;
+            width: 40px;
+            heigth: 40px;
         }
     </style>
     <script type="text/javascript" src="{% static 'blog/js/jquery-3.1.1.js' %}"></script>
@@ -62,11 +68,11 @@
             <div class="user">
             {# 不可使用request.session['username'], 模板中的语句都不带参数 #}
             {% if request.session.username %}
-                <div>
-                    <img id='userimg' src="{{ request.session.userimg }}" heigth='40' width='40'>
-                    <a id='username' href="{% url 'blog:logout' %}" float:left>{{ request.session.username }}</a>
-                    <a id='usercomment' href="{% url 'blog:account' %}">评论过的文章</a>
+                <div id='userimgdiv'>
+                    <img id='userimg' src="{{ request.session.userimg }}">
                 </div>
+                <a id='username' href="{% url 'blog:logout' %}" float:left>{{ request.session.username }}</a>
+                <a id='usercomment' href="{% url 'blog:account' %}">评论过的文章</a>
             {% else %}
                 <a href="{% url 'blog:regist' %}">注册</a>
                 <a href="{% url 'blog:login' %}">登陆</a>

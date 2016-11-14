@@ -222,7 +222,6 @@ def search(request):
             body_search = form.cleaned_data['body_search']
             #article_list = Article.objects.filter(Q(title__icontains=body_search) | Q(body__icontains=body_search)).distinct()
             article_list = form.search()
-            print '----debug---'
             return render(request, 'blog/index.html', {'article_list':article_list})
         else:
             return HttpResponseRedirect('/')
@@ -260,12 +259,12 @@ def regist(request):
                     user_profile.user_id = user.id
                     user_profile.phone = phone
                     user_profile.nickname = nickname
-                    user_profile.userimg = 'static/blog/img/userimg/defaultuser.png'
+                    user_profile.userimg = '/static/blog/img/userimg/defaultuser.png'
                     if userimg:
                         imgpath = os.path.join('blog/static/blog/img/userimg', username)
                         with open(imgpath, 'wb') as img:
                             img.write(userimg.read())
-                        user_profile.userimg = imgpath[5:]
+                        user_profile.userimg = imgpath[4:]
                     user_profile.save()
                     regist_info = '注册成功'
                     user = auth.authenticate(username=username, password=password1)
