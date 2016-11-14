@@ -1,4 +1,4 @@
-
+{% load highlight %}
     <h2>Search</h2>  
       
     <form method="get" action=".">  
@@ -17,6 +17,11 @@
       
             {% for result in page.object_list %}  
                 <p>  
+                    {% highlight result.object.abstract with query %}
+
+                    {% highlight result.object.title with query html_tag "div" css_class "highlight_me_please" %}
+
+                    {% highlight result.object.title with query max_length 40 %}
                     <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>  
                 </p>  
             {% empty %}  
