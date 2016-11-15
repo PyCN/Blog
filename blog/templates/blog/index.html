@@ -20,29 +20,54 @@
 
                 <div id="bd" class="wrp clear-fix">
                     <div id="main">
-                        {% load paginate_tags %}
-                        {% paginate article_list 7 %}
-                        {% for article in article_list %}
-                            <div class="post">
+                        {% if query %}  
+                            <h3>Search Results</h3>  
+                            {% load highlight %}
+                            {% for result in page.object_list %}  
                                 <div class="post-hd">
-                                    <h1 class="title"><a
-                                            href="{% url 'blog:detail' article.pk %}">{{ article.title }}</a></h1>
-                                </div>
+                                    <h1 class="title">
+                                        <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
+                                    </h1>
+                                </div>   
                                 <div class="post-bd">
-                                    <p>{{ article.abstract }}</p>
-                                    <p><a href="" class="more-link"></a></p>
+                                    {% highlight result.object.body with query css_class "highlight_me_please" max_length 200 %}
                                 </div>
-                                <div class="post-ft">
-                                    <a href="{% url 'blog:detail' article.id %}" class="more">阅读全文>></a>
-                                    <i class="icon-date"></i>
-                                    <span class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
-                                    <!--i class='icon-praise'></i>-->
-                                    <span>点赞:{{ article.likes}}</span>
-                                    <span>阅读量:{{ article.views}}</span>
+                            {% empty %}  
+                                <p>No results found.</p>  
+                            {% endfor %}  
+
+                            {% if page.has_previous or page.has_next %}  
+                                <div>  
+                                    {% if page.has_previous %}<a href="?q={{ query }}&page={{ page.previous_page_number }}">{% endif %}« Previous{% if page.has_previous %}</a>{% endif %}  
+                                    |  
+                                    {% if page.has_next %}<a href="?q={{ query }}&page={{ page.next_page_number }}">{% endif %}Next »{% if page.has_next %}</a>{% endif %}  
+                                </div>  
+                            {% endif %}  
+                        {% else %}  
+                            {% load paginate_tags %}
+                            {% paginate article_list 7 %}
+                            {% for article in article_list %}
+                                <div class="post">
+                                    <div class="post-hd">
+                                        <h1 class="title"><a
+                                                href="{% url 'blog:detail' article.pk %}">{{ article.title }}</a></h1>
+                                    </div>
+                                    <div class="post-bd">
+                                        <p>{{ article.abstract }}</p>
+                                        <p><a href="" class="more-link"></a></p>
+                                    </div>
+                                    <div class="post-ft">
+                                        <a href="{% url 'blog:detail' article.id %}" class="more">阅读全文>></a>
+                                        <i class="icon-date"></i>
+                                        <span class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
+                                        <!--i class='icon-praise'></i>-->
+                                        <span>点赞:{{ article.likes}}</span>
+                                        <span>阅读量:{{ article.views}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                        {% include 'blog/pagination.html' %}
+                            {% endfor %}
+                            {% include 'blog/pagination.html' %}
+                        {% endif %}  
                     </div>
                 </div>
             </div>
