@@ -1129,16 +1129,6 @@ img.aligncenter, img.alignright, img.alignleft {
     display: block;
 }
 
-#footer #ft-links {
-    width: 436px;
-    height: 20px;
-    padding-top: 26px;
-    margin: 0 auto;
-    font-size: 15px;
-    font-weight: bold;
-    padding-left: 36px;
-}
-
 #footer #ft-links li {
     display: inline-block;
     *display: inline;
@@ -1150,14 +1140,6 @@ img.aligncenter, img.alignright, img.alignleft {
 #footer #ft-links li a {
     color: #a8abb3;
     text-decoration: none;
-}
-
-#footer #ft-about-links {
-    width: 436px;
-    height: 20px;
-    padding-top: 23px;
-    margin: 0 auto;
-    padding-left: 36px;
 }
 
 #footer #ft-about-links li {
@@ -1172,7 +1154,7 @@ img.aligncenter, img.alignright, img.alignleft {
     text-decoration: none;
 }
 
-#footer #copyright {
+#footer #copyright, #ft-links, #ft-about-links {
     width: 190px;
     height: 20px;
     padding-top: 16px;
