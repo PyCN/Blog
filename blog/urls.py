@@ -3,6 +3,7 @@
 from django.conf.urls import url
 from blog import views
 from django.views.decorators.cache import cache_page  # 缓存
+import search_views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
@@ -22,6 +23,7 @@ urlpatterns = [
     url(r'^logout$', views.logout, name='logout'),
     url(r'^regist$', cache_page(60)(views.regist), name='regist'),
     url(r'^retrieve$', views.retrieve, name='retrieve'),
+    url(r'^search/', search_views.MySearchView(), name='haystack_search'),  
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
         {'template_name': 'blog/login.html'}),
 ]
