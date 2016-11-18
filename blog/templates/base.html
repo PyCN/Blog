@@ -7,57 +7,9 @@
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'blog/css/pygments/github.css' %}">
     <link rel="stylesheet" href="{% static 'lib/css/bootstrap.min.css' %}">
-    <style>
-        #tooltip{
-            position:absolute;
-            border:1px solid #ccc;
-            background:#333;
-            padding:2px;
-            display:none;
-            color:#fff;
-        }
-        #userimg{
-            width: 100%;
-            heigth: 100%;
-        }
-        #userimgdiv{
-            float: left;
-            width: 40px;
-            heigth: 40px;
-        }
-        .highlight_me_please{
-            color: red;
-        }
-    </style>
     <script type="text/javascript" src="{% static 'blog/js/jquery-3.1.1.js' %}"></script>
     <script type="text/javascript" src="{% static 'blog/js/django.js' %}"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $("p").css("backgroud-color", "red").slideUp(1000).slideDown(1000);
-            $('input.generate_qrcode').click(submit_qrcode);
-        });
-        function submit_qrcode(){
-            target_url = $('input[name=target_url]').val();
-            if (target_url == ''){
-                target_url = document.URL
-            }
-            $.post(
-                '/qrcode', 
-                {'target_url': target_url},
-                function(result){
-                    var tooltip = "<div id='tooltip'><img class='qrcode' title='点击关闭二维码' alt='生成二维码'><\/div>";
-                    $("body").append(tooltip);	//把它追加到文档中	
-                    // 直接获取图片数据流，base64编码
-                    $('img.qrcode').attr("src", "data:image/png;base64," + result);			 
-                    $("#tooltip")
-                            .css({
-                                "top": "100px",
-                                "left":  "500px"
-                            }).show("fast");
-                    $("#tooltip").click(function(){$("#tooltip").remove();});
-                    })
-        }
-    </script>
+    <script type="text/javascript" src="{% static 'blog/js/base.js' %}"></script>
 </head>
 <body>
 <div id="header">

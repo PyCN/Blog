@@ -343,6 +343,28 @@ embed {
     color: #7c808c;
 }
 
+#tooltip{
+    position:absolute;
+    border:1px solid #ccc;
+    background:#333;
+    padding:2px;
+    display:none;
+    color:#fff;
+}
+#userimg{
+    width: 100%;
+    heigth: 100%;
+}
+#userimgdiv{
+    float: left;
+    width: 40px;
+    heigth: 40px;
+}
+
+.highlight_me_please{
+    color: red;
+}
+
 .wrp {
     width: 960px;
     height: 72px;
