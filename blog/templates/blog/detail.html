@@ -29,6 +29,7 @@
                         <div class="date-read">
                             <i class="icon-date"></i><span
                                 class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
+                            <a href="/admin/blog/article/{{ article.pk }}">编辑</a>
                         </div>
                         <div class="post-bd">
                             {{ article.body |safe|linebreaks }}

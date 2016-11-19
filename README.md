@@ -19,4 +19,6 @@ a blog for my django study
 
 7、jQuery
 
+8、markdown支持
+
 目前项目已部署在个人ubuntu系统中，IP为100.64.240.69:11118(因路由器IP可能变动，此IP实时更新)
