@@ -1,4 +1,4 @@
-# Blog
+# Python
 a blog for my django study
 
 数据库采用MySql
@@ -7,9 +7,9 @@ a blog for my django study
 
 1、用户注册、登陆、显示用户评论过的文章
 
-2、文章发表，分类，标签集合,whoosh搜索
+2、文章发表，分类，标签集合
 
-3、评论
+3、评论, 上传用户头像
 
 4、二维码转换
 
@@ -21,4 +21,6 @@ a blog for my django study
 
 8、markdown支持
 
-目前项目已部署在阿里云服务器中，IP为120.24.191.19
+9、whoosh搜索
+
+目前项目已部署在阿里云服务器中，IP为120.24.191.19, 可直接输入IP访问
