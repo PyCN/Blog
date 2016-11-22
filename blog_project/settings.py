@@ -143,7 +143,7 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE  =  8
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 

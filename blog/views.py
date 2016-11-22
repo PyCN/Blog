@@ -1,6 +1,7 @@
 #coding:utf-8
 
 import os
+import sys
 
 from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect, Http404
 from django.views.generic.list import ListView
@@ -259,12 +260,13 @@ def regist(request):
                     user_profile.user_id = user.id
                     user_profile.phone = phone
                     user_profile.nickname = nickname
-                    user_profile.userimg = '/static/blog/img/userimg/defaultuser.png'
+                    user_profile.userimg = '/media/uploads/userimg/defaultuser.png'
                     if userimg:
-                        imgpath = os.path.join('blog/static/blog/img/userimg', username)
+                        basepath = sys.path[0]
+                        imgpath = os.path.join(basepath, 'blog/media/uploads/userimg', username)
                         with open(imgpath, 'wb') as img:
                             img.write(userimg.read())
-                        user_profile.userimg = imgpath[4:]
+                        user_profile.userimg = imgpath[(len(basepath) + 5):]
                     user_profile.save()
                     regist_info = '注册成功'
                     user = auth.authenticate(username=username, password=password1)
