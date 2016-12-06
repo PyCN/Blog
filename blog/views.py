@@ -2,6 +2,7 @@
 
 import os
 import sys
+import logging
 
 from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect, Http404
 from django.views.generic.list import ListView
@@ -65,6 +66,7 @@ class IndexView(ListView):
 
     def get_queryset(self):
         article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p')
+        logging.info('get index ok')
         return article_list
 
     def get_context_data(self, **kwargs):
