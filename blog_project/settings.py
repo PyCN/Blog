@@ -24,9 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_lho^m33w-!qkhmqe2n2cwovcouiw(l++%&^(w5x@171pbm7_4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True 
+# DEBUG = True 
 TEMPLATE_DEBUG = False  
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.1.100']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '120.24.191.19']
 
 # Application definition
 
@@ -86,8 +86,11 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 try:
     import mysettings
     DATABASES = mysettings.MYDATABASES
+    DEBUG = False
 except ImportError:
     # You should set it by yourself
+    logging.warn('import mysettings error')
+    DEBUG = True
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
