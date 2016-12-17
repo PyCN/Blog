@@ -83,16 +83,21 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Blog',
-        'USER': 'ctg',
-        'PASSWORD': 'ctgllp',
-        'HOST': '127.0.0.1',
-        'PORT': '3306'
+try:
+    import mysettings
+    DATABASES = mysettings.MYDATABASES
+except ImportError:
+    # You should set it by yourself
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'Blog',
+            'USER': 'your_username',
+            'PASSWORD': 'your_password',
+            'HOST': '127.0.0.1',
+            'PORT': '3306'
+        }
     }
-}
 
 if 'test' in sys.argv:
     DATABASES['default'] = {

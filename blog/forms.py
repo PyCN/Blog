@@ -44,6 +44,9 @@ class SearchForm(forms.Form):
     body_search = forms.CharField(required=True)
 
 
+class AttachmentForm(forms.Form):
+    attachment = forms.FileInput()
+
 class BlogCommentForm(forms.Form):
     body = forms.CharField(required=True, widget=forms.Textarea(
         attrs={'placeholder': '我来评两句~'}))
