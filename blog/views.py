@@ -100,6 +100,26 @@ class ArticleDetailView(DetailView):
         kwargs['form'] = BlogCommentForm()
         return super(ArticleDetailView, self).get_context_data(**kwargs)
 
+def upload(request):
+    if request.method == 'GET':
+        return HttpResponseRedirect('/')
+    else:
+        target_article = get_object_or_404(Article, pk=article_id)
+        if target_article.status == 'd':
+            return HttpResponseRedirect('/')
+        myfile = request.FILES.get('uploadfile', None)
+        if not myfile:
+            self.success_url = reverse('blog:detail', args=(target_article.id,))
+            return HttpResponseRedirect(self.success_url)
+        basepath = sys.path[0]
+        filepath = os.path.join(basepath, 'blog/media/uploads/', myfile.name)
+        with open(filepath, 'wb') as f:
+            for chunk in myfile.chunks:
+                f.write(chunk)
+        return HttpResponse('Upload success!')
+
+def download(request):
+    pass
 
 class CategoryView(ListView):
     template_name = "blog/index.html"
