@@ -37,6 +37,14 @@
                     </div>
                 </div>
             </div>
+         <form class="form-horizontal" action="{% url 'blog:detail' article.pk %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for='uploadfile'>附件</label>
+            <input name=uploadfile' type='file'></input>
+            <p class="form-actions">
+                <input type="submit" value="上传" class="btn btn-primary">
+            </p>
+        </form>
            {% include 'blog/comment.html' %}
             
 {% endblock %}
