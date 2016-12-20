@@ -26,7 +26,7 @@ SECRET_KEY = '_lho^m33w-!qkhmqe2n2cwovcouiw(l++%&^(w5x@171pbm7_4'
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True 
 TEMPLATE_DEBUG = False  
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '120.24.191.19']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '120.24.191.19', 'cblog.xyz']
 
 # Application definition
 

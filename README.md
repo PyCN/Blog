@@ -25,6 +25,6 @@ a blog for my django study
 
 10、logging记录log信息
 
-11、主从数据库(详情可以进入网站120.24.191.19查看)
+11、主从数据库(详情可以进入网站http://cblog.xyz查看)
 
-目前项目已部署在阿里云服务器中，IP为120.24.191.19, 可直接输入IP访问
+目前项目已部署在阿里云服务器中，<a href='http://cbog.xyz' target='_blank'>网址</a>为http://cblog.xyz
