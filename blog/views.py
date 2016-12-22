@@ -100,22 +100,37 @@ class ArticleDetailView(DetailView):
         kwargs['form'] = BlogCommentForm()
         return super(ArticleDetailView, self).get_context_data(**kwargs)
 
-def upload(request):
+def upload(request, article_id):
+    article_url = reverse('blog:detail', args=(article_id,))
     if request.method == 'GET':
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect(article_url)
     else:
         target_article = get_object_or_404(Article, pk=article_id)
         if target_article.status == 'd':
             return HttpResponseRedirect('/')
         myfile = request.FILES.get('uploadfile', None)
-        if not myfile:
-            self.success_url = reverse('blog:detail', args=(target_article.id,))
-            return HttpResponseRedirect(self.success_url)
+        myfilename = myfile.name
+        rightformat = myfilename.endswith('.zip') or myfilename.endswith('.rar') or myfilename.endswith('tar') and len(myfilename.split('/')) < 2
+        if not myfile :
+            return HttpResponse('No upload files!')
+        elif not rightformat:
+            return HttpResponse('Files format only support "zip","rar" or "tar"!')
+        logging.info(myfile.size)
         basepath = sys.path[0]
-        filepath = os.path.join(basepath, 'blog/media/uploads/', myfile.name)
+        folderpath = os.path.join(basepath, 'blog/media/uploads/%s/' % article_id)
+        try:
+            os.mkdir(folderpath)
+        except OSError, e:
+            logging.error(e)
+        filepath = os.path.join(folderpath, myfilename)
         with open(filepath, 'wb') as f:
-            for chunk in myfile.chunks:
-                f.write(chunk)
+            if myfile.multiple_chunks():
+                f.write(myfile.read())
+            else:
+                for chunk in myfile.chunks():
+                    f.write(chunk)
+        target_article.attachment_url += myfilename
+        target_article.save()
         return HttpResponse('Upload success!')
 
 def download(request):
