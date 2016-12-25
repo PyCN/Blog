@@ -13,6 +13,8 @@ urlpatterns = [
         views.ArticleDetailView.as_view(), name='detail'),
     url(r'^article/(?P<article_id>\d+)/upload$',
         views.upload, name='upload'),
+    url(r'^article/(\d+)/download/(\d+)$',
+        views.download, name='download'),
     url(r'^category/(?P<cate_id>\d+)$',
         views.CategoryView.as_view(), name='category'),
     url(r'^tag/(?P<tag_id>\d+)$', views.TagView.as_view(), name='tag'),

@@ -34,11 +34,16 @@
                         <div class='upload' >
                             <form class="form" action="{% url 'blog:detail' article.pk %}/upload" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <input name='uploadfile' type='file'><input type="submit" value="上传" >
+                                <input name='uploadfile' type='file'>
+                                <input type="submit" value="附件上传" >
                             </form>
                         </div>
                         <div class="post-bd">
                             {{ article.body |safe|linebreaks }}
+                            <h2 class="title">附件:</h2>
+                            {% for files in article.attachment_url %}
+                                <a href="{% url 'blog:detail' article.pk %}/download/{{ forloop.counter }}">{{ files }}</a><br>
+                            {% endfor %}  
                         </div>
                     </div>
                 </div>

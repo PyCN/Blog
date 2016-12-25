@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.utils import timezone
 # 缓存推荐在urls那里添加
 from django.views.decorators.cache import cache_page #缓存  
@@ -28,6 +28,9 @@ from haystack.views import SearchView
 from blog.models import Article, Category, Tag, BlogComment, UserProfile
 from .forms import RegistForm, UserForm, RetrieveForm, SearchForm, BlogCommentForm
 
+BASEPATH = sys.path[0]
+UPLOADPATH = os.path.join(BASEPATH, 'blog/media/uploads')
+       
 
 class CachePageMixin(object):
     @classmethod
@@ -91,6 +94,7 @@ class ArticleDetailView(DetailView):
         obj.views += 1
         obj.save()
         obj.body = markdown2.markdown(obj.body,['codehilite'], extras=['fenced-code-blocks'])
+        obj.attachment_url = obj.attachment_url.split('/')
         return obj
 
     
@@ -112,12 +116,12 @@ def upload(request, article_id):
         if not myfile :
             return HttpResponse('No upload files!')
         myfilename = myfile.name
-        rightformat = myfilename.endswith('.zip') or myfilename.endswith('.rar') or myfilename.endswith('tar') and len(myfilename.split('/')) < 2
+        rightformat = len(myfilename.split('/')) < 2
         if not rightformat:
-            return HttpResponse('Files format only support "zip","rar" or "tar"!')
-        logging.info(myfile.size)
-        basepath = sys.path[0]
-        folderpath = os.path.join(basepath, 'blog/media/uploads/%s/' % article_id)
+            return HttpResponse('File name error!')
+        elif myfilename in target_article.attachment_url:
+            return HttpResponse('File exists!')
+        folderpath = os.path.join(UPLOADPATH, '%s/' % article_id)
         try:
             os.mkdir(folderpath)
         except OSError, e:
@@ -133,8 +137,35 @@ def upload(request, article_id):
         target_article.save()
         return HttpResponse('Upload success!')
 
-def download(request):
-    pass
+def download(request, param1, param2):
+    article_id = param1
+    file_id = int(param2)
+    article_url = reverse('blog:detail', args=(article_id,))
+    if request.method == 'POST':
+        return HttpResponseRedirect(article_url)
+    else:
+        target_article = get_object_or_404(Article, pk=article_id)
+        if target_article.status == 'd':
+            return HttpResponseRedirect('/')
+
+        def file_iterator(file_name, chunk_size=512):
+            with open(file_name, 'rb') as f:
+                while True:
+                    c = f.read(chunk_size)
+                    if c:
+                        yield c
+                    else:
+                        break
+
+        try:
+            file_name = target_article.attachment_url.split('/')[file_id - 1]
+        except IndexError:
+            logging.error('No such file!')
+        file_path = os.path.join(UPLOADPATH, article_id, file_name)
+        response = FileResponse(file_iterator(file_path))
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename=%s' % file_name
+        return response
 
 class CategoryView(ListView):
     template_name = "blog/index.html"
@@ -299,8 +330,7 @@ def regist(request):
                     user_profile.nickname = nickname
                     user_profile.userimg = '/media/uploads/userimg/defaultuser.png'
                     if userimg:
-                        basepath = sys.path[0]
-                        imgpath = os.path.join(basepath, 'blog/media/uploads/userimg', username)
+                        imgpath = os.path.join(UPLOADPATH, 'userimg', username)
                         with open(imgpath, 'wb') as img:
                             img.write(userimg.read())
                         user_profile.userimg = imgpath[(len(basepath) + 5):]
