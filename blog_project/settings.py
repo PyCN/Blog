@@ -84,13 +84,11 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 try:
-    import mysettings
-    DATABASES = mysettings.MYDATABASES
-    DEBUG = False
+    from mysettings import *
 except ImportError:
     # You should set it by yourself
     logging.warn('import mysettings error')
-    DEBUG = True
+    DEBUG = False
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',

@@ -31,20 +31,19 @@
                                 class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
                             <a href="/admin/blog/article/{{ article.pk }}">编辑</a>
                         </div>
+                        <div class='upload' >
+                            <form class="form" action="{% url 'blog:detail' article.pk %}/upload" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input name='uploadfile' type='file'><input type="submit" value="上传" >
+                            </form>
+                        </div>
                         <div class="post-bd">
                             {{ article.body |safe|linebreaks }}
                         </div>
                     </div>
                 </div>
             </div>
-         <form class="form-horizontal" action="{% url 'blog:detail' article.pk %}/upload" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label >附件</label>
-            <input name='uploadfile' type='file'></input>
-            <p class="form-actions">
-                <input type="submit" value="上传" class="btn btn-primary">
-            </p>
-        </form>
+         
            {% include 'blog/comment.html' %}
             
 {% endblock %}

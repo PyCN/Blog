@@ -109,11 +109,11 @@ def upload(request, article_id):
         if target_article.status == 'd':
             return HttpResponseRedirect('/')
         myfile = request.FILES.get('uploadfile', None)
-        myfilename = myfile.name
-        rightformat = myfilename.endswith('.zip') or myfilename.endswith('.rar') or myfilename.endswith('tar') and len(myfilename.split('/')) < 2
         if not myfile :
             return HttpResponse('No upload files!')
-        elif not rightformat:
+        myfilename = myfile.name
+        rightformat = myfilename.endswith('.zip') or myfilename.endswith('.rar') or myfilename.endswith('tar') and len(myfilename.split('/')) < 2
+        if not rightformat:
             return HttpResponse('Files format only support "zip","rar" or "tar"!')
         logging.info(myfile.size)
         basepath = sys.path[0]
@@ -129,7 +129,7 @@ def upload(request, article_id):
             else:
                 for chunk in myfile.chunks():
                     f.write(chunk)
-        target_article.attachment_url += myfilename
+        target_article.attachment_url += '%s/' % myfilename
         target_article.save()
         return HttpResponse('Upload success!')
 
