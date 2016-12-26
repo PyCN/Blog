@@ -10,7 +10,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, FormView
 from django.contrib import auth
 from django.template.context import RequestContext
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 #from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -104,6 +104,7 @@ class ArticleDetailView(DetailView):
         kwargs['form'] = BlogCommentForm()
         return super(ArticleDetailView, self).get_context_data(**kwargs)
 
+@login_required
 def upload(request, article_id):
     article_url = reverse('blog:detail', args=(article_id,))
     if request.method == 'GET':
@@ -137,6 +138,7 @@ def upload(request, article_id):
         target_article.save()
         return HttpResponse('Upload success!')
 
+@permission_required('blog.download_file')
 def download(request, param1, param2):
     article_id = param1
     file_id = int(param2)

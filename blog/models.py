@@ -106,6 +106,24 @@ class UserProfile(models.Model):
     nickname = models.CharField(max_length=255)
     userimg = models.CharField('用户头像', default='', max_length='100')
 
+class Permission(models.Model):
+    name = models.CharField("权限名称", max_length=64)
+    url = models.CharField('URL名称', max_length=255)
+    chioces = ((1, 'GET'), (2, 'POST'))
+    per_method = models.SmallIntegerField('请求方法', choices=chioces, default=1)
+    argument_list = models.CharField('参数列表', max_length=255, help_text='多个参数之间用英文半角逗号隔开', blank=True, null=True)
+    describe = models.CharField('描述', max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = '权限表'
+        verbose_name_plural = verbose_name
+        permissions = (
+            ('download_file', '下载附件'),
+            ('upload_file', '上传附件'),
+        )
 '''    
 class Search(models.Model):
     body_search = models.CharField(max_length=255) 
