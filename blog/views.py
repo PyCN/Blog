@@ -138,7 +138,11 @@ def upload(request, article_id):
         target_article.save()
         return HttpResponse('Upload success!')
 
-@permission_required('blog.download_file')
+# arguments can be:login_url, raise_exception
+# or can use permission.py, @perm_check
+# @permission_required('blog.download_file', raise_exception=True)
+from permission import check_blog_permission
+@check_blog_permission
 def download(request, param1, param2):
     article_id = param1
     file_id = int(param2)
