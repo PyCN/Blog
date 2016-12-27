@@ -1,5 +1,5 @@
 # Python
-a blog for my django study
+A blog use django
 
 数据库采用MySql
 
@@ -11,20 +11,22 @@ a blog for my django study
 
 3、评论, 显示用户评论过的文章
 
-4、二维码转换
+4、文件上传、下载，权限控制
 
-5、站点缓存
+5、二维码转换
 
-6、完整的测试
+6、站点缓存
 
-7、jQuery, bootstrap
+7、完整的测试
 
-8、markdown支持
+8、jQuery, bootstrap
 
-9、whoosh搜索
+9、markdown支持
 
-10、logging记录log信息
+10、whoosh搜索
 
-11、主从数据库(详情可以进入网站http://cblog.xyz)
+11、logging记录log信息
+
+12、主从数据库(详情可以进入网站http://cblog.xyz)
 
 目前项目已部署在阿里云服务器中，<a href='http://cblog.xyz' target='_blank'>网址</a>为http://cblog.xyz

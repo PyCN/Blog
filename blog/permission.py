@@ -1,3 +1,4 @@
+# coding:utf-8
 from django.shortcuts import render
 from django.db.models import Q
 from django.core.urlresolvers import resolve
@@ -26,7 +27,7 @@ def perm_check(request, *args, **kwargs):
 
 def check_blog_permission(fun):
     def wapper(request, *args, **kwargs):
-        if perm_check(request, *args, **kargs):
-            return fun(request, *args, **kargs)
+        if perm_check(request, *args, **kwargs):
+            return fun(request, *args, **kwargs)
         return render(request, '403.html')
     return wapper
