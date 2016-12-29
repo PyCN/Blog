@@ -11,17 +11,17 @@ A blog use django
 
 3、评论, 显示用户评论过的文章
 
-4、文件上传、下载，权限控制
+4、文件上传、下载
 
-5、二维码转换
+5、用户权限控制
 
-6、站点缓存
+6、二维码转换
 
-7、完整的测试
+7、站点缓存
 
-8、jQuery, bootstrap
+8、完整的测试
 
-9、markdown支持
+9、jQuery, bootstrap, markdown支持
 
 10、whoosh搜索
 
