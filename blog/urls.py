@@ -11,6 +11,8 @@ urlpatterns = [
     # 如果用 r'^article/(?P<article_id>\d+)'，则文章无法评论
     url(r'^article/(?P<article_id>\d+)$',
         views.ArticleDetailView.as_view(), name='detail'),
+    url(r'^article/(?P<article_id>\d+)/praise$',
+        views.praise, name='praise'),
     url(r'^article/(?P<article_id>\d+)/upload$',
         views.upload, name='upload'),
     url(r'^article/(\d+)/download/(\d+)$',

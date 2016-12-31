@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block content %}
     <!--<div id="banner" class="noselect"></div> -->
 
@@ -61,7 +62,11 @@
                                         <i class="icon-date"></i>
                                         <span class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
                                         <!--i class='icon-praise'></i>-->
-                                        <span>点赞:{{ article.likes}}</span>
+                                        <span>
+                                            <a href="{% url 'blog:detail' article.id %}/praise">
+                                                <img id='gb21' src="{% static 'blog/img/gb21.png' %}">
+                                            </a>{{ article.likes}}
+                                        </span>&nbsp;&nbsp;&nbsp;&nbsp;
                                         <span>阅读量:{{ article.views}}</span>
                                     </div>
                                 </div>
@@ -93,6 +98,52 @@
                                        href="#collapse{{ forloop.counter }}"
                                        aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
                                         {{ year }} 年
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in" role="tabpanel"
+                                 aria-labelledby="heading{{ forloop.counter }}">
+                                <div class="panel-body">
+                                    {% for month in months %}
+                                        <a href="{% url 'blog:archive' year month %}"><p>{{ month }} 月</p></a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <h3>热门文章：</h3>
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    {% for year,months in date_archive %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                       href="#collapse{{ forloop.counter }}"
+                                       aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in" role="tabpanel"
+                                 aria-labelledby="heading{{ forloop.counter }}">
+                                <div class="panel-body">
+                                    {% for month in months %}
+                                        <a href="{% url 'blog:archive' year month %}"><p>{{ month }} 月</p></a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <h3>最新评论：</h3>
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    {% for year,months in date_archive %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                       href="#collapse{{ forloop.counter }}"
+                                       aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
                                     </a>
                                 </h4>
                             </div>

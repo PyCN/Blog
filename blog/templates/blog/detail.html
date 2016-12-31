@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block content %}
     <div class="container">
         <div class="row">
@@ -29,7 +30,10 @@
                         <div class="date-read">
                             <i class="icon-date"></i><span
                                 class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
-                            <a href="/admin/blog/article/{{ article.pk }}">编辑</a>
+                            <a href="/admin/blog/article/{{ article.pk }}">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="{% url 'blog:detail' article.id %}/praise">
+                                <img id='gb21' src="{% static 'blog/img/gb21.png' %}">
+                            </a>{{ article.likes}}
                         </div>
                         <div class='upload' >
                             <form class="form" action="{% url 'blog:detail' article.pk %}/upload" method="post" enctype="multipart/form-data">
@@ -40,7 +44,7 @@
                         </div>
                         <div class="post-bd">
                             {{ article.body |safe|linebreaks }}
-                            <h2 class="title">附件:</h2>
+                            <h3 class="title">附件:</h3>
                             {% for files in article.attachment_url %}
                                 <a href="{% url 'blog:detail' article.pk %}/download/{{ forloop.counter }}">{{ files }}</a><br>
                             {% endfor %}  

@@ -281,6 +281,17 @@ class MySearchView(SearchView, ListView):
         context['side_list'] = side_list
         return context
            
+@login_required
+def praise(request, article_id):
+    current_url = request.get_host()
+    if request.method == 'POST':
+        return HttpResponseRedirect(current_url)
+    else:
+        target_article = get_object_or_404(Article, pk=article_id)
+        target_article.likes += 1
+        target_article.save()
+        return HttpResponse('Praise article success')
+
 def search(request):
 
     if request.method == 'POST':
