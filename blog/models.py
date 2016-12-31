@@ -38,6 +38,7 @@ class Article(models.Model):
     views = models.PositiveIntegerField('浏览量', default=0)
     likes = models.PositiveIntegerField('点赞数', default=0)
     user_likes = models.TextField('点赞用户', blank=True, default='')
+    weight = models.PositiveIntegerField('权重', default=0)
     topped = models.BooleanField('置顶', default=False)
     attachment_url = models.CharField('附件地址', blank=True, default='', max_length=255)
 

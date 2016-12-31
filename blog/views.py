@@ -32,6 +32,16 @@ BASEPATH = sys.path[0]
 UPLOADPATH = os.path.join(BASEPATH, 'blog/media/uploads')
 LENGTH_IN_RIGHT_INDEX = 14
 
+def add_views_or_likes(target_article, views_or_likes):
+    # A likes add two weight, a view add one weight
+    if views_or_likes == 'views':
+        target_article.views += 1
+        target_article.weight += 1
+    else:
+        target_article.likes += 1
+        target_article.weight += 2
+    return True
+
 def get_context_data_all(**kwargs):
     kwargs['category_list'] = Category.objects.all()
     kwargs['date_archive'] = Article.objects.archive()
@@ -41,7 +51,7 @@ def get_context_data_all(**kwargs):
         if len(comment.body) > LENGTH_IN_RIGHT_INDEX:
             comment.body = comment.body[:LENGTH_IN_RIGHT_INDEX + 1] + '...'
     kwargs['recent_comment'] = recent_comment
-    hot_article = Article.objects.filter(status='p').order_by('-views')[:5]
+    hot_article = Article.objects.filter(status='p').order_by('-weight','-created_time')[:5]
     for article in hot_article:
         if len(article.title) > LENGTH_IN_RIGHT_INDEX:
             article.title = article.title[:LENGTH_IN_RIGHT_INDEX + 1] + '...' 
@@ -103,7 +113,7 @@ class ArticleDetailView(DetailView):
         # 未发表文章不能显示
         if obj.status == 'd':
             raise Http404
-        obj.views += 1
+        add_views_or_likes(target_article=obj, views_or_likes='views')
         obj.save()
         obj.body = markdown2.markdown(obj.body,['codehilite'], extras=['fenced-code-blocks'])
         obj.attachment_url = obj.attachment_url.split('/')
@@ -300,7 +310,7 @@ def praise(request, article_id):
         if str(request.user.id) in target_article.user_likes:
             return HttpResponseRedirect(current_url)
         target_article.user_likes += '%s,' % request.user.id
-        target_article.likes += 1
+        add_views_or_likes(target_article=target_article, views_or_likes='likes')
         target_article.save()
         return HttpResponse('Praise article success')
 
