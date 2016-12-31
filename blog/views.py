@@ -283,11 +283,17 @@ class MySearchView(SearchView, ListView):
            
 @login_required
 def praise(request, article_id):
-    current_url = request.get_host()
+    # 前一个访问的页面，要去除/praise'
+    current_url = request.get_full_path()[:-7]
     if request.method == 'POST':
         return HttpResponseRedirect(current_url)
     else:
         target_article = get_object_or_404(Article, pk=article_id)
+        if target_article.status == 'd':
+            return HttpResponseRedirect('/')
+        if str(request.user.id) in target_article.user_likes:
+            return HttpResponseRedirect(current_url)
+        target_article.user_likes += '%s,' % request.user.id
         target_article.likes += 1
         target_article.save()
         return HttpResponse('Praise article success')

@@ -37,8 +37,9 @@ class Article(models.Model):
         '摘要', max_length=54, blank=True, help_text="可选，如若为空将摘取正文的前54个字符")
     views = models.PositiveIntegerField('浏览量', default=0)
     likes = models.PositiveIntegerField('点赞数', default=0)
+    user_likes = models.TextField('点赞用户', blank=True, default='')
     topped = models.BooleanField('置顶', default=False)
-    attachment_url = models.CharField('附件地址', blank=True, default='', max_length=1024)
+    attachment_url = models.CharField('附件地址', blank=True, default='', max_length=255)
 
     category = models.ForeignKey(
         'Category', verbose_name='分类', null=True, on_delete=models.SET_NULL)
