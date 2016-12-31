@@ -30,7 +30,23 @@ from .forms import RegistForm, UserForm, RetrieveForm, SearchForm, BlogCommentFo
 
 BASEPATH = sys.path[0]
 UPLOADPATH = os.path.join(BASEPATH, 'blog/media/uploads')
-       
+LENGTH_IN_RIGHT_INDEX = 14
+
+def get_context_data_all(**kwargs):
+    kwargs['category_list'] = Category.objects.all()
+    kwargs['date_archive'] = Article.objects.archive()
+    kwargs['tag_list'] = Tag.objects.all()
+    recent_comment = BlogComment.objects.order_by('-created_time')[:5]
+    for comment in recent_comment:
+        if len(comment.body) > LENGTH_IN_RIGHT_INDEX:
+            comment.body = comment.body[:LENGTH_IN_RIGHT_INDEX + 1] + '...'
+    kwargs['recent_comment'] = recent_comment
+    hot_article = Article.objects.filter(status='p').order_by('-views')[:5]
+    for article in hot_article:
+        if len(article.title) > LENGTH_IN_RIGHT_INDEX:
+            article.title = article.title[:LENGTH_IN_RIGHT_INDEX + 1] + '...' 
+    kwargs['hot_article'] = hot_article
+    return kwargs
 
 class CachePageMixin(object):
     @classmethod
@@ -56,10 +72,7 @@ class AccountView(LoginRequiredMixin, ListView):
 
     
     def get_context_data(self, **kwargs):
-        # models中已经定义了meta类，所以可以不用.order_by('name')
-        kwargs['category_list'] = Category.objects.all()
-        kwargs['date_archive'] = Article.objects.archive()
-        kwargs['tag_list'] = Tag.objects.all()
+        kwargs = get_context_data_all()
         return super(AccountView, self).get_context_data(**kwargs)
     
 
@@ -68,15 +81,14 @@ class IndexView(ListView):
     context_object_name = "article_list"
 
     def get_queryset(self):
+        # models中已经定义了meta类，所以可以不用.order_by('name')
         article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p')
         logging.info('get index ok')
+        logging.info(dir(BlogComment))
         return article_list
 
     def get_context_data(self, **kwargs):
-        # models中已经定义了meta类，所以可以不用.order_by('name')
-        kwargs['category_list'] = Category.objects.all()
-        kwargs['date_archive'] = Article.objects.archive()
-        kwargs['tag_list'] = Tag.objects.all()
+        kwargs = get_context_data_all()
         return super(IndexView, self).get_context_data(**kwargs)
 
 
@@ -182,9 +194,7 @@ class CategoryView(ListView):
         return article_list
 
     def get_context_data(self, **kwargs):
-        kwargs['category_list'] = Category.objects.all()
-        kwargs['date_archive'] = Article.objects.archive()
-        kwargs['tag_list'] = Tag.objects.all()
+        kwargs = get_context_data_all()
         return super(CategoryView, self).get_context_data(**kwargs)
 
 
@@ -197,9 +207,7 @@ class TagView(ListView):
         return article_list
 
     def get_context_data(self, **kwargs):
-        kwargs['category_list'] = Category.objects.all()
-        kwargs['tag_list'] = Tag.objects.all()
-        kwargs['date_archive'] = Article.objects.archive()
+        kwargs = get_context_data_all()
         return super(TagView, self).get_context_data(**kwargs)
 
 
@@ -214,9 +222,7 @@ class ArchiveView(ListView):
         return article_list
 
     def get_context_data(self, **kwargs):
-        kwargs['category_list'] = Category.objects.all()
-        kwargs['tag_list'] = Tag.objects.all()
-        kwargs['date_archive'] = Article.objects.archive()
+        kwargs = get_context_data_all()
         return super(ArchiveView, self).get_context_data(**kwargs)
 
     

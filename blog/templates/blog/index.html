@@ -114,7 +114,6 @@
                 </div>
                 <h3>热门文章：</h3>
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    {% for year,months in date_archive %}
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
                                 <h4 class="panel-title">
@@ -127,17 +126,15 @@
                             <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in" role="tabpanel"
                                  aria-labelledby="heading{{ forloop.counter }}">
                                 <div class="panel-body">
-                                    {% for month in months %}
-                                        <a href="{% url 'blog:archive' year month %}"><p>{{ month }} 月</p></a>
+                                    {% for article in hot_article %}
+                                        <a href="{% url 'blog:detail' article.id %}"><p>{{ article.title|truncatewords:2 }}</p></a>
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
                 </div>
                 <h3>最新评论：</h3>
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    {% for year,months in date_archive %}
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
                                 <h4 class="panel-title">
@@ -150,13 +147,12 @@
                             <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in" role="tabpanel"
                                  aria-labelledby="heading{{ forloop.counter }}">
                                 <div class="panel-body">
-                                    {% for month in months %}
-                                        <a href="{% url 'blog:archive' year month %}"><p>{{ month }} 月</p></a>
+                                    {% for comment in recent_comment %}
+                                        <a href="{% url 'blog:detail' comment.article.id %}"><p>{{ comment.body }}</p></a>
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>
