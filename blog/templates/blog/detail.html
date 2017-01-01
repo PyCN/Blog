@@ -31,9 +31,9 @@
                             <i class="icon-date"></i><span
                                 class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
                             <a href="/admin/blog/article/{{ article.pk }}">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="{% url 'blog:detail' article.id %}/praise">
-                                <img id='gb21' src="{% static 'blog/img/gb21.png' %}">
-                            </a>{{ article.likes}}
+                            <input type='image' class='praise' src="{% static 'blog/img/gb21.png' %}" href="{% url 'blog:detail' article.id %}/praise">
+                            <span class='likes_num'>{{ article.likes}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span>阅读量:{{ article.views}}</span>
                         </div>
                         <div class='upload' >
                             <form class="form" action="{% url 'blog:detail' article.pk %}/upload" method="post" enctype="multipart/form-data">

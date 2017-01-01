@@ -1,9 +1,10 @@
 $(document).ready(function(){
     $("#search").css("backgroud-color", "red").slideUp(1000).slideDown(1000);
     $('input.generate_qrcode').click(submit_qrcode);
+    $('input.praise').click(praise);
 });
 function submit_qrcode(){
-    target_url = $('input[name=target_url]').val();
+    var target_url = $('input[name=target_url]').val();
     if (target_url == ''){
         target_url = document.URL
     }
@@ -22,4 +23,27 @@ function submit_qrcode(){
                     }).show("fast");
             $("#tooltip").click(function(){$("#tooltip").remove();});
             })
+};
+
+function praise(){
+    var target_url = $(this).attr('href');
+    var likes = $(this).next()
+    $.ajax({
+        type: "GET",
+        url: target_url,
+        dataType: 'json',
+        success: function(data){
+            var error_code = data.error_code;
+            var likes_num = data.likes;
+            if (error_code == 0)
+                likes.text(likes_num);
+            else if (error_code == -3)
+                alert('您已赞过');
+            //var dictdata = $.parseJSON(data);
+            //console.log(dictdata.error_code);
+        },
+        error: function(data){
+            alert("500 Server Error");
+        }
+    });
 }

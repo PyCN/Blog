@@ -3,6 +3,7 @@
 import os
 import sys
 import logging
+import json
 
 from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect, Http404
 from django.views.generic.list import ListView
@@ -300,19 +301,25 @@ class MySearchView(SearchView, ListView):
 @login_required
 def praise(request, article_id):
     # 前一个访问的页面，要去除/praise'
-    current_url = request.get_full_path()[:-7]
+    # current_url = request.get_full_path()[:-7]
+    method_error = -1
+    status_error = -2
+    user_error = -3
+    result = {'error_code':0, 'likes':0}
     if request.method == 'POST':
-        return HttpResponseRedirect(current_url)
+        result['error_code'] = method_error
     else:
         target_article = get_object_or_404(Article, pk=article_id)
         if target_article.status == 'd':
-            return HttpResponseRedirect('/')
-        if str(request.user.id) in target_article.user_likes:
-            return HttpResponseRedirect(current_url)
-        target_article.user_likes += '%s,' % request.user.id
-        add_views_or_likes(target_article=target_article, views_or_likes='likes')
-        target_article.save()
-        return HttpResponse('Praise article success')
+            result['error_code'] = status_error
+        elif str(request.user.id) in target_article.user_likes:
+            result['error_code'] = user_error
+        else:
+            target_article.user_likes += '%s,' % request.user.id
+            add_views_or_likes(target_article=target_article, views_or_likes='likes')
+            target_article.save()
+            result['likes'] = target_article.likes
+    return HttpResponse(json.dumps(result))
 
 def search(request):
 

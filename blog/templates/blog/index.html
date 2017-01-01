@@ -62,11 +62,8 @@
                                         <i class="icon-date"></i>
                                         <span class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
                                         <!--i class='icon-praise'></i>-->
-                                        <span>
-                                            <a href="{% url 'blog:detail' article.id %}/praise">
-                                                <img id='gb21' src="{% static 'blog/img/gb21.png' %}">
-                                            </a>{{ article.likes}}
-                                        </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type='image' class='praise' src="{% static 'blog/img/gb21.png' %}" href="{% url 'blog:detail' article.id %}/praise">
+                                        <span class='likes_num'>{{ article.likes}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                         <span>阅读量:{{ article.views}}</span>
                                     </div>
                                 </div>
