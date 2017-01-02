@@ -95,7 +95,6 @@ class IndexView(ListView):
         # models中已经定义了meta类，所以可以不用.order_by('name')
         article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p')
         logging.info('get index ok')
-        logging.info(dir(BlogComment))
         return article_list
 
     def get_context_data(self, **kwargs):
@@ -379,7 +378,7 @@ def regist(request):
                         imgpath = os.path.join(UPLOADPATH, 'userimg', username)
                         with open(imgpath, 'wb') as img:
                             img.write(userimg.read())
-                        user_profile.userimg = imgpath[(len(basepath) + 5):]
+                        user_profile.userimg = imgpath[(len(BASEPATH) + 5):]
                     user_profile.save()
                     regist_info = '注册成功'
                     user = auth.authenticate(username=username, password=password1)
