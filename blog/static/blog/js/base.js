@@ -43,7 +43,7 @@ function praise(){
             //console.log(dictdata.error_code);
         },
         error: function(data){
-            alert("500 Server Error");
+            alert("登陆后才可点赞");
         }
     });
 }

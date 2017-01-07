@@ -16,8 +16,8 @@ import sys
 import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# os.path.dirname 返回当前目录/文件的所在目录, 所以BASE_DIR为Blog文件夹的绝对路径
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
