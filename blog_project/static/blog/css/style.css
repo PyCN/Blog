@@ -343,6 +343,28 @@ embed {
     color: #7c808c;
 }
 
+#tooltip{
+    position:absolute;
+    border:1px solid #ccc;
+    background:#333;
+    padding:2px;
+    display:none;
+    color:#fff;
+}
+#userimg{
+    width: 100%;
+    heigth: 100%;
+}
+#userimgdiv{
+    float: left;
+    width: 40px;
+    heigth: 40px;
+}
+
+.highlight_me_please{
+    color: red;
+}
+
 .wrp {
     width: 960px;
     height: 72px;
@@ -574,6 +596,16 @@ a.backToTop:hover {
     height: 13px;
     margin-right: 7px;
     background: url(../img/date.png) no-repeat;
+}
+
+.icon-praise {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    width: 14px;
+    height: 13px;
+    margin-right: 3px;
+    background: url(../img/praise.gif);
 }
 
 .read, .date {
@@ -945,7 +977,7 @@ a.backToTop:hover {
 .icon-previous {
     width: 10px;
     height: 20px;
-    background: url(img/previous.png) no-repeat;
+    background: url(../img/previous.png) no-repeat;
 }
 
 .previous-post {
@@ -957,7 +989,7 @@ a.backToTop:hover {
 .icon-next {
     width: 10px;
     height: 20px;
-    background: url(img/next.png) no-repeat;
+    background: url(../img/next.png) no-repeat;
 }
 
 .next-post {
@@ -1119,16 +1151,6 @@ img.aligncenter, img.alignright, img.alignleft {
     display: block;
 }
 
-#footer #ft-links {
-    width: 436px;
-    height: 20px;
-    padding-top: 26px;
-    margin: 0 auto;
-    font-size: 15px;
-    font-weight: bold;
-    padding-left: 36px;
-}
-
 #footer #ft-links li {
     display: inline-block;
     *display: inline;
@@ -1140,14 +1162,6 @@ img.aligncenter, img.alignright, img.alignleft {
 #footer #ft-links li a {
     color: #a8abb3;
     text-decoration: none;
-}
-
-#footer #ft-about-links {
-    width: 436px;
-    height: 20px;
-    padding-top: 23px;
-    margin: 0 auto;
-    padding-left: 36px;
 }
 
 #footer #ft-about-links li {
@@ -1162,7 +1176,7 @@ img.aligncenter, img.alignright, img.alignleft {
     text-decoration: none;
 }
 
-#footer #copyright {
+#footer #copyright, #ft-links, #ft-about-links {
     width: 190px;
     height: 20px;
     padding-top: 16px;
