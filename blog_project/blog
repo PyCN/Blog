@@ -1,0 +1,20 @@
+server {
+    listen 8080 default_server;
+    listen [::]:8080 default_server ipv6only=on;
+
+    # Make site accessible from http://localhost/
+    server_name localhost;
+
+    location / {
+      include uwsgi_params;
+      uwsgi_pass 127.0.0.1:9001;
+    }
+
+    location /static/ {
+      alias /home/ctg/project/Blog/blog/static/;
+    }
+
+    location /media/ {
+      alias /home/ctg/project/Blog/blog/media/;
+    }
+}
