@@ -64,3 +64,5 @@ A free, open-source blog system based on Django + MySql + jQuery + bootstrap + m
    python manage.py runserver 8080
    
 接下来就可以在浏览器访问localhost:8080
+
+ps:如果用apache2或者nginx运行时，访问具体文章速度很慢时，可以查看apache2或者nginx的log。如果是jieba那边提示Operation not permitted，那么就查看/tmp/jieba.cache的权限是否为774，如果不是请修改为774
