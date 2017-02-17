@@ -13,7 +13,7 @@ from django.contrib import auth
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required, permission_required
 #from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse, FileResponse
@@ -25,7 +25,9 @@ import qrcode
 from cStringIO import StringIO
 import markdown2
 from haystack.views import SearchView
+from rest_framework import viewsets
 
+from blog.serializers import UserSerializer, GroupSerializer
 from blog.models import Article, Category, Tag, BlogComment, UserProfile
 from .forms import RegistForm, UserForm, RetrieveForm, SearchForm, BlogCommentForm
 
@@ -468,3 +470,18 @@ def generate_qrcode(request):
         return HttpResponseRedirect('/')            
 
      
+# For API
+class UserViewSet(viewsets.ModelViewSet):
+    '''
+    API enpoint that allows users to be viewed or edited.
+    '''
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+
+class GroupViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows groups to be viewed or edited.
+    '''
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+

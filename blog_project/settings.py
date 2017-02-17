@@ -42,7 +42,15 @@ INSTALLED_APPS = [
     'blog',
     'markdown2',
     'pygments',
+    'rest_framework',
 ]
+
+REST_FRAMWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+    ],
+    'PAGE_SIZE': 10
+}
 
 # 不要轻易缓存站点，不然登陆、登出等容易出问题
 MIDDLEWARE_CLASSES = [
