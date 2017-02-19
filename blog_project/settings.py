@@ -69,6 +69,24 @@ MIDDLEWARE_CLASSES = [
 #CACHE_MIDDLEWARE_ALIAS = 'default'  #缓存站点 
 #CACHE_MIDDLEWARE_SECONDS = 60 * 60 #缓存站点 失效的时间 秒  
 
+
+# 使用django-redis作为缓存
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': '127.0.0.1:6379',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+    },
+}
+REDIS_TIMEOUT = 7 * 24 * 60 * 60
+CUBES_REDIS_TIMEOUT = 60 * 60
+NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
 ROOT_URLCONF = 'blog_project.urls'
 
 TEMPLATES = [
