@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 #from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 from django.db.models import Q
 from django.http import HttpResponse, FileResponse
 from django.utils import timezone
@@ -97,6 +98,8 @@ class IndexView(ListView):
         # models中已经定义了meta类，所以可以不用.order_by('name')
         article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p')
         logging.info('get index ok')
+        # cache.set('tcdlejl', 'value', timeout=100)
+        # logging.info(cache.get('tcdlejl'))
         return article_list
 
     def get_context_data(self, **kwargs):
