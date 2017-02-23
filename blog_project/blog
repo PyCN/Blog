@@ -1,9 +1,12 @@
 server {
-    listen 8080 default_server;
-    listen [::]:8080 default_server ipv6only=on;
+    listen 80 default_server;
+    listen [::]:80 default_server ipv6only=on;
+
+    # 限制同一IP并发量最大为10
+    limit_conn one 10;
 
     # Make site accessible from http://localhost/
-    server_name localhost;
+    server_name cblog.xyz, www.cblog.xyz, 120.24.191.19;
 
     location / {
       include uwsgi_params;
