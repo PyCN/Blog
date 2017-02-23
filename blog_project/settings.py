@@ -195,3 +195,6 @@ STATICFILES = os.path.join(BASE_DIR, 'blog/static')
 MEDIA_ROOT = os.path.join(os.path.dirname(__file__),'media')
 MEDIA_URL = '/media/'
 MEDIAFILES = os.path.join(BASE_DIR, 'blog/media')
+
+BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+CELERY_RESULT_BACKEND = 'amqp'
