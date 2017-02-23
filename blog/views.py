@@ -197,7 +197,7 @@ def download(request, param1, param2):
         file_path = os.path.join(UPLOADPATH, article_id, file_name)
         response = FileResponse(file_iterator(file_path))
         response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename=%s' % file_name
+        response['Content-Disposition'] = 'attachment;filename=%s' % file_name.encode('utf-8')
         return response
 
 class CategoryView(ListView):
