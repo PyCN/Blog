@@ -9,4 +9,5 @@ admin.site.register(Tag)
 admin.site.register(BlogComment)
 admin.site.register(Permission)
 admin.site.register(UserProfile)
+admin.site.register(VisitorIP)
 
