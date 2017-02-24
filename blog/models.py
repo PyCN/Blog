@@ -132,10 +132,14 @@ class VisitorIP(models.Model):
     country = models.CharField('国家', max_length=128)
     city = models.CharField('城市', max_length=128)
     visited_time = models.DateTimeField('访问时间', default=timezone.now)
-    views = models.PositiveIntegerField('访问次数', default=1)
     article = models.ForeignKey(
         'Article', verbose_name='文章', null=True, on_delete=models.SET_NULL)
 
+    def __unicode__(self):
+        return self.ip
+
+    class Meta:
+        ordering = ['visited_time']
 
 '''    
 class Search(models.Model):
