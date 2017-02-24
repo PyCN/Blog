@@ -126,6 +126,17 @@ class Permission(models.Model):
             ('download_file', '下载附件'),
             ('upload_file', '上传附件'),
         )
+
+class VisitorIP(models.Model):
+    ip = models.CharField('访问者IP', max_length=64)
+    country = models.CharField('国家', max_length=128)
+    city = models.CharField('城市', max_length=128)
+    visited_time = models.DateTimeField('访问时间', default=timezone.now)
+    views = models.PositiveIntegerField('访问次数', default=1)
+    article = models.ForeignKey(
+        'Article', verbose_name='文章', null=True, on_delete=models.SET_NULL)
+
+
 '''    
 class Search(models.Model):
     body_search = models.CharField(max_length=255) 
