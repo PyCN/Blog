@@ -151,6 +151,27 @@
                             </div>
                         </div>
                 </div>
+                <h3>最近访问</h3>
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                       href="#collapse{{ forloop.counter }}"
+                                       aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in" role="tabpanel"
+                                 aria-labelledby="heading{{ forloop.counter }}">
+                                <div class="panel-body">
+                                    {% for visitor in visitor_ip %}
+                                        <a><p>{{ visitor.ip }}[{{ visitor.city }}]</p></a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                </div>
             </div>
         </div>
     </div>

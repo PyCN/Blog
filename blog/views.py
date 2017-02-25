@@ -51,6 +51,11 @@ def get_context_data_all(**kwargs):
     kwargs['category_list'] = Category.objects.all()
     kwargs['date_archive'] = Article.objects.archive()
     kwargs['tag_list'] = Tag.objects.all()
+    visitor_ip = VisitorIP.objects.all()[:5]
+    for visitor in visitor_ip:
+        ip_split = visitor.ip.split('.')
+        visitor.ip = '%s.*.*.%s' % (ip_split[0], ip_split[3])
+    kwargs['visitor_ip'] = visitor_ip
     recent_comment = BlogComment.objects.order_by('-created_time')[:5]
     for comment in recent_comment:
         if len(comment.body) > LENGTH_IN_RIGHT_INDEX:
