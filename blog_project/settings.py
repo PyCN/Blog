@@ -84,7 +84,7 @@ REDIS_TIMEOUT = 7 * 24 * 60 * 60
 CUBES_REDIS_TIMEOUT = 60 * 60
 NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_CACHE_ALIAS = 'default'
 
 ROOT_URLCONF = 'blog_project.urls'
