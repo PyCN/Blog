@@ -19,9 +19,11 @@ def save_client_ip(client_ip):
     ip_info = ''
     last_ip = VisitorIP.objects.last()
     if not last_ip or last_ip == client_ip:
+        url = IP_INFO_URL + client_ip
         try:
-            ip_info = urllib2.urlopen(IP_INFO_URL.join(client_ip))
+            ip_info = urllib2.urlopen(url)
         except Exception, e:
+            logging.warn(url)
             logging.info('Get ip info failed: %s' % e)
         if ip_info:
             ip_info = json.loads(ip_info)
