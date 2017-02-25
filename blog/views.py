@@ -30,6 +30,7 @@ from rest_framework import viewsets
 
 from blog.serializers import UserSerializer, GroupSerializer
 from blog.models import Article, Category, Tag, BlogComment, UserProfile, VisitorIP
+from blog.tasks import save_client_ip
 from .forms import RegistForm, UserForm, RetrieveForm, SearchForm, BlogCommentForm
 
 BASEPATH = sys.path[0]
@@ -104,14 +105,7 @@ class IndexView(ListView):
         # models中已经定义了meta类，所以可以不用.order_by('name')
         article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p')
         client_ip= get_client_ip(self.request)
-        try:
-            ip_list = VisitorIP.objects.all()[0]
-            ip_list = ''
-        except IndexError:
-            logging.info('There is not any ip in database')
-            VisitorIP.objects.create(ip=client_ip, country='China', city='深圳', visited_time=timezone.now())
-        if not client_ip == ip_list:
-            VisitorIP.objects.create(ip=client_ip, country='China', city='深圳', visited_time=timezone.now())
+        save_client_ip.delay(client_ip)
         logging.info('get index ok')
         logging.info('client ip:%s' % client_ip)
         # cache.set('tcdlejl', 'value', timeout=100)
