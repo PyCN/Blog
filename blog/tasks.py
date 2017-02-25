@@ -22,6 +22,7 @@ def save_client_ip(client_ip):
         url = IP_INFO_URL + client_ip
         try:
             ip_info = urllib2.urlopen(url)
+            ip_info = ip_info.read()
         except Exception, e:
             logging.warn(url)
             logging.info('Get ip info failed: %s' % e)
