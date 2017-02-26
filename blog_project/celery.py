@@ -15,6 +15,12 @@ app = Celery('blog_project')
 app.config_from_object('django.conf:settings', namespace='CELERY')  
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)  
 
+app.conf.update(
+    CELERY_TASK_SERIALIZER='json',
+    CELERY_ACCEPT_CONTENT=['json'],
+    CELERY_RESULT_SERIALIZER='json',
+)
+
 @app.task(bind=True)  
 def debug_task(self):  
     print('Request: {0!r}'.format(self.request))  
