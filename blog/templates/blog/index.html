@@ -166,7 +166,7 @@
                                  aria-labelledby="heading{{ forloop.counter }}">
                                 <div class="panel-body">
                                     {% for visitor in visitor_ip %}
-                                        <a><p>{{ visitor.ip }}[{{ visitor.city }}]</p></a>
+                                        <a><p>网友{{ visitor.ip }}[{{ visitor.city }}] {{ visitor.visited_time | date:'y-m-j H:i'}}</p></a>
                                     {% endfor %}
                                 </div>
                             </div>

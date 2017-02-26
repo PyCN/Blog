@@ -17,11 +17,11 @@
         {% for comment in comment_list %}
             <div class="main-content">
                 {% if comment.commentator.userprofile.nickname %}
-                    <span class="user-nickname">{{ comment.commentator.userprofile.nickname }}</span>
+                    <span class="user-nickname">网友: {{ comment.commentator.userprofile.nickname }}</span>
                 {% else %}
-                    <span class="user-nickname">{{ comment.commentator}}</span>
+                    <span class="user-nickname">网友: {{ comment.commentator}}</span>
                 {% endif %}
-                <time class="time">{{ comment.created_time }}</time>
+                <time class="time">{{ comment.created_time | date:'Y-m-j H:i' }}</time>
                 <div class="comment-content">
                     {{ comment.body }}
                 </div>
