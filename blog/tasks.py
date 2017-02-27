@@ -18,7 +18,7 @@ def save_client_ip(client_ip):
     city = ''
     ip_info = ''
     last_ip = VisitorIP.objects.last()
-    if not last_ip or last_ip == client_ip:
+    if not last_ip or last_ip.ip != client_ip:
         url = IP_INFO_URL + client_ip
         try:
             ip_info = urllib2.urlopen(url)
@@ -29,7 +29,10 @@ def save_client_ip(client_ip):
         if ip_info:
             ip_info = json.loads(ip_info)
             country = ip_info['country'].encode('utf-8')
-            city = ip_info['city'].encode('utf-8')
+            if ip_info.has_key('city'):
+                city = ip_info['city'].encode('utf-8')
+            else:
+                city = country
 
         VisitorIP.objects.create(ip=client_ip, country=country, city=city)
     else:

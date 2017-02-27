@@ -111,8 +111,6 @@ class IndexView(ListView):
         article_list = Article.objects.filter(created_time__lte=timezone.now(), status='p')
         client_ip= get_client_ip(self.request)
         save_client_ip.delay(client_ip)
-        logging.info('get index ok')
-        logging.info('client ip:%s' % client_ip)
         # cache.set('tcdlejl', 'value', timeout=100)
         # logging.info(cache.get('tcdlejl'))
         return article_list
