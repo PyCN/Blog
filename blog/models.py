@@ -139,7 +139,7 @@ class VisitorIP(models.Model):
         return self.ip
 
     class Meta:
-        ordering = ['visited_time']
+        ordering = ['-visited_time']
 
 '''    
 class Search(models.Model):
