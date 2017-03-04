@@ -56,6 +56,7 @@ def get_context_data_all(**kwargs):
         ip_split = visitor.ip.split('.')
         visitor.ip = '%s.*.*.%s' % (ip_split[0], ip_split[3])
     kwargs['visitor_ip'] = visitor_ip
+    kwargs['visitor_num'] = cache.get('visitor_num')
     recent_comment = BlogComment.objects.order_by('-created_time')[:5]
     for comment in recent_comment:
         if len(comment.body) > LENGTH_IN_RIGHT_INDEX:
