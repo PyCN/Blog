@@ -7,6 +7,7 @@ import logging
 from django.core.cache import cache
 from celery import shared_task
 from blog.models import Article, Category, Tag, BlogComment, UserProfile, VisitorIP
+from blog_project import settings
 
 IP_INFO_URL = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip='
 @shared_task
@@ -18,10 +19,10 @@ def save_client_ip(client_ip):
     country = ''
     city = ''
     ip_info = ''
-    vistor_num = cache.get('vistor_num')
-    if not vistor_num:
-        vistor_num = VisitorIP.objects.count()
-        cache.set('vistor_num', vistor_num)
+    visitor_num = cache.get('visitor_num')
+    if not visitor_num:
+        visitor_num = VisitorIP.objects.count()
+        cache.set('visitor_num', visitor_num, settings.REDIS_TIMEOUT)
     last_ip = VisitorIP.objects.first()
     if not last_ip or last_ip.ip != client_ip:
         url = IP_INFO_URL + client_ip
@@ -41,4 +42,4 @@ def save_client_ip(client_ip):
     else:
         return 'existed ip'
     VisitorIP.objects.create(ip=client_ip, country=country, city=city)
-    cache.set('vistor_num', vistor_num + 1)
+    cache.set('visitor_num', visitor_num + 1, settings.REDIS_TIMEOUT)
