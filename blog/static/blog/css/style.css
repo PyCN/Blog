@@ -36,8 +36,21 @@ a {
     text-decoration: none
 }
 
+a:link {
+    color: #000005;
+}
+
+/*
+a:visited {
+    color: red;
+}*/
+
 a:hover {
     text-decoration: none
+}
+
+a:actived {
+    color: red;
 }
 
 input, textarea {
