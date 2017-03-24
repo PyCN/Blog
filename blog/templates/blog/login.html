@@ -1,36 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>login</title>
-    <meta name="author" content="caitinggui">
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-        }
-    </style>
-    
-    {% block extra_head %}{% endblock %}
-</head>
+{% extends 'base.html' %}
+{% load staticfiles %}
 
-<body> 
-    <div class="well">
-        <h1>login</h1>
-        <p>&nbsp;</p>
-        <form class="form-horizontal" action="" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <p class="form-actions">
-                <input type="submit" value="登录" class="btn btn-primary">
-                <a href="{% url 'blog:retrieve'  %}"><input type="button" value="忘记密码" class="btn btn-danger"></a>
-                <a href="{% url 'blog:regist'  %}"><input type="button" value="注册账号?" class="btn btn-success"></a>
-            </p>
-        </form>
-        {{ login_info }}
+{% block content %}
+<p>Login</p>
+<form class="form-horizontal" action="" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+    <div class="col-sm-5">
+      <input type="email" class="form-control" id="inputEmail" name="username" placeholder="Email">
     </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword" class="col-sm-2 control-label">Password</label>
+    <div class="col-sm-5">
+      <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox"> Remember me
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <input type="submit" value="登录" class="btn btn-default">
+        <a href="{% url 'blog:retrieve'  %}"><input type="button" value="忘记密码" class="btn btn-default"></a>
+        <a href="{% url 'blog:regist'  %}"><input type="button" value="注册账号?" class="btn btn-default"></a>
+    </div>
+  </div>
+</form>
+        {{ login_info }}
+{% endblock %}
 
-</body>
-</html>
 
 
 
