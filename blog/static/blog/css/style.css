@@ -40,10 +40,10 @@ a:link {
     color: #000005;
 }
 
-/*
+
 a:visited {
-    color: red;
-}*/
+    color: #000005;
+}
 
 a:hover {
     text-decoration: none
