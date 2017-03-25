@@ -1,37 +1,53 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load staticfiles %}
 
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>regist</title>
-    <meta name="author" content="caitinggui">
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-        }
-    </style>
-    
-    {% block extra_head %}{% endblock %}
-</head>
-
-<body>
-
-    <div class="well">
-        <h1>regist</h1>
-        <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <p class="form-actions">
-                <input type="submit" value="注册" class="btn btn-primary">
-                <a href="{% url 'blog:login'  %}"><input type="button" value="已有账号?" class="btn btn-danger"></a>
-                <!--<a href="/contactme/"><input type="button" value="新员工？" class="btn btn-success"></a>-->
-            </p>
-        </form>
-        {{ regist_info }}
+{% block content %}
+<p>Login</p>
+<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="inputEmail" class="col-sm-2 control-label">邮箱</label>
+    <div class="col-sm-5">
+      <input type="email" class="form-control" id="inputEmail" name="username" placeholder="Email">
     </div>
-    
-
-</body>
-</html>
-
+  </div>
+  <div class="form-group">
+    <label for="inputNickname" class="col-sm-2 control-label">昵称</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" id="inputNickname" name="nickname" placeholder="Nickname">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword1" class="col-sm-2 control-label">密码</label>
+    <div class="col-sm-5">
+      <input type="password" class="form-control" id="inputPassword1" name="password1" placeholder="Password1">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword2" class="col-sm-2 control-label">确认密码</label>
+    <div class="col-sm-5">
+      <input type="password" class="form-control" id="inputPassword2" name="password2" placeholder="Password2">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPhone" class="col-sm-2 control-label">手机</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" id="inputPhone" name="phone" placeholder="Phone">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputUserimg" class="col-sm-2 control-label">头像</label>
+    <div class="col-sm-5">
+      <input type="file" class="file" id="inputUserimg" name="usering">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <input type="submit" value="注册" class="btn btn-default">
+        <a href="{% url 'blog:login'  %}"><input type="button" value="已有账号" class="btn btn-default"></a>
+    </div>
+  </div>
+</form>
+        {{ regist_info }}
+{% endblock %}
 
