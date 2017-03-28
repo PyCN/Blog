@@ -3,7 +3,9 @@
 
 from haystack.views import SearchView
 
-from blog.models import Article, Category, Tag, BlogComment, UserProfile
+from blog.models import Article, Category, Tag, BlogComment, UserProfile,\
+    VisitorIP
+from blog.views import get_context_data_all
 
 
 class MySearchView(SearchView):
@@ -15,7 +17,5 @@ class MySearchView(SearchView):
 
     def extra_context(self):
         context = super(MySearchView, self).extra_context()
-        context['category_list'] = Category.objects.all()
-        context['date_archive'] = Article.objects.archive()
-        context['tag_list'] = Tag.objects.all()
+        context = get_context_data_all()
         return context
