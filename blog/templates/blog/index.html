@@ -25,6 +25,7 @@
                             <h3>Search Results</h3>  
                             {% load highlight %}
                             {% for result in page.object_list %}  
+                              <div class="post">
                                 <div class="post-hd">
                                     <h1 class="title">
                                         <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
@@ -33,8 +34,11 @@
                                 <div class="post-bd">
                                     {% highlight result.object.body with query css_class "highlight_me_please" max_length 200 %}
                                 </div>
+                              </div>
                             {% empty %}  
+                              <div class="post">
                                 <p>No results found.</p>  
+                              </div>
                             {% endfor %}  
 
                             {% if page.has_previous or page.has_next %}  
