@@ -61,7 +61,7 @@ class Article(models.Model):
         return reverse('blog:detail', kwargs={'article_id': self.pk})
 
     class Meta:
-        ordering = ['-topped', '-created_time', '-last_modified_time']
+        ordering = ['-topped', '-last_modified_time', '-created_time']
 
 
 class Category(models.Model):
