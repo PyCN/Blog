@@ -55,6 +55,7 @@ class Article(models.Model):
                 self.abstract = self.body
             else:
                 self.abstract = self.body[:54]
+        self.last_modified_time = timezone.now()
         super(Article, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
