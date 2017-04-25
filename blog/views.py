@@ -5,10 +5,11 @@ import sys
 import logging
 import json
 
-from django.shortcuts import render_to_response, render, get_object_or_404, HttpResponseRedirect, Http404
+from django.shortcuts import render_to_response, render, get_object_or_404, \
+    HttpResponseRedirect, Http404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import FormView
 from django.contrib import auth
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required, permission_required
