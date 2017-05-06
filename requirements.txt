@@ -19,9 +19,9 @@ django-filter==0.13.0
 
 # 异步任务依赖库
 # RabbitMQ
-celery==3.1.18
+celery==4.0.2
 
 # qrcode依赖库
 qrcode==5.3
-Pillow==3.2.0
+Pillow
 
