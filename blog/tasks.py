@@ -1,3 +1,5 @@
+# coding:utf-8
+
 from __future__ import absolute_import, unicode_literals
 
 import urllib2
@@ -10,12 +12,16 @@ from blog.models import Article, Category, Tag, BlogComment, UserProfile, Visito
 from blog_project import settings
 
 IP_INFO_URL = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip='
+
+
 @shared_task
 def add(x, y):
     return x + y
 
+
+# TODO 检查文章id判断是否为同一次访问
 @shared_task
-def save_client_ip(client_ip):
+def save_client_ip(client_ip, article=None):
     country = ''
     city = ''
     ip_info = ''
@@ -41,5 +47,8 @@ def save_client_ip(client_ip):
                 city = country
     else:
         return 'existed ip'
-    VisitorIP.objects.create(ip=client_ip, country=country, city=city)
+    if article:
+        article = Article.objects.get(id=article)
+    VisitorIP.objects.create(ip=client_ip, country=country, city=city,
+                             article=article)
     cache.set('visitor_num', visitor_num + 1, settings.REDIS_TIMEOUT)

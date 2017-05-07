@@ -148,6 +148,9 @@ class ArticleDetailView(DetailView):
         obj.body = markdown2.markdown(
             obj.body, ['codehilite'], extras=['fenced-code-blocks'])
         obj.attachment_url = obj.attachment_url.split('/')
+        client_ip = get_client_ip(self.request)
+        save_client_ip.delay(client_ip, obj.id)
+
         return obj
 
     def get_context_data(self, **kwargs):
