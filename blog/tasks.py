@@ -19,7 +19,6 @@ def add(x, y):
     return x + y
 
 
-# TODO 检查文章id判断是否为同一次访问
 @shared_task
 def save_client_ip(client_ip, article=None):
     country = ''
@@ -30,7 +29,7 @@ def save_client_ip(client_ip, article=None):
         visitor_num = VisitorIP.objects.count()
         cache.set('visitor_num', visitor_num, settings.REDIS_TIMEOUT)
     last_ip = VisitorIP.objects.first()
-    if not last_ip or last_ip.ip != client_ip:
+    if not last_ip or last_ip.ip != client_ip or last_ip.article != article:
         url = IP_INFO_URL + client_ip
         try:
             ip_info = urllib2.urlopen(url)
@@ -40,11 +39,8 @@ def save_client_ip(client_ip, article=None):
             logging.error('Get ip info failed: %s' % e)
         if ip_info:
             ip_info = json.loads(ip_info)
-            country = ip_info['country'].encode('utf-8')
-            if ip_info.has_key('city') and ip_info['city']:
-                city = ip_info['city'].encode('utf-8')
-            else:
-                city = country
+            country = ip_info.get('country', '').encode('utf-8')
+            city = ip_info.get('city', country).encode('utf-8')
     else:
         return 'existed ip'
     if article:
