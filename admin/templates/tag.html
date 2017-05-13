@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}安生 | 标签管理{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+{% endblock %}
+
+{% block content-wrapper %}
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                标签管理
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'admin:dashboard' %}"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li><a>标签/分类</a></li>
+                <li class="active">标签管理</li>
+            </ol>
+        </section>
+        <section class="content">
+            <div class="row">
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <table id="articleList" class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>标签</th>
+                                            <th>创建时间</th>
+                                            <th>文章关联次数</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for tag in tags %}
+                                            <tr id="TagID{{ tag.id }}">
+                                                <td>{{ tag.id }}</td>
+                                                <td>
+                                                    <span id="TagName{{ tag.id }}" onclick="HideElements('{{ tag.id }}')">{{ tag.name }}</span>
+
+                                                    <div style="display: none" id="DTagName{{ tag.id }}" class=" input-group input-group-sm">
+                                                        <input type="text" value="{{ tag.name }}" id="ITagName{{ tag.id }}">
+                                                    </div>
+
+                                                </td>
+                                                <td>{{ tag.created_time }}</td>
+                                                <td>{{ tag.tag_article_count }}</td>
+                                                <td>
+                                                    <button id="DeleteTag{{ tag.id }}" type="button" class="btn btn-danger" style="font-size: 12px"
+                                                            onclick="DeleteTag('{{ tag.name }}')">删除
+                                                    </button>
+                                                    <div style="display: none" id="BTagName{{ tag.id }}">
+                                                        <button type="button" class="btn btn-primary" style="font-size: 12px"
+                                                                onclick="SaveElements('{{ tag.id }}')">保存
+                                                        </button>
+                                                        <button type="button" class="btn btn-default" style="font-size: 12px"
+                                                                onclick="CancelElements('{{ tag.id }}')">取消
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-xs-12">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h4 class="box-title">添加标签</h4>
+                                </div>
+                                <div class="box-body">
+                                    <form action="{% url 'admin:tag' %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <textarea class="form-control" rows="3" placeholder="添加多个标签，以逗号(,)分隔开" name="tags"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">添加</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(function () {
+            $("#articleList").DataTable();
+        });
+
+        function DeleteTag(Name) {
+            $.ajax({
+                type: "DELETE",
+                url: "{% url 'admin:tag' %}",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                data: JSON.stringify({
+                    name: Name
+                }),
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#TagID' + data.tid).remove();
+                }
+            });
+        }
+        function HideElements(ID) {
+
+            $('#TagName' + ID).css(
+                "display", "none"
+            );
+            $('#DeleteTag' + ID).css(
+                "display", "none"
+            );
+
+            $('#DTagName' + ID).css(
+                "display", "block"
+            );
+            $('#BTagName' + ID).css(
+                "display", "block"
+            );
+        }
+
+        function SaveElements(ID) {
+            var TagVal = $('#ITagName' + ID).val();
+
+            $.ajax({
+                type: "PUT",
+                url: "{% url 'admin:tag' %}",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                data: JSON.stringify({
+                    id: ID,
+                    val: TagVal
+                }),
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#TagName' + data.id).text(values = data.val);
+                    CancelElements(ID);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        function CancelElements(ID) {
+            $('#TagName' + ID).css(
+                "display", "block"
+            );
+            $('#DeleteTag' + ID).css(
+                "display", "block"
+            );
+
+            $('#DTagName' + ID).css(
+                "display", "none"
+            );
+            $('#BTagName' + ID).css(
+                "display", "none"
+            );
+        }
+    </script>
+{% endblock %}

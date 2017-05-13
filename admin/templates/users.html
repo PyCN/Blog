@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}安生 | 用户列表{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+{% endblock %}
+
+{% block content-wrapper %}
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                用户列表
+                <small>包含所有激活和未激活的注册用户~</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li class="active">用户列表</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="articleList" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>昵称</th>
+                                    <th>邮箱</th>
+                                    <th>性别</th>
+                                    <th>注册时间</th>
+                                    <th>最近登录</th>
+                                    <th>是否激活</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.nick_name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.get_gender_display }}</td>
+                                        <td>{{ user.date_joined }}</td>
+                                        <td>{{ user.last_login }}</td>
+                                        <td>{{ user.is_active }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <!-- DataTables -->
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <!-- page script -->
+    <script>
+        $(function () {
+            $("#articleList").DataTable();
+        });
+    </script>
+{% endblock %}

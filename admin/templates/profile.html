@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}安生 | 个人信息{% endblock %}
+{% block custom_css %}
+
+{% endblock %}
+
+{% block content-wrapper %}
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                {{ request.user.nick_name }}
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'admin:dashboard' %}"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li class="active">个人信息</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Horizontal Form -->
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">个人信息</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form class="form-horizontal" method="post" action="{% url 'admin:profile' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label for="inputNikName" class="col-sm-2 control-label">昵称</label>
+
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputNikName" placeholder="Nick Name" value="{{ request.user.nick_name }}" name="nick_name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputGender" class="col-sm-2 control-label">性别</label>
+                                    <div class="col-sm-10">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="gender" id="optionsRadios1" value="male" {% if request.user.gender == 'male' %} checked{% endif %} >男
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="gender" id="optionsRadios2" value="female" {% if request.user.gender == 'female' %} checked{% endif %}>女
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputEmail" class="col-sm-2 control-label">邮箱</label>
+
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" id="inputEmail3" placeholder="Email" value="{{ request.user.email }}" name="email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputAvatar" class="col-sm-2 control-label">头像</label>
+
+                                    <div class="col-sm-10">
+                                        <input type="file" class="form-control" id="inputAvatar" placeholder="Avatar" name="image">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn btn-primary pull-right">保存</button>
+                            </div>
+                            <!-- /.box-footer -->
+                        </form>
+                    </div>
+                    <!-- /.box -->
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">修改密码</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form class="form-horizontal" method="post" action="{% url 'restpassword' %}">
+                            {% csrf_token %}
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label for="OldPassword" class="col-sm-2 control-label">旧密码</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="OldPassword" placeholder="Old Password" name="oldpassword">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="NewPassword" class="col-sm-2 control-label">新密码</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="NewPassword" placeholder="New Password" name="newpassword">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="RetypePassword" class="col-sm-2 control-label">确认新密码</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="RetypePassword" placeholder="Retype Password" name="retypepassword">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn btn-primary pull-right">保存</button>
+                            </div>
+                            <!-- /.box-footer -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+
+{% endblock %}

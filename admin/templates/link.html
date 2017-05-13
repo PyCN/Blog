@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}安生 | 友情链接{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+{% endblock %}
+
+{% block content-wrapper %}
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                友情链接
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'admin:dashboard' %}"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li class="active">友情链接</li>
+            </ol>
+        </section>
+        <section class="content">
+            <div class="row">
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <table id="articleList" class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>名称</th>
+                                            <th>描述</th>
+                                            <th>URL</th>
+                                            <th>添加时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for link in links %}
+                                            <tr id="LinkID{{ link.id }}">
+                                                <td>{{ link.id }}</td>
+                                                <td>
+                                                    <span id="LinkDataName{{ link.id }}">{{ link.name }}</span>
+                                                    <input id="LinkName{{ link.id }}" style="display: none;width: 100%" value="{{ link.name }}" type="text">
+                                                </td>
+                                                <td>
+                                                    <span id="LinkDataDesc{{ link.id }}">{{ link.description }}</span>
+                                                    <input id="LinkDesc{{ link.id }}" style="display: none;width: 100%" value="{{ link.description }}" type="text">
+                                                </td>
+                                                <td>
+                                                    <span id="LinkDataURL{{ link.id }}">{{ link.url }}</span>
+                                                    <input id="LinkURL{{ link.id }}" style="display: none;width: 100%" value="{{ link.url }}" type="url">
+                                                </td>
+                                                <td>{{ link.add_time }}</td>
+                                                <td>
+                                                    <div id="ModifyDelete{{ link.id }}">
+                                                        <button onclick="ModifyLink({{ link.id }})" id="LinkData" type="button" class="btn btn-info" style="font-size: 12px">修改</button>
+                                                        <button onclick="DeleteLink({{ link.id }})" id="LinkData" type="button" class="btn btn-danger" style="font-size: 12px">删除</button>
+                                                    </div>
+                                                    <div id="SaveCancel{{ link.id }}" style="display: none">
+                                                        <button onclick="SaveLink({{ link.id }})" id="ModifyLink{{ link.id }}" type="button" class="btn btn-primary" style="font-size: 12px">保存</button>
+                                                        <button onclick="CancelLink({{ link.id }})" id="DeleteLink{{ link.id }}" type="button" class="btn btn-success" style="font-size: 12px">取消</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-xs-12">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">添加友联</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <!-- form start -->
+                                <form role="form" method="post" action="{% url 'admin:link' %}">
+                                    {% csrf_token %}
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="form-group col-xs-2">
+                                                <label for="exampleInputName">博客名称</label>
+                                                <input type="text" class="form-control" id="exampleInputName" placeholder="Blog Name" name="name">
+                                            </div>
+                                            <div class="form-group col-xs-3">
+                                                <label for="exampleInputURL">URL</label>
+                                                <input type="url" class="form-control" id="exampleInputURL" placeholder="URL" name="url">
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <label for="exampleInputDesc">描述信息</label>
+                                                <input type="text" class="form-control" id="exampleInputDesc" placeholder="Description" name="description">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer">
+                                        <button type="submit" class="btn btn-primary">提交</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(function () {
+            $("#articleList").DataTable();
+        });
+        function DeleteLink(ID) {
+            $.ajax({
+                type: "DELETE",
+                url: "{% url 'admin:link' %}",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                data: JSON.stringify({
+                    lid: ID
+                }),
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#LinkID' + data.lid).remove();
+                }
+            });
+        }
+        function ModifyLink(ID) {
+            $('#ModifyDelete' + ID).css(
+                "display", "none"
+            );
+            $('#SaveCancel' + ID).css(
+                "display", "block"
+            );
+
+            $('#LinkDataName' + ID).css(
+                "display", "none"
+            );
+            $('#LinkDataURL' + ID).css(
+                "display", "none"
+            );
+            $('#LinkDataDesc' + ID).css(
+                "display", "none"
+            );
+
+            $('#LinkName' + ID).css(
+                "display", "block"
+            );
+            $('#LinkURL' + ID).css(
+                "display", "block"
+            );
+            $('#LinkDesc' + ID).css(
+                "display", "block"
+            );
+        }
+        function CancelLink(ID) {
+            $('#ModifyDelete' + ID).css(
+                "display", "block"
+            );
+            $('#SaveCancel' + ID).css(
+                "display", "none"
+            );
+
+            $('#LinkDataName' + ID).css(
+                "display", "block"
+            );
+            $('#LinkDataURL' + ID).css(
+                "display", "block"
+            );
+            $('#LinkDataDesc' + ID).css(
+                "display", "block"
+            );
+
+            $('#LinkName' + ID).css(
+                "display", "none"
+            );
+            $('#LinkURL' + ID).css(
+                "display", "none"
+            );
+            $('#LinkDesc' + ID).css(
+                "display", "none"
+            );
+        }
+        function SaveLink(ID) {
+            $.ajax({
+                type: "PUT",
+                url: "{% url 'admin:link' %}",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                data: JSON.stringify({
+                    lid: ID,
+                    name: $('#LinkName' + ID).val(),
+                    url: $('#LinkURL' + ID).val(),
+                    description: $('#LinkDesc' + ID).val()
+                }),
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#LinkDataName' + data.lid).text(values = data.name);
+                    $('#LinkDataURL' + data.lid).text(values = data.url);
+                    $('#LinkDataDesc' + data.lid).text(values = data.description);
+                    CancelLink(data.lid)
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}安生 | 分类管理{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+{% endblock %}
+
+{% block content-wrapper %}
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                分类管理
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'admin:dashboard' %}"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li><a>标签/分类</a></li>
+                <li class="active">分类管理</li>
+            </ol>
+        </section>
+        <section class="content">
+            <div class="row">
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="articleList" class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>分类</th>
+                                            <th>创建时间</th>
+                                            <th>分类文章数</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% for categorie in categories %}
+                                            <tr id="CategoriesID{{ categorie.id }}">
+                                                <td>{{ categorie.id }}</td>
+                                                <td>
+                                                    <span id="CategoriesName{{ categorie.id }}" onclick="HideElements('{{ categorie.id }}')">{{ categorie.name }}</span>
+
+                                                    <div style="display: none" id="DCategoriesName{{ categorie.id }}" class=" input-group input-group-sm">
+                                                        <input type="text" value="{{ categorie.name }}" id="ICategoriesName{{ categorie.id }}">
+                                                    </div>
+
+                                                </td>
+                                                <td>{{ categorie.created_time }}</td>
+                                                <td>{{ categorie.categories_article_count }}</td>
+                                                <td>
+                                                    <button id="DeleteCategories{{ categorie.id }}" type="button" class="btn btn-danger" style="font-size: 12px"
+                                                            onclick="DeleteCategories('{{ categorie.name }}')">删除
+                                                    </button>
+                                                    <div style="display: none" id="BCategoriesName{{ categorie.id }}">
+                                                        <button type="button" class="btn btn-primary" style="font-size: 12px"
+                                                                onclick="SaveElements('{{ categorie.id }}')">保存
+                                                        </button>
+                                                        <button type="button" class="btn btn-default" style="font-size: 12px"
+                                                                onclick="CancelElements('{{ categorie.id }}')">取消
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h4 class="box-title">添加分类</h4>
+                                </div>
+                                <div class="box-body">
+                                    <form action="{% url 'admin:categories' %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <textarea class="form-control" rows="3" placeholder="添加多个分类，以逗号(,)分隔开" name="categories"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">添加</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(function () {
+            $("#articleList").DataTable();
+        });
+        function DeleteCategories(Name) {
+            $.ajax({
+                type: "DELETE",
+                url: "{% url 'admin:categories' %}",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                data: JSON.stringify({
+                    name: Name
+                }),
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#CategoriesID' + data.cid).remove();
+                }
+            });
+        }
+        function HideElements(ID) {
+
+            $('#CategoriesName' + ID).css(
+                "display", "none"
+            );
+            $('#DeleteCategories' + ID).css(
+                "display", "none"
+            );
+
+            $('#DCategoriesName' + ID).css(
+                "display", "block"
+            );
+            $('#BCategoriesName' + ID).css(
+                "display", "block"
+            );
+        }
+
+        function SaveElements(ID) {
+            var CategoriesVal = $('#ICategoriesName' + ID).val();
+
+            $.ajax({
+                type: "PUT",
+                url: "{% url 'admin:categories' %}",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                data: JSON.stringify({
+                    id: ID,
+                    val: CategoriesVal
+                }),
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#CategoriesName' + data.id).text(values = data.val);
+                    CancelElements(ID);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        function CancelElements(ID) {
+            $('#CategoriesName' + ID).css(
+                "display", "block"
+            );
+            $('#DeleteCategories' + ID).css(
+                "display", "block"
+            );
+
+            $('#DCategoriesName' + ID).css(
+                "display", "none"
+            );
+            $('#BCategoriesName' + ID).css(
+                "display", "none"
+            );
+        }
+    </script>
+{% endblock %}

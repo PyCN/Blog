@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}安生 | 全局设置{% endblock %}
+{% block custom_css %}
+
+{% endblock %}
+
+{% block content-wrapper %}
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                全局设置
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'admin:dashboard' %}"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li class="active">全局设置</li>
+            </ol>
+        </section>
+        <section class="content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">博客相关配置</h3>
+                        </div>
+                        <form class="form-horizontal" method="post" action="{% url 'admin:setting' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label for="Title" class="col-sm-2 control-label">标题</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="Title" placeholder="Title" name="title" value="{{ setting.title }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="KeyWords" class="col-sm-2 control-label">关键词</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="KeyWords" placeholder="KeyWords" name="keywords" value="{{ setting.keywords }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Description" class="col-sm-2 control-label">描述</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="Description" placeholder="Description" name="description" value="{{ setting.description }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="NickName" class="col-sm-2 control-label">首页昵称</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="NickName" placeholder="NickName" name="nickname" value="{{ setting.nickname }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Avatar" class="col-sm-2 control-label">首页头像</label>
+                                    <div class="col-sm-10">
+                                        <input type="file" class="form-control" id="Avatar" placeholder="Avatar" name="avatar">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="HomeDescription" class="col-sm-2 control-label">首页描述</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="HomeDescription" placeholder="Home Description" name="homedescription" value="{{ setting.homedescription }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="RecordInformation" class="col-sm-2 control-label">备案信息</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="RecordInformation" placeholder="Record information" name="recordinfo" value="{{ setting.recordinfo }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="StatisticalCode" class="col-sm-2 control-label">统计分析代码</label>
+                                    <div class="col-sm-10">
+                                        <textarea id="StatisticalCode" class="form-control" rows="3" placeholder="Statistical Code..." name="statisticalcode">{{ setting.statisticalcode }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn btn-primary pull-right">保存</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

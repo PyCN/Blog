@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}安生 | 编辑文章{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'editormd/css/editormd.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
+{% endblock %}
+
+{% block content-wrapper %}
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                编辑文章
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'admin:dashboard' %}"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li><a>文章管理</a></li>
+                <li class="active">编辑文章</li>
+            </ol>
+        </section>
+        <section class="content">
+            <div class="row">
+                <form action="{% url 'admin:article-add' %}" method="post">
+                    {% csrf_token %}
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <input class="form-control input-lg" type="text" name="title" placeholder="文章标题" value="{{ article.title }}">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-xs-1">
+                                    <div class="form-group">
+                                        <select class="form-control" name="status">
+                                            {% if article.status == '0' %}
+                                                <option value="0">发布</option>
+                                                <option value="1">存稿</option>
+                                            {% elif article.status == '1' %}
+                                                <option value="1">存稿</option>
+                                                <option value="0">发布</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="url" placeholder="URL" value="{{ article.url }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select class="form-control select2" multiple="multiple" data-placeholder="分类" style="width: 100%;" name="categories">
+                                            {% for category in categories %}
+                                                <option value="{{ category.name }}">{{ category.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select class="form-control select2" multiple="multiple" data-placeholder="标签" style="width: 100%;" name="tags">
+                                            {% for tag in tags %}
+                                                <option value="{{ tag.name }}">{{ tag.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>已关联的分类</label>
+                                        <input class="form-control" type="text" value="{{ exist_categories }}" name="exist_categories">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>已关联的标签</label>
+                                        <input class="form-control" type="text" value="{{ exist_tag }}" name="exist_tag">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="layout">
+                            <div id="editormd"></div>
+                        </div>
+                    </div>
+                    <div class="box-footer" style="background-color: #ecf0f5">
+                        <button type="submit" class="btn btn-primary pull-right btn-lg">保存</button>
+                    </div>
+                    <input style="display: none" type="text" name="id" value="{{ article.id }}">
+                </form>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
+    <script src="{% static 'editormd/editormd.js' %}"></script>
+    <script type="text/javascript">
+        var Editor;
+        $(function () {
+            $.get('{% url 'admin:article-body' %}?aid={{ article.id }}', function (md) {
+                Editor = editormd("editormd", {
+                    width: "100%",
+                    height: 740,
+                    path: '../lib/',
+                    markdown: md,
+                    codeFold: true,
+                    saveHTMLToTextarea: true,
+                    searchReplace: true,
+                    htmlDecode: "style,script,iframe|on*",
+                    emoji: true,
+                    taskList: true,
+                    tocm: true,
+                    tex: true,
+                    flowChart: true,
+                    sequenceDiagram: true,
+                    imageUpload: true,
+                    imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                    imageUploadURL: "/admin/upload/"
+                });
+            });
+            $(".select2").select2();
+        });
+    </script>
+{% endblock %}
