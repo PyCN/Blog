@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 """
 Django settings for blog_project project.
 
@@ -25,14 +25,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_lho^m33w-!qkhmqe2n2cwovcouiw(l++%&^(w5x@171pbm7_4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True 
-TEMPLATE_DEBUG = False  
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '120.24.191.19', 'cblog.xyz', 'www.cblog.xyz']
+# DEBUG = True
+TEMPLATE_DEBUG = False
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
+                 '120.24.191.19', 'cblog.xyz', 'www.cblog.xyz']
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'haystack',
     'blog',
+    'admin',
     'markdown2',
     'pygments',
     'rest_framework',
@@ -54,7 +55,7 @@ REST_FRAMWORK = {
 
 # 不要轻易缓存站点，不然登陆、登出等容易出问题
 MIDDLEWARE_CLASSES = [
-    #'django.middleware.cache.UpdateCacheMiddleware',#缓存站点 增加 必须放最上  
+    #'django.middleware.cache.UpdateCacheMiddleware',#缓存站点 增加 必须放最上
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,11 +64,11 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'django.middleware.cache.FetchFromCacheMiddleware',#缓存站点 增加 必须放最后  
+    #'django.middleware.cache.FetchFromCacheMiddleware',#缓存站点 增加 必须放最后
 ]
 
-#CACHE_MIDDLEWARE_ALIAS = 'default'  #缓存站点 
-#CACHE_MIDDLEWARE_SECONDS = 60 * 60 #缓存站点 失效的时间 秒  
+# CACHE_MIDDLEWARE_ALIAS = 'default'  #缓存站点
+# CACHE_MIDDLEWARE_SECONDS = 60 * 60 #缓存站点 失效的时间 秒
 
 
 # 使用django-redis作为缓存
@@ -92,9 +93,8 @@ ROOT_URLCONF = 'blog_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'blog/templates')]
-        ,
-        'APP_DIRS': True, 
+        'DIRS': [os.path.join(BASE_DIR, 'blog/templates')],
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -169,8 +169,8 @@ HAYSTACK_CONNECTIONS = {
 # 自动更新索引
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
-#设置每页显示的数目，默认为20，可以自己修改  
-HAYSTACK_SEARCH_RESULTS_PER_PAGE  =  8  
+# 设置每页显示的数目，默认为20，可以自己修改
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 8
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -188,11 +188,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_ROOT = os.path.join(os.path.dirname(__file__),'static')
+STATIC_ROOT = os.path.join(os.path.dirname(__file__), 'static')
 STATIC_URL = '/static/'
-STATICFILES = os.path.join(BASE_DIR, 'blog/static')
+STATICFILES = [os.path.join(BASE_DIR, 'blog/static'),
+               os.path.join(BASE_DIR, 'admin/static')]
 
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__),'media')
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media')
 MEDIA_URL = '/media/'
 MEDIAFILES = os.path.join(BASE_DIR, 'blog/media')
 

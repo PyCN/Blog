@@ -37,7 +37,7 @@ __all__ = [
 
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'dashboard.html')
+        return render(request, 'admin/dashboard.html')
 
 
 class ArticleAddView(LoginRequiredMixin, View):
