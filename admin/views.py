@@ -10,7 +10,8 @@ from django.utils import timezone
 from django.conf import settings
 
 from .forms import LinkForm, SettingForm
-from blog.models import *
+from blog.models import Article, BlogComment, Category, Permission,\
+        Link, Tag, UserProfile, UserProfile
 from .models import *
 # from users.models import *
 from utils.mixin_utils import LoginRequiredMixin
@@ -21,7 +22,7 @@ __all__ = [
     'ArticleEditView',
     'ArticleBodyView',
     'TagView',
-    'CategoriesView',
+    'CategoryView',
     'UploadView',
     'LinkView',
     # 'UsersView',
@@ -42,9 +43,9 @@ class DashboardView(LoginRequiredMixin, View):
 
 class ArticleAddView(LoginRequiredMixin, View):
     def get(self, request):
-        categories = Categories.objects.all().values('name')
+        categories = Category.objects.all().values('name')
         tags = Tag.objects.all().values('name')
-        return render(request, 'article-add.html', {'categories': categories, 'tags': tags})
+        return render(request, 'admin/article-add.html', {'categories': categories, 'tags': tags})
 
     def post(self, request):
         d = dict(request.POST)
@@ -78,13 +79,16 @@ class ArticleAddView(LoginRequiredMixin, View):
                 article.tag.remove(t)
             exist_categories = d['exist_categories'][0].split(',')
             old_categories = article.get_categories().strip(',').split(',')
-            categories = list(set(categories).difference(set(exist_categories)))
-            delete_categories_list = list(set(old_categories).difference(set(exist_categories)))
+            categories = list(
+                set(categories).difference(set(exist_categories)))
+            delete_categories_list = list(
+                set(old_categories).difference(set(exist_categories)))
             for dc in delete_categories_list:
-                t = Categories.objects.get(name=dc)
+                t = Category.objects.get(name=dc)
                 article.categories.remove(t)
         except Exception:
-            article = Article.objects.create(title=title, url=url, body=editormd, status=status, description=description)
+            article = Article.objects.create(
+                title=title, url=url, body=editormd, status=status, description=description)
             if status == 0:
                 article.release_time = timezone.now()
         if tags:
@@ -93,7 +97,7 @@ class ArticleAddView(LoginRequiredMixin, View):
                 article.tag.add(t)
         if categories:
             for categorie in categories:
-                c = Categories.objects.get(name=categorie)
+                c = Category.objects.get(name=categorie)
                 article.categories.add(c)
         article.save()
         return HttpResponseRedirect(reverse('admin:article-list'))
@@ -113,11 +117,11 @@ class ArticleEditView(LoginRequiredMixin, View):
             article = Article.objects.get(pk=aid)
         else:
             article = Article.objects.all().last()
-        categories = Categories.objects.all().values('name')
+        categories = Category.objects.all().values('name')
         tags = Tag.objects.all().values('name')
         exist_categories = article.get_categories().strip(',')
         exist_tag = article.get_tag().strip(',')
-        return render(request, 'article-edit.html', {
+        return render(request, 'admin/article-edit.html', {
             'categories': categories,
             'tags': tags,
             'article': article,
@@ -135,14 +139,14 @@ class ArticleBodyView(LoginRequiredMixin, View):
 
 class ArticleListView(LoginRequiredMixin, ListView):
     queryset = Article.objects.all().order_by('-id')
-    template_name = 'article-list.html'
+    template_name = 'admin/article-list.html'
     context_object_name = 'articles'
 
 
 class TagView(LoginRequiredMixin, View):
     def get(self, request):
         tags = Tag.objects.all()
-        return render(request, 'tag.html', {'tags': tags})
+        return render(request, 'admin/tag.html', {'tags': tags})
 
     def post(self, request):
         tags = request.POST.get('tags', '')
@@ -168,31 +172,31 @@ class TagView(LoginRequiredMixin, View):
         return HttpResponse(json.dumps(data))
 
 
-class CategoriesView(LoginRequiredMixin, View):
+class CategoryView(LoginRequiredMixin, View):
     def get(self, request):
-        categories = Categories.objects.all()
-        return render(request, 'categories.html', {'categories': categories})
+        categories = Category.objects.all()
+        return render(request, 'admin/categories.html', {'categories': categories})
 
     def post(self, request):
         categories = request.POST.get('categories', '')
         for categorie in categories.split(','):
 
             try:
-                Categories.objects.create(name=categorie.capitalize())
+                Category.objects.create(name=categorie.capitalize())
             except Exception:
                 pass
         return HttpResponseRedirect(reverse('admin:categories'))
 
     def delete(self, request):
         categories = json.loads(str(request.body, encoding='utf-8'))
-        c = Categories.objects.get(name=categories['name'])
+        c = Category.objects.get(name=categories['name'])
         cid = c.id
         c.delete()
         return HttpResponse(json.dumps({'cid': cid}))
 
     def put(self, request):
         data = json.loads(str(request.body, encoding='utf-8'))
-        categories = Categories.objects.get(pk=data['id'])
+        categories = Category.objects.get(pk=data['id'])
         categories.name = data['val']
         categories.save()
         return HttpResponse(json.dumps(data))
@@ -203,7 +207,8 @@ class UploadView(FormView):
         files = request.FILES.get('editormd-image-file', None)
         if files:
             img = Images.objects.create(image=files)
-            result = {'success': 1, 'message': 'OK', 'url': request.META['HTTP_ORIGIN'] + settings.MEDIA_URL + str(img.image)}
+            result = {'success': 1, 'message': 'OK',
+                      'url': request.META['HTTP_ORIGIN'] + settings.MEDIA_URL + str(img.image)}
         else:
             result = {'success': 0, 'message': '未获取到文件！'}
         return HttpResponse(json.dumps(result), content_type='application/json')
@@ -212,7 +217,7 @@ class UploadView(FormView):
 class LinkView(LoginRequiredMixin, View):
     def get(self, request):
         links = Link.objects.all().order_by('-add_time')
-        return render(request, 'link.html', {'links': links})
+        return render(request, 'admin/link.html', {'links': links})
 
     def post(self, request):
         link_form = LinkForm(request.POST)
@@ -247,7 +252,7 @@ class LinkView(LoginRequiredMixin, View):
 
 class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'profile.html')
+        return render(request, 'admin/profile.html')
 
     def post(self, request):
         image = request.FILES.get('image')
@@ -266,7 +271,8 @@ class ProfileView(LoginRequiredMixin, View):
             user.email = email
             flag = True
         user.save()
-        Message.objects.create(body="用户%s于%s通过后台修改了个人信息" % (user.email, timezone.now()))
+        Message.objects.create(body="用户%s于%s通过后台修改了个人信息" %
+                               (user.email, timezone.now()))
         if flag:
             logout(request)
             return HttpResponseRedirect(reverse('login'))
@@ -275,7 +281,7 @@ class ProfileView(LoginRequiredMixin, View):
 
 
 class MessageOSView(LoginRequiredMixin, ListView):
-    template_name = 'message-os.html'
+    template_name = 'admin/message-os.html'
     context_object_name = 'messages'
 
     def get_queryset(self):
@@ -288,7 +294,7 @@ class MessageCommentView(LoginRequiredMixin, View):
     def get(self, request):
         Comment.objects.filter(status=False).update(status=True)
         comments = Comment.objects.all().order_by('-add_time')
-        return render(request, 'message-comment.html', {'comments': comments})
+        return render(request, 'admin/message-comment.html', {'comments': comments})
 
 
 class SettingView(View):
@@ -297,7 +303,7 @@ class SettingView(View):
             setting = Setting.objects.get(pk=1)
         except Setting.DoesNotExist:
             setting = None
-        return render(request, 'setting.html', {'setting': setting})
+        return render(request, 'admin/setting.html', {'setting': setting})
 
     def post(self, request):
         setting_form = SettingForm(request.POST)
