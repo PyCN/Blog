@@ -25,7 +25,7 @@ __all__ = [
     'CategoryView',
     'UploadView',
     'LinkView',
-    # 'UsersView',
+    'UsersView',
     'ProfileView',
     'DashboardView',
     'MessageOSView',
@@ -142,6 +142,11 @@ class ArticleListView(LoginRequiredMixin, ListView):
     template_name = 'admin/article-list.html'
     context_object_name = 'articles'
 
+    def get_queryset(self):
+        super(ArticleListView, self).__init__()
+        articles = Article.objects.all()
+        return articles
+
 
 class TagView(LoginRequiredMixin, View):
     def get(self, request):
@@ -244,10 +249,10 @@ class LinkView(LoginRequiredMixin, View):
         return HttpResponse(json.dumps(data))
 
 
-# class UsersView(LoginRequiredMixin, ListView):
-    # queryset = UserProfile.objects.all()
-    # template_name = 'users.html'
-    # context_object_name = 'users'
+class UsersView(LoginRequiredMixin, ListView):
+    queryset = UserProfile.objects.all()
+    template_name = 'admin/users.html'
+    context_object_name = 'users'
 
 
 class ProfileView(LoginRequiredMixin, View):
@@ -256,15 +261,15 @@ class ProfileView(LoginRequiredMixin, View):
 
     def post(self, request):
         image = request.FILES.get('image')
-        nick_name = request.POST.get('nick_name')
+        nickname = request.POST.get('nickname')
         gender = request.POST.get('gender')
         email = request.POST.get('email')
         user = UserProfile.objects.get(pk=request.user.pk)
         flag = False
         if image:
             user.image = image
-        if nick_name and nick_name != user.nick_name:
-            user.nick_name = nick_name
+        if nickname and nickname != user.nickname:
+            user.nickname = nickname
         if gender and gender != user.gender:
             user.gender = gender
         if email and email != user.email:
@@ -292,8 +297,8 @@ class MessageOSView(LoginRequiredMixin, ListView):
 
 class MessageCommentView(LoginRequiredMixin, View):
     def get(self, request):
-        Comment.objects.filter(status=False).update(status=True)
-        comments = Comment.objects.all().order_by('-add_time')
+        BlogComment.objects.filter(status=False).update(status=True)
+        comments = BlogComment.objects.all().order_by('-add_time')
         return render(request, 'admin/message-comment.html', {'comments': comments})
 
 

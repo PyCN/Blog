@@ -5,7 +5,7 @@ from .views import *
 urlpatterns = [
     url(r'^tag/$', TagView.as_view(), name='tag'),
     url(r'^link/$', LinkView.as_view(), name='link'),
-    # url(r'^users/$', UsersView.as_view(), name='users'),
+    url(r'^users/$', UsersView.as_view(), name='users'),
     url(r'^profile/$', ProfileView.as_view(), name='profile'),
     url(r'^setting/$', SettingView.as_view(), name='setting'),
     url(r'^upload/$', csrf_exempt(UploadView.as_view()), name='upload'),

@@ -57,7 +57,7 @@
                                         <td>
                                             <button onclick="EditArticle({{ article.id }})" type="button" class="btn btn-success" style="font-size: 12px">编辑</button>
                                             <button onclick="DeleteArticle({{ article.id }})" type="button" class="btn btn-danger" style="font-size: 12px">删除</button>
-                                            <a href="{% url 'article' article.url %}"><button type="button" class="btn btn-default" style="font-size: 12px">访问</button></a>
+                                            <a href="{% url 'blog:detail' article.id %}"><button type="button" class="btn btn-default" style="font-size: 12px">访问</button></a>
                                         </td>
                                     </tr>
                                 {% endfor %}
