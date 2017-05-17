@@ -4,7 +4,7 @@ import sys
 import logging
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "blog_project.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configs.settings")
 
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(filename)s[line:%(lineno)d]%(levelname)s %(message)s',
