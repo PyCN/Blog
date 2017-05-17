@@ -63,6 +63,20 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('blog:detail', kwargs={'article_id': self.pk})
 
+    def get_categories(self):
+        categories = ''
+        categories += ',' + self.category.name
+        return categories.strip(',')
+
+    def get_tag(self):
+        tag = ''
+        for t in self.tags.all():
+            tag += ',' + t.name
+        return tag.strip(',')
+
+    def get_comment_num(self):
+        return BlogComment.objects.filter(article=self.id).count()
+
     class Meta:
         ordering = ['-topped', '-last_modified_time', '-created_time']
 
