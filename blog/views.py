@@ -163,6 +163,7 @@ class ArticleDetailView(DetailView):
 @login_required
 def upload(request, article_id):
     article_url = reverse('blog:detail', args=(article_id,))
+    result = {'error_code': 0, 'msg': 'upload success'}
     if request.method == 'GET':
         return HttpResponseRedirect(article_url)
     else:
@@ -192,7 +193,7 @@ def upload(request, article_id):
                     f.write(chunk)
         target_article.attachment_url += '%s/' % myfilename
         target_article.save()
-        return HttpResponse('Upload success!')
+        return HttpResponse(json.dumps(result))
 
 
 # arguments can be:login_url, raise_exception
