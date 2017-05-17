@@ -34,9 +34,14 @@ from blog.models import Article, Category, Tag, BlogComment, UserProfile, Visito
 from blog.tasks import save_client_ip
 from .forms import RegistForm, UserForm, RetrieveForm, SearchForm, BlogCommentForm
 from permission import check_blog_permission
+from configs import settings
 
+# 代表本文件的绝对目录
 BASEPATH = sys.path[0]
-UPLOADPATH = os.path.join(BASEPATH, 'blog/media/uploads')
+# 文件上传的目录
+ATTACHEMENTPATH = os.path.join(settings.MEDIA_ROOT, 'blog/attachments')
+USERPATH = os.path.join(settings.MEDIA_ROOT, 'user')
+# 首页显示的评论字数
 LENGTH_IN_RIGHT_INDEX = 14
 
 
@@ -174,12 +179,10 @@ def upload(request, article_id):
         if not myfile:
             return HttpResponse('No upload files!')
         myfilename = myfile.name
-        rightformat = len(myfilename.split('/')) < 2
-        if not rightformat:
+        filename_error = os.path.sep in myfilename
+        if filename_error:
             return HttpResponse('File name error!')
-        elif myfilename in target_article.attachment_url:
-            return HttpResponse('File exists!')
-        folderpath = os.path.join(UPLOADPATH, '%s/' % article_id)
+        folderpath = os.path.join(ATTACHEMENTPATH, str(article_id))
         try:
             os.mkdir(folderpath)
         except OSError, e:
@@ -191,7 +194,14 @@ def upload(request, article_id):
             else:
                 for chunk in myfile.chunks():
                     f.write(chunk)
-        target_article.attachment_url += '%s/' % myfilename
+        # Remove the same filename, and attachment_url should split in
+        # case of new filename is part of old filename
+        if myfilename in target_article.attachment_url.split('/'):
+            # Because the name exists, so attachment_url shouldn't change
+            logging.warn('File exists, and will remove old file')
+        else:
+            target_article.attachment_url = myfilename + '/' \
+                    + target_article.attachment_url
         target_article.save()
         return HttpResponse(json.dumps(result))
 
@@ -225,7 +235,7 @@ def download(request, param1, param2):
             file_name = target_article.attachment_url.split('/')[file_id - 1]
         except IndexError:
             logging.error('No such file!')
-        file_path = os.path.join(UPLOADPATH, article_id, file_name)
+        file_path = os.path.join(ATTACHEMENTPATH, article_id, file_name)
         response = FileResponse(file_iterator(file_path))
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename=%s' % file_name.encode(
@@ -427,7 +437,7 @@ def regist(request):
                     user_profile.nickname = nickname
                     user_profile.userimg = '/media/uploads/userimg/defaultuser.png'
                     if userimg:
-                        imgpath = os.path.join(UPLOADPATH, 'userimg', username)
+                        imgpath = os.path.join(ATTACHEMENTPATH, 'userimg', username)
                         with open(imgpath, 'wb') as img:
                             img.write(userimg.read())
                         user_profile.userimg = imgpath[(len(BASEPATH) + 5):]
