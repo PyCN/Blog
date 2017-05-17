@@ -92,24 +92,27 @@
 			});
         });
         function DeleteArticle(ID) {
-            $.ajax({
-                type: "DELETE",
-                url: "{% url 'admin:article-add' %}",
-                headers: {
-                    "X-CSRFToken": '{{ csrf_token }}'
-                },
-                data: JSON.stringify({
-                    id: ID
-                }),
-                success: function (data) {
-                    data = JSON.parse(data);
-                    $('#Article' + data.aid).remove();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert(jqXHR, textStatus, errorThrown);
-                }
-            });
-        }
+			var response = confirm('确定删除吗？');
+			if (response==true){
+                $.ajax({
+                    type: "DELETE",
+                    url: "{% url 'admin:article-add' %}",
+                    headers: {
+                        "X-CSRFToken": '{{ csrf_token }}'
+                    },
+                    data: JSON.stringify({
+                        id: ID
+                    }),
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        $('#Article' + data.aid).remove();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(jqXHR, textStatus, errorThrown);
+                    }
+                });
+			}
+		}
         function EditArticle(ID) {
             location.href = "{% url 'admin:article-edit' %}" + '?aid=' + ID
         }
