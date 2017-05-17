@@ -71,35 +71,27 @@ class ArticleAddView(LoginRequiredMixin, View):
             delete_tag_list = list(set(old_tag).difference(set(exist_tag)))
             for dt in delete_tag_list:
                 t = Tag.objects.get(name=dt)
-                article.tag.remove(t)
-            exist_categories = d['exist_categories'][0].split(',')
-            old_categories = article.get_categories().strip(',').split(',')
-            categories = list(
-                set(categories).difference(set(exist_categories)))
-            delete_categories_list = list(
-                set(old_categories).difference(set(exist_categories)))
-            for dc in delete_categories_list:
-                t = Category.objects.get(name=dc)
-                article.categories.remove(t)
+                article.tags.remove(t)
         except Exception:
             article = Article.objects.create(
                 title=title, body=editormd, status=status, abstract=abstract)
         if tags:
             for tag in tags:
                 t = Tag.objects.get(name=tag)
-                article.tag.add(t)
-        if categories:
-            for categorie in categories:
-                c = Category.objects.get(name=categorie)
-                article.categories.add(c)
+                article.tags.add(t)
+        article.category = Category.objects.get(name=categories[0])
         article.save()
         return HttpResponseRedirect(reverse('admin:article-list'))
 
     def delete(self, request):
-        data = json.loads(str(request.body, encoding='utf-8'))
-        article = Article.objects.get(pk=data['id'])
-        aid = article.id
-        article.delete()
+        logging.info('delete article')
+        try:
+            data = json.loads(request.body)
+            article = Article.objects.get(pk=data['id'])
+            aid = article.id
+            article.delete()
+        except Exception, e:
+            logging.error(e)
         return HttpResponse(json.dumps({'aid': aid}))
 
 

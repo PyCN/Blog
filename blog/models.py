@@ -64,9 +64,7 @@ class Article(models.Model):
         return reverse('blog:detail', kwargs={'article_id': self.pk})
 
     def get_categories(self):
-        categories = ''
-        categories += ',' + self.category.name
-        return categories.strip(',')
+        return self.category.name
 
     def get_tag(self):
         tag = ''
