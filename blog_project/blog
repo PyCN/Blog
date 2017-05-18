@@ -13,8 +13,9 @@ server {
       uwsgi_pass 127.0.0.1:9001;
     }
 
-    location /static/ {
-      alias /home/ctg/project/Blog/blog/static/;
+    # 设置静态文件根目录为Django项目的root_static, /static无'/'
+    location /static {
+      alias /home/ctg/project/Blog/blog_project/static/;
     }
 
     location /media/ {
