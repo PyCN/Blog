@@ -2,9 +2,9 @@
 {% load staticfiles %}
 {% block title %}安生 | 添加文章{% endblock %}
 {% block custom_css %}
-    <link rel="stylesheet" href="{% static 'admin/geditormd/css/editormd.css' %}"/>
-    <link rel="stylesheet" href="{% static 'admin/gplugins/select2/select2.min.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/gdist/css/AdminLTE.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/editormd/css/editormd.css' %}"/>
+    <link rel="stylesheet" href="{% static 'admin/plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/dist/css/AdminLTE.min.css' %}">
 {% endblock %}
 
 {% block content-wrapper %}
@@ -82,8 +82,8 @@
 {% endblock %}
 
 {% block custom_js %}
-    <script src="{% static 'admin/gplugins/select2/select2.full.min.js' %}"></script>
-    <script src="{% static 'admin/geditormd/editormd.js' %}"></script>
+    <script src="{% static 'admin/plugins/select2/select2.full.min.js' %}"></script>
+    <script src="{% static 'admin/editormd/editormd.js' %}"></script>
     <script type="text/javascript">
         var Editor;
         $(function () {

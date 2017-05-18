@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% block title %}安生 | 标签管理{% endblock %}
 {% block custom_css %}
-    <link rel="stylesheet" href="{% static 'admin/gplugins/datatables/dataTables.bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/plugins/datatables/dataTables.bootstrap.css' %}">
 {% endblock %}
 
 {% block content-wrapper %}
@@ -94,8 +94,8 @@
 {% endblock %}
 
 {% block custom_js %}
-    <script src="{% static 'admin/gplugins/datatables/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'admin/gplugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'admin/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'admin/plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
     <script>
         $(function () {
             $("#articleList").DataTable();
