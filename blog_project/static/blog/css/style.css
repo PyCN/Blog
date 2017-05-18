@@ -15,7 +15,8 @@ body {
     background-color:#404040; 
     background-repeat:no-repeat;
     background-attachment: fixed;
-    background-image:url(https://ss1.bdstatic.com/kvoZeXSm1A5BphGlnYG/skin_zoom/19.jpg?2)
+    background-position:center;
+    background-image:url(../img/background-img.jpg)
 }
 
 body.mac {
@@ -35,8 +36,21 @@ a {
     text-decoration: none
 }
 
+a:link {
+    color: #000005;
+}
+
+
+a:visited {
+    color: #000005;
+}
+
 a:hover {
     text-decoration: none
+}
+
+a:actived {
+    color: red;
 }
 
 input, textarea {
@@ -1075,8 +1089,8 @@ img.aligncenter, img.alignright, img.alignleft {
 }
 
 #footer {
-    height: 222px;
-    background-color: #515666;
+    height: 1px;
+    background-color: #0011FF;
     margin-bottom: 0;
     color: #a8abb3;
     clear: both;
@@ -1365,8 +1379,8 @@ img.aligncenter, img.alignright, img.alignleft {
 }
 
 .transparent {
-  filter:alpha(opacity=70);
-  -moz-opacity:0.7;
-  -khtml-opacity: 0.7;
-  opacity: 0.7;
+  filter:alpha(opacity=60);
+  -moz-opacity:0.6;
+  -khtml-opacity: 0.6;
+  opacity: 0.6;
 }
