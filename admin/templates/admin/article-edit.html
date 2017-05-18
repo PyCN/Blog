@@ -2,9 +2,9 @@
 {% load staticfiles %}
 {% block title %}安生 | 编辑文章{% endblock %}
 {% block custom_css %}
-    <link rel="stylesheet" href="{% static 'editormd/css/editormd.css' %}"/>
-    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
-    <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/editormd/css/editormd.css' %}"/>
+    <link rel="stylesheet" href="{% static 'admin/plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/dist/css/AdminLTE.min.css' %}">
 {% endblock %}
 
 {% block content-wrapper %}
@@ -107,8 +107,8 @@
 {% endblock %}
 
 {% block custom_js %}
-    <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
-    <script src="{% static 'editormd/editormd.js' %}"></script>
+    <script src="{% static 'admin/plugins/select2/select2.full.min.js' %}"></script>
+    <script src="{% static 'admin/editormd/editormd.js' %}"></script>
     <script type="text/javascript">
         var Editor;
         $(function () {
@@ -116,7 +116,8 @@
                 Editor = editormd("editormd", {
                     width: "100%",
                     height: 740,
-                    path: '../lib/',
+					<!--根据浏览器调试信息和nginx error.log来更改路径-->
+                    path: '/static/admin/editormd/lib/',
                     markdown: md,
                     codeFold: true,
                     saveHTMLToTextarea: true,
