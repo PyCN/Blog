@@ -39,11 +39,11 @@
     <header class="main-header">
 
         <!-- Logo -->
-        <a href="{% url 'admin:dashboard' %}" class="logo">
+        <a href="{% url 'blog:index' %}" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>A</b>S</span>
+            <span class="logo-mini"><b>首</b>页</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>An</b>Sheng</span>
+            <span class="logo-lg"><b>网站</b>首页</span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->
@@ -78,7 +78,7 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="{{ MEDIA_URL }}{{ request.user.image }}" class="user-image" alt="User Image">
-                            <span class="hidden-xs">{{ request.user.nick_name }}</span>
+                            <span class="hidden-xs">{{ request.user.nickname }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
@@ -116,7 +116,7 @@
                     <img src="{{ MEDIA_URL }}{{ request.user.image }}" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>{{ request.user.nick_name }}</p>
+                    <p>{{ request.user.nickname }}</p>
                     <a><i class="fa fa-circle text-success"></i> 在线</a>
                 </div>
             </div>
@@ -200,7 +200,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 0.2.0
         </div>
-        <strong>Copyright &copy; 2017-2017 <a href="https://www.ansheng.me">安生</a>.</strong> All rights
+        <strong>Copyright &copy; 2017-2017 <a href="https://www.ansheng.me">低调诺</a>.</strong> All rights
         reserved.
     </footer>
 

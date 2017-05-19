@@ -39,13 +39,10 @@
                                 <div class="col-xs-1">
                                     <div class="form-group">
                                         <select class="form-control" name="status">
-                                            {% if article.status == 'p' %}
-                                                <option value="p">发布</option>
-                                                <option value="d">存稿</option>
-                                            {% elif article.status == 'd' %}
-                                                <option value="d">存稿</option>
-                                                <option value="p">发布</option>
-                                            {% endif %}
+                                            {% block status_show %}
+                                            <option value="p">发布</option>
+                                            <option value="d">存稿</option>
+                                            {% endblock %}
                                         </select>
                                     </div>
                                 </div>
