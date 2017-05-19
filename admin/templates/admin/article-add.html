@@ -1,6 +1,6 @@
 {% extends 'admin/base.html' %}
 {% load staticfiles %}
-{% block title %}安生 | 添加文章{% endblock %}
+{% block title %}低调诺 | 添加文章{% endblock %}
 {% block custom_css %}
     <link rel="stylesheet" href="{% static 'admin/editormd/css/editormd.css' %}"/>
     <link rel="stylesheet" href="{% static 'admin/plugins/select2/select2.min.css' %}">
@@ -9,6 +9,8 @@
 
 {% block content-wrapper %}
     <div class="content-wrapper">
+
+        {% block content-header %}
         <section class="content-header">
             <h1>
                 添加文章
@@ -19,6 +21,8 @@
                 <li class="active">添加文章</li>
             </ol>
         </section>
+        {% endblock %}
+
         <section class="content">
             <div class="row">
                 <form action="{% url 'admin:article-add' %}" method="post">
@@ -27,7 +31,7 @@
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <input class="form-control input-lg" type="text" name="title" placeholder="文章标题">
+                                    <input class="form-control input-lg" type="text" name="title" placeholder="文章标题" value="{{ article.title }}">
                                 </div>
                             </div>
                             <br>
@@ -35,13 +39,18 @@
                                 <div class="col-xs-1">
                                     <div class="form-group">
                                         <select class="form-control" name="status">
-                                            <option value="0">发布</option>
-                                            <option value="1">存稿</option>
+                                            {% if article.status == 'p' %}
+                                                <option value="p">发布</option>
+                                                <option value="d">存稿</option>
+                                            {% elif article.status == 'd' %}
+                                                <option value="d">存稿</option>
+                                                <option value="p">发布</option>
+                                            {% endif %}
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
-                                    <input type="text" class="form-control" name="url" placeholder="URL">
+                                    <input type="text" class="form-control" name="abstract" placeholder="摘要" value="{{ article.abstract }}">
                                 </div>
                             </div>
                             <div class="row">
@@ -65,6 +74,38 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>已关联的分类</label>
+                                        <input class="form-control" type="text" value="{{ exist_categories }}" name="exist_categories">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>点赞数</label>
+                                        <input class="form-control" type="text" value="{{ article.likes }}" name="likes">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>浏览数</label>
+                                        <input class="form-control" type="text" value="{{ article.views }}" name="views">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>已关联的标签</label>
+                                        <input class="form-control" type="text" value="{{ exist_tag }}" name="exist_tag">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -75,6 +116,7 @@
                     <div class="box-footer" style="background-color: #ecf0f5">
                         <button type="submit" class="btn btn-primary pull-right btn-lg">保存</button>
                     </div>
+                    <input style="display: none" type="text" name="id" value="{{ article.id }}">
                 </form>
             </div>
         </section>
