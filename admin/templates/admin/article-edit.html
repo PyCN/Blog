@@ -1,123 +1,18 @@
-{% extends 'admin/base.html' %}
+{% extends 'admin/article-add.html' %}
 {% load staticfiles %}
 {% block title %}低调诺| 编辑文章{% endblock %}
-{% block custom_css %}
-    <link rel="stylesheet" href="{% static 'admin/editormd/css/editormd.css' %}"/>
-    <link rel="stylesheet" href="{% static 'admin/plugins/select2/select2.min.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/dist/css/AdminLTE.min.css' %}">
-{% endblock %}
 
-{% block content-wrapper %}
-    <div class="content-wrapper">
-        <section class="content-header">
-            <h1>
-                编辑文章
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="{% url 'admin:dashboard' %}"><i class="fa fa-dashboard"></i> 首页</a></li>
-                <li><a>文章管理</a></li>
-                <li class="active">编辑文章</li>
-            </ol>
-        </section>
-        <section class="content">
-            <div class="row">
-                <form action="{% url 'admin:article-add' %}" method="post">
-                    {% csrf_token %}
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <input class="form-control input-lg" type="text" name="title" placeholder="文章标题" value="{{ article.title }}">
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-xs-1">
-                                    <div class="form-group">
-                                        <select class="form-control" name="status">
-                                            {% if article.status == 'p' %}
-                                                <option value="p">发布</option>
-                                                <option value="d">存稿</option>
-                                            {% elif article.status == 'd' %}
-                                                <option value="d">存稿</option>
-                                                <option value="p">发布</option>
-                                            {% endif %}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <input type="text" class="form-control" name="abstract" placeholder="摘要" value="{{ article.abstract }}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <select class="form-control select2" multiple="multiple" data-placeholder="分类" style="width: 100%;" name="categories">
-                                            {% for category in categories %}
-                                                <option value="{{ category.name }}">{{ category.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <select class="form-control select2" multiple="multiple" data-placeholder="标签" style="width: 100%;" name="tags">
-                                            {% for tag in tags %}
-                                                <option value="{{ tag.name }}">{{ tag.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>已关联的分类</label>
-                                        <input class="form-control" type="text" value="{{ exist_categories }}" name="exist_categories">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-1">
-                                    <div class="form-group">
-                                        <label>点赞数</label>
-                                        <input class="form-control" type="text" value="{{ article.likes }}" name="likes">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-1">
-                                    <div class="form-group">
-                                        <label>浏览数</label>
-                                        <input class="form-control" type="text" value="{{ article.views }}" name="views">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>已关联的标签</label>
-                                        <input class="form-control" type="text" value="{{ exist_tag }}" name="exist_tag">
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div id="layout">
-                            <div id="editormd"></div>
-                        </div>
-                    </div>
-                    <div class="box-footer" style="background-color: #ecf0f5">
-                        <button type="submit" class="btn btn-primary pull-right btn-lg">保存</button>
-                    </div>
-                    <input style="display: none" type="text" name="id" value="{{ article.id }}">
-                </form>
-            </div>
-        </section>
-    </div>
-
+{% block content-header %}
+    <section class="content-header">
+    <h1>
+        编辑文章
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="{% url 'admin:dashboard' %}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a>文章管理</a></li>
+        <li class="active">编辑文章</li>
+    </ol>
+    </section>
 {% endblock %}
 
 {% block custom_js %}
