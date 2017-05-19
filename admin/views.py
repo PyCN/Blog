@@ -1,6 +1,7 @@
 # coding:utf-8
 
 import json
+import logging
 
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
@@ -49,27 +50,21 @@ class ArticleAddView(LoginRequiredMixin, View):
 
     def post(self, request):
         d = dict(request.POST)
+        logging.info(d)
         title = d['title'][0]
-        url = d['url'][0]
         status = d['status'][0]
+        abstract = d.get('abstract', [None])[0]
         editormd = d['editormd-markdown-doc'][0]
-        description = editormd.split('---')[0]
-        try:
-            tags = d['tags']
-        except KeyError:
-            tags = ''
-        try:
-            categories = d['categories']
-        except KeyError:
-            categories = ''
+        tags = d.get('tags', '')
+        categories = d.get('categories', '')
         try:
             aid = d['id'][0]
             article = Article.objects.get(pk=aid)
             article.title = title
-            article.url = url
             article.body = editormd
             article.status = status
-            article.description = description
+            article.abstract = abstract
+            article.views = d['views'][0]
             exist_tag = d['exist_tag'][0].split(',')
             old_tag = article.get_tag().strip(',').split(',')
             tags = list(set(tags).difference(set(exist_tag)))
@@ -88,9 +83,7 @@ class ArticleAddView(LoginRequiredMixin, View):
                 article.categories.remove(t)
         except Exception:
             article = Article.objects.create(
-                title=title, url=url, body=editormd, status=status, description=description)
-            if status == 0:
-                article.release_time = timezone.now()
+                title=title, body=editormd, status=status, abstract=abstract)
         if tags:
             for tag in tags:
                 t = Tag.objects.get(name=tag)
@@ -142,10 +135,10 @@ class ArticleListView(LoginRequiredMixin, ListView):
     template_name = 'admin/article-list.html'
     context_object_name = 'articles'
 
-    def get_queryset(self):
-        super(ArticleListView, self).__init__()
-        articles = Article.objects.all()
-        return articles
+    # def get_queryset(self):
+        # super(ArticleListView, self).__init__()
+        # articles = Article.objects.all()
+    #     return articles
 
 
 class TagView(LoginRequiredMixin, View):
