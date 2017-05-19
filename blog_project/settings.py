@@ -26,7 +26,6 @@ SECRET_KEY = '_lho^m33w-!qkhmqe2n2cwovcouiw(l++%&^(w5x@171pbm7_4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
                  '120.24.191.19', 'cblog.xyz', 'www.cblog.xyz']
 
@@ -190,8 +189,10 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(os.path.dirname(__file__), 'static')
 STATIC_URL = '/static/'
-STATICFILES = [os.path.join(BASE_DIR, 'blog/static'),
-               os.path.join(BASE_DIR, 'admin/static')]
+# DEBUG=True时默认在各个app目录下的static查找，=False时使用nginx
+# 管理静态文件
+# STATICFILES = [os.path.join(BASE_DIR, 'blog/static'),
+#                os.path.join(BASE_DIR, 'admin/static')]
 
 MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media')
 MEDIA_URL = '/media/'
