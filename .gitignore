@@ -14,19 +14,19 @@ whoosh_index/
 # Distribution / packaging
 .Python
 /
-datas/
-env/
-build/
+#datas/
+#env/
+#build/
 develop-eggs/
 #dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
+#lib/
+#lib64/
+#parts/
+#sdist/
+#var/
 *.egg-info/
 .installed.cfg
 *.egg
