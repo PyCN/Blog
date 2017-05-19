@@ -56,7 +56,7 @@ class ArticleAddView(LoginRequiredMixin, View):
         abstract = d.get('abstract', [None])[0]
         editormd = d['editormd-markdown-doc'][0]
         tags = d.get('tags', '')
-        categories = d.get('categories', '')
+        categories = d.get('categories', [''])[0]
         try:
             aid = d['id'][0]
             article = Article.objects.get(pk=aid)
@@ -73,13 +73,16 @@ class ArticleAddView(LoginRequiredMixin, View):
                 t = Tag.objects.get(name=dt)
                 article.tags.remove(t)
         except Exception:
+            category = Category.objects.get(name=categories)
             article = Article.objects.create(
-                title=title, body=editormd, status=status, abstract=abstract)
+                title=title, body=editormd, status=status, abstract=abstract,
+                category=category)
         if tags:
             for tag in tags:
                 t = Tag.objects.get(name=tag)
                 article.tags.add(t)
-        article.category = Category.objects.get(name=categories[0])
+        if categories:
+            article.category = Category.objects.get(name=categories)
         article.save()
         return HttpResponseRedirect(reverse('admin:article-list'))
 
