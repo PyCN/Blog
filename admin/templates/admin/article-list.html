@@ -32,9 +32,11 @@
                                 <tr>
                                     <th>文章标题</th>
                                     <th>创建时间</th>
-                                    <th>发布时间</th>
+                                    <th>修改时间</th>
                                     <th>阅读数</th>
+                                    <th>点赞数</th>
                                     <th>评论数</th>
+                                    <th>置顶</th>
                                     <th>状态</th>
                                     <th>操作</th>
                                 </tr>
@@ -44,13 +46,15 @@
                                     <tr id="Article{{ article.id }}">
                                         <td>{{ article.title }}</td>
                                         <td>{{ article.created_time }}</td>
-                                        <td>{{ article.release_time }}</td>
-                                        <td>{{ article.read }}</td>
+                                        <td>{{ article.last_modified_time }}</td>
+                                        <td>{{ article.views }}</td>
+                                        <td>{{ article.likes }}</td>
                                         <td>{{ article.get_comment_num }}</td>
+                                        <td>{{ article.topped }}</td>
                                         <td>
-                                            {% if article.status == '0' %}
+                                            {% if article.status == 'p' %}
                                                 <button type="button" class="btn btn-primary" style="font-size: 12px">发布</button>
-                                            {% elif article.status == '1' %}
+                                            {% elif article.status == 'd' %}
                                                 <button type="button" class="btn btn-info" style="font-size: 12px">存稿</button>
                                             {% endif %}
                                         </td>
