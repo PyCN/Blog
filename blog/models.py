@@ -169,3 +169,9 @@ class Link(models.Model):
     description = models.CharField(max_length=255,
                                    default='此用户没有添加任何描述')
     add_time = models.DateTimeField(auto_now_add=True)
+
+
+class Message(models.Model):
+    add_time = models.DateTimeField(auto_now_add=True)
+    body = models.CharField(max_length=200)
+    status = models.BooleanField(default=False)
