@@ -87,7 +87,9 @@
     <!-- page script -->
     <script>
         $(function () {
-            $("#articleList").DataTable();
+			$("#articleList").DataTable({
+			    'ordering': false
+			});
         });
         function DeleteArticle(ID) {
             $.ajax({
