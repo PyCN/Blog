@@ -2,7 +2,7 @@
 import datetime
 try:
     import pytz
-except:
+except ImportError:
     pass
 from django.utils import timezone
 from django.test import TestCase

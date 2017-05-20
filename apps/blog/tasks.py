@@ -9,7 +9,7 @@ import logging
 from django.core.cache import cache
 from celery import shared_task
 from blog.models import Article, Category, Tag, BlogComment, UserProfile, VisitorIP
-from blog_project import settings
+from configs import settings
 
 IP_INFO_URL = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip='
 

@@ -4,7 +4,7 @@ from django.conf.urls import url
 from blog import views
 from django.views.decorators.cache import cache_page  # 缓存
 import search_views
-from blog_project import settings
+from configs import settings
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
@@ -30,11 +30,13 @@ urlpatterns = [
     url(r'^logout$', views.logout, name='logout'),
     url(r'^regist$', cache_page(60)(views.regist), name='regist'),
     url(r'^retrieve$', views.retrieve, name='retrieve'),
-    url(r'^search/', search_views.MySearchView(), name='haystack_search'),  
+    url(r'^search/', search_views.MySearchView(), name='haystack_search'),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
         {'template_name': 'blog/login.html'}),
 ]
 
 if settings.DEBUG:
-    # 如果使用settings.MEDIA_ROOT,那么会上传到blog_project/media下，因为settings中的os.path.dirname(__file__)路径为../Blog/blog_project
-    urlpatterns.append(url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIAFILES}))
+    # 如果使用settings.MEDIA_ROOT,那么会上传到media/下，因为settings中的MEDIA_ROOT路径为../Blog/configs
+    urlpatterns.append(url(r'^media/(?P<path>.*)$',
+                           'django.views.static.serve', {'document_root':
+                                                         settings.MEDIA_ROOT}))
