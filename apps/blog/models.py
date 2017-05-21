@@ -123,6 +123,9 @@ class UserProfile(models.Model):
     nickname = models.CharField(max_length=255)
     userimg = models.CharField('用户头像', default='', max_length='100')
 
+    def __unicode__(self):
+        return self.nickname
+
 
 class Permission(models.Model):
     name = models.CharField("权限名称", max_length=64)
@@ -173,3 +176,6 @@ class Message(models.Model):
     add_time = models.DateTimeField(auto_now_add=True)
     body = models.CharField(max_length=200)
     status = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.nickname
