@@ -42,11 +42,13 @@ BASEPATH = sys.path[0]
 ATTACHMENT_PATH = os.path.join(settings.MEDIA_ROOT, 'blog/attachments')
 USER_IMG_PATH = os.path.join(settings.MEDIA_ROOT, 'user/userimg')
 USER_IMG_URL = os.path.join(settings.MEDIA_URL, 'user/userimg')
+USER_IMG_MAX_SIZE = 1024 * 1024
 DEFAULT_USER_IMG = 'defaultuser.png'
 # 首页显示的评论字数
 LENGTH_IN_RIGHT_INDEX = 14
 
 logger = logging.getLogger(__name__)
+
 
 def add_views_or_likes(target_article, views_or_likes):
     # A likes add two weight, a view add one weight
@@ -422,6 +424,10 @@ def regist(request):
             nickname = form.cleaned_data['nickname']
             phone = form.cleaned_data['phone']
             userimg = form.cleaned_data['userimg']
+            logger.info(userimg.size)
+            if userimg.size > USER_IMG_MAX_SIZE:
+                regist_info = 'user img too big'
+                return render_to_response("blog/regist.html", RequestContext(request, {'form': form, 'regist_info': regist_info}))
             if password1 == password2:
                 user_filter_result = User.objects.filter(username=username)
                 nickname_filter_result = UserProfile.objects.filter(
@@ -430,20 +436,19 @@ def regist(request):
                     regist_info = "邮箱或昵称已存在"
                     return render_to_response("blog/regist.html", RequestContext(request, {'form': form, 'regist_info': regist_info}))
                 else:
-                    user = User.objects.create_user(
-                        username=username, password=password1)
-                    # user.is_active=True
-                    # user.save
                     user_profile = UserProfile()
-                    user_profile.user_id = user.id
-                    user_profile.phone = phone
-                    user_profile.nickname = nickname
                     user_profile.userimg = DEFAULT_USER_IMG
                     if userimg:
                         imgpath = os.path.join(USER_IMG_PATH, username)
                         with open(imgpath, 'wb') as img:
                             img.write(userimg.read())
                         user_profile.userimg = username
+
+                    user = User.objects.create_user(
+                        username=username, password=password1)
+                    user_profile.user_id = user.id
+                    user_profile.phone = phone
+                    user_profile.nickname = nickname
                     user_profile.save()
                     regist_info = '注册成功'
                     user = auth.authenticate(
