@@ -39,11 +39,14 @@ from configs import settings
 # 代表本文件的绝对目录
 BASEPATH = sys.path[0]
 # 文件上传的目录
-ATTACHEMENTPATH = os.path.join(settings.MEDIA_ROOT, 'blog/attachments')
-USERPATH = os.path.join(settings.MEDIA_ROOT, 'user')
+ATTACHMENT_PATH = os.path.join(settings.MEDIA_ROOT, 'blog/attachments')
+USER_IMG_PATH = os.path.join(settings.MEDIA_ROOT, 'user/userimg')
+USER_IMG_URL = os.path.join(settings.MEDIA_URL, 'user/userimg')
+DEFAULT_USER_IMG = 'defaultuser.png'
 # 首页显示的评论字数
 LENGTH_IN_RIGHT_INDEX = 14
 
+logger = logging.getLogger(__name__)
 
 def add_views_or_likes(target_article, views_or_likes):
     # A likes add two weight, a view add one weight
@@ -182,7 +185,7 @@ def upload(request, article_id):
         filename_error = os.path.sep in myfilename
         if filename_error:
             return HttpResponse('File name error!')
-        folderpath = os.path.join(ATTACHEMENTPATH, str(article_id))
+        folderpath = os.path.join(ATTACHMENT_PATH, str(article_id))
         try:
             os.mkdir(folderpath)
         except OSError, e:
@@ -235,7 +238,7 @@ def download(request, param1, param2):
             file_name = target_article.attachment_url.split('/')[file_id - 1]
         except IndexError:
             logging.error('No such file!')
-        file_path = os.path.join(ATTACHEMENTPATH, article_id, file_name)
+        file_path = os.path.join(ATTACHMENT_PATH, article_id, file_name)
         response = FileResponse(file_iterator(file_path))
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename=%s' % file_name.encode(
@@ -332,7 +335,7 @@ class LoginView(FormView):
             auth.login(self.request, user)
             # 利用session传递信息给模板层
             self.request.session['username'] = username
-            self.request.session['userimg'] = user.userprofile.userimg
+            self.request.session['userimg'] = os.path.join(USER_IMG_URL, user.userprofile.userimg)
             return HttpResponseRedirect('/')
         else:
             login_info = "Username or password is error"
@@ -435,12 +438,12 @@ def regist(request):
                     user_profile.user_id = user.id
                     user_profile.phone = phone
                     user_profile.nickname = nickname
-                    user_profile.userimg = '/media/uploads/userimg/defaultuser.png'
+                    user_profile.userimg = DEFAULT_USER_IMG
                     if userimg:
-                        imgpath = os.path.join(ATTACHEMENTPATH, 'userimg', username)
+                        imgpath = os.path.join(USER_IMG_PATH, username)
                         with open(imgpath, 'wb') as img:
                             img.write(userimg.read())
-                        user_profile.userimg = imgpath[(len(BASEPATH) + 5):]
+                        user_profile.userimg = username
                     user_profile.save()
                     regist_info = '注册成功'
                     user = auth.authenticate(
@@ -448,7 +451,7 @@ def regist(request):
                     auth.login(request, user)
                     # 利用session传递信息给模板层
                     request.session['username'] = username
-                    request.session['userimg'] = user.userprofile.userimg
+                    request.session['userimg'] = os.path.join(USER_IMG_URL, user_profile.userimg)
                     return HttpResponseRedirect('/')
                     return render_to_response('blog/regist.html', RequestContext(request, {'form': form, 'regist_info': regist_info}))
             else:

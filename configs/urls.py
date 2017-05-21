@@ -1,3 +1,5 @@
+# coding:utf-8
+
 """blog_project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -16,6 +18,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from rest_framework import routers
 from blog import views
+from configs import settings
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -27,3 +30,9 @@ urlpatterns = [
     url(r'', include('blog.urls', namespace='blog', app_name='blog')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
+
+if settings.DEBUG:
+    # 如果使用settings.MEDIA_ROOT,那么会上传到media/下，因为settings中的MEDIA_ROOT路径为../Blog/configs
+    urlpatterns.append(url(r'^media/(?P<path>.*)$',
+                           'django.views.static.serve', {'document_root':
+                                                         settings.MEDIA_ROOT}))

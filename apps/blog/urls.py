@@ -4,7 +4,6 @@ from django.conf.urls import url
 from blog import views
 from django.views.decorators.cache import cache_page  # 缓存
 import search_views
-from configs import settings
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
@@ -35,8 +34,3 @@ urlpatterns = [
         {'template_name': 'blog/login.html'}),
 ]
 
-if settings.DEBUG:
-    # 如果使用settings.MEDIA_ROOT,那么会上传到media/下，因为settings中的MEDIA_ROOT路径为../Blog/configs
-    urlpatterns.append(url(r'^media/(?P<path>.*)$',
-                           'django.views.static.serve', {'document_root':
-                                                         settings.MEDIA_ROOT}))
