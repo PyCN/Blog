@@ -14,6 +14,7 @@ from .forms import LinkForm, SettingForm
 from blog.models import Article, BlogComment, Category, Permission,\
         Link, Tag, UserProfile, UserProfile
 from .models import *
+from logs.mylogger import myLog
 # from users.models import *
 from utils.mixin_utils import LoginRequiredMixin
 
@@ -35,7 +36,10 @@ __all__ = [
 ]
 
 
+logger = logging.getLogger(__name__)
+
 # Create your views here.
+
 
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
@@ -50,7 +54,6 @@ class ArticleAddView(LoginRequiredMixin, View):
 
     def post(self, request):
         d = dict(request.POST)
-        logging.info(d)
         title = d['title'][0]
         status = d['status'][0]
         abstract = d.get('abstract', [None])[0]
@@ -87,14 +90,14 @@ class ArticleAddView(LoginRequiredMixin, View):
         return HttpResponseRedirect(reverse('admin:article-list'))
 
     def delete(self, request):
-        logging.info('delete article')
+        logger.info('delete article')
         try:
             data = json.loads(request.body)
             article = Article.objects.get(pk=data['id'])
             aid = article.id
             article.delete()
         except Exception, e:
-            logging.error(e)
+            logger.error(e)
         return HttpResponse(json.dumps({'aid': aid}))
 
 
@@ -130,11 +133,6 @@ class ArticleListView(LoginRequiredMixin, ListView):
     template_name = 'admin/article-list.html'
     context_object_name = 'articles'
 
-    # def get_queryset(self):
-        # super(ArticleListView, self).__init__()
-        # articles = Article.objects.all()
-    #     return articles
-
 
 class TagView(LoginRequiredMixin, View):
     def get(self, request):
@@ -150,8 +148,11 @@ class TagView(LoginRequiredMixin, View):
                 pass
         return HttpResponseRedirect(reverse('admin:tag'))
 
+    @myLog
     def delete(self, request):
-        tag = json.loads(str(request.body, encoding='utf-8'))
+        logger.info('Try to delete tag')
+        tag = json.loads(request.body)
+        logger.info(tag)
         t = Tag.objects.get(name=tag['name'])
         tid = t.id
         t.delete()
@@ -180,8 +181,9 @@ class CategoryView(LoginRequiredMixin, View):
                 pass
         return HttpResponseRedirect(reverse('admin:categories'))
 
+    @myLog
     def delete(self, request):
-        categories = json.loads(str(request.body, encoding='utf-8'))
+        categories = json.loads(request.body)
         c = Category.objects.get(name=categories['name'])
         cid = c.id
         c.delete()

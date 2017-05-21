@@ -87,6 +87,9 @@ class Category(models.Model):
     def __unicode__(self):
         return self.name
 
+    def category_article_count(self):
+        return self.article_set.all().count()
+
     class Meta:
         ordering = ['name']
 
@@ -98,6 +101,9 @@ class Tag(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def tag_article_count(self):
+        return self.article_set.all().count()
 
     class Meta:
         ordering = ['name']
