@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = '_lho^m33w-!qkhmqe2n2cwovcouiw(l++%&^(w5x@171pbm7_4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'itech.kim', 'www.itech.kim'
                  '120.24.191.19', 'cblog.xyz', 'www.cblog.xyz']
 
