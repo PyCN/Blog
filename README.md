@@ -35,9 +35,27 @@ A free, open-source blog system based on Django + MySql + jQuery + bootstrap + m
 
 1、安装依赖包  
    $ sudo pip install -r requirements.txt  
+
+   ** ubuntu **
    $ sudo apt-get install redis-server  
    $ sudo apt-get install rabbitmq-server  
-   
+
+   ** cenos **
+```
+   $ sudo yum install nginx
+   $ sudo yum install redis-server
+
+   $ wget http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
+   $ sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm
+   $ sudo yum install mysql-community-server
+   $ sudo service mysqld restart
+
+   $ wget https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_10/rabbitmq-server-3.6.10-1.el7.noarch.rpm
+   $ rpm --import https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
+   $ sudo yum install rabbitmq-server-3.6.10-1.el7.noarch.rpm
+
+ ```
+
 2、创建MySql数据库  
    在linux shell中登陆mysql: $mysql -u root -p  
    创建Blog数据库:           myql>CREATE DATEBASE 'Blog'  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;  
