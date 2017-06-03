@@ -1,5 +1,5 @@
 # Python
-A free, open-source blog system based on Django + MySql + jQuery + bootstrap + markdown
+A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + markdown
 
 目前已实现功能：
 
@@ -40,7 +40,7 @@ A free, open-source blog system based on Django + MySql + jQuery + bootstrap + m
    $ sudo apt-get install redis-server  
    $ sudo apt-get install rabbitmq-server  
 
-   **cenos**
+   **centos**
 ```
    $ sudo yum install nginx
    $ sudo yum install redis-server
@@ -57,12 +57,15 @@ A free, open-source blog system based on Django + MySql + jQuery + bootstrap + m
 
  ```
 
-2、创建MySql数据库  
+2、创建MySQL数据库  
+```
    创建mysql root密码: $ mysqladmin -u root password "newpass"
+   修改mysql时区
    在linux shell中登陆mysql: $mysql -u root -p  
    创建Blog数据库:           myql>CREATE DATABASE `Blog` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;  
    为用户授权:               mysql>grant all on Blog.* to your_username@localhost identified by 'your_password';  
    退出数据库:               mysql>exit  
+```
    
 3、在settings.py所在目录创建个人配置文件mysettings.py(或者直接修改settings.py中的DATABASE配置)  
    #coding:utf-8  
