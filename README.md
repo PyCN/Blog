@@ -36,11 +36,11 @@ A free, open-source blog system based on Django + MySql + jQuery + bootstrap + m
 1、安装依赖包  
    $ sudo pip install -r requirements.txt  
 
-   ** ubuntu **
+   **ubuntu**  
    $ sudo apt-get install redis-server  
    $ sudo apt-get install rabbitmq-server  
 
-   ** cenos **
+   **cenos**
 ```
    $ sudo yum install nginx
    $ sudo yum install redis-server
@@ -48,6 +48,7 @@ A free, open-source blog system based on Django + MySql + jQuery + bootstrap + m
    $ wget http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
    $ sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm
    $ sudo yum install mysql-community-server
+   $ sudo yum install mysql-community-devel
    $ sudo service mysqld restart
 
    $ wget https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_10/rabbitmq-server-3.6.10-1.el7.noarch.rpm
