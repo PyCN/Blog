@@ -43,6 +43,7 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
    **centos**
 ```
    $ sudo yum install nginx
+   $ sudo setsebool httpd_can_network_connect on -P 
    $ sudo yum install redis
    $ sudo systemctl start redis.service
    $ sudo systemctl enable redis.service # 开机启动
