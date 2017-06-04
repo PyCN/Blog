@@ -43,7 +43,9 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
    **centos**
 ```
    $ sudo yum install nginx
-   $ sudo yum install redis-server
+   $ sudo yum install redis
+   $ sudo systemctl start redis.service
+   $ sudo systemctl enable redis.service # 开机启动
 
    $ wget http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
    $ sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm
@@ -60,7 +62,8 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
 2、创建MySQL数据库  
 ```
    创建mysql root密码: $ mysqladmin -u root password "newpass"
-   修改mysql时区
+   修改mysql时区 
+   $ sudo vim /etc/my.conf # 在[mysqld]下添加:default-time-zone='+8:00'
    在linux shell中登陆mysql: $mysql -u root -p  
    创建Blog数据库:           myql>CREATE DATABASE `Blog` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;  
    为用户授权:               mysql>grant all on Blog.* to your_username@localhost identified by 'your_password';  
