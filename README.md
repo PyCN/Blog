@@ -65,6 +65,7 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
    创建mysql root密码: $ mysqladmin -u root password "newpass"
    修改mysql时区 
    $ sudo vim /etc/my.conf # 在[mysqld]下添加:default-time-zone='+8:00'
+   $ mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -D mysql -u root -p 
    在linux shell中登陆mysql: $mysql -u root -p  
    创建Blog数据库:           myql>CREATE DATABASE `Blog` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;  
    为用户授权:               mysql>grant all on Blog.* to your_username@localhost identified by 'your_password';  
