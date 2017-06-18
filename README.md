@@ -53,10 +53,12 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
    $ sudo yum install mysql-community-server
    $ sudo yum install mysql-community-devel
    $ sudo service mysqld restart
+   $ sudo systemctl enable mysql.service # 开机启动
 
    $ wget https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_10/rabbitmq-server-3.6.10-1.el7.noarch.rpm
    $ rpm --import https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
    $ sudo yum install rabbitmq-server-3.6.10-1.el7.noarch.rpm
+   $ sudo systemctl enable rabbitmq-server.service # 开机启动
 
  ```
 
@@ -64,7 +66,7 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
 ```
    创建mysql root密码: $ mysqladmin -u root password "newpass"
    修改mysql时区 
-   $ sudo vim /etc/my.conf # 在[mysqld]下添加:default-time-zone='+8:00'
+   $ sudo vim /etc/my.cnf # 在[mysqld]下添加:default-time-zone='+8:00'
    $ mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -D mysql -u root -p 
    在linux shell中登陆mysql: $mysql -u root -p  
    创建Blog数据库:           myql>CREATE DATABASE `Blog` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;  
