@@ -25,7 +25,7 @@ from django.views.decorators.cache import cache_page  # 缓存
 
 import qrcode
 from cStringIO import StringIO
-import markdown2
+# import markdown2
 from haystack.views import SearchView
 from rest_framework import viewsets
 
@@ -160,8 +160,8 @@ class ArticleDetailView(DetailView):
             raise Http404
         add_views_or_likes(target_article=obj, views_or_likes='views')
         obj.save()
-        obj.body = markdown2.markdown(
-            obj.body, ['codehilite'], extras=['fenced-code-blocks'])
+        # obj.body = markdown2.markdown(
+            # obj.body, ['codehilite'], extras=['fenced-code-blocks'])
         obj.attachment_url = obj.attachment_url.split('/')
         client_ip = get_client_ip(self.request)
         save_client_ip.delay(client_ip, obj.id)

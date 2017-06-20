@@ -9,11 +9,11 @@
     <title>低调诺的博客</title>
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'blog/img/favicon.ico' %}" media="screen" />
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'blog/css/pygments/github.css' %}">
     <link rel="stylesheet" href="{% static 'lib/css/bootstrap.min.css' %}">
     <script type="text/javascript" src="{% static 'blog/js/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'blog/js/django.js' %}"></script>
     <script type="text/javascript" src="{% static 'blog/js/base.js' %}"></script>
+	 {% block custom_css %}{% endblock %}
     <!--script type="text/javascript" src="{% static 'blog/js/ajaxdebug.js' %}"></script-->
 </head>
 <body>
@@ -62,6 +62,7 @@
 </div>
 
 {% block content %}{% endblock %}
+{% block custom_js %}{% endblock %}
 
 <div class="row">
   <div class="col-md-1 col-md-offset-1">

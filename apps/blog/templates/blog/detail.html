@@ -42,8 +42,10 @@
                                 <input type="submit" value="附件上传" >
                             </form>
                         </div>
+                        <div id="editormd">
+							<textarea style="display:none">{{ article.body }}</textarea>
+						</div>
                         <div class="post-bd">
-                            {{ article.body |safe|linebreaks }}
                             <h3 class="title">附件:</h3>
                             {% for files in article.attachment_url %}
                                 <a href="{% url 'blog:detail' article.pk %}/download/{{ forloop.counter }}">{{ files }}</a><br>
@@ -55,4 +57,25 @@
          
            {% include 'blog/comment.html' %}
             
+{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'admin/editormd/css/editormd.css' %}"/>
+{% endblock %}
+{% block custom_js %}
+    <script src="{% static 'admin/editormd/editormd.js' %}"></script>
+    <script src="{% static 'admin/editormd/lib/marked.min.js' %}"></script>
+    <script src="{% static 'admin/editormd/lib/prettify.min.js' %}"></script>
+    <script type="text/javascript">
+        var Editor;
+        $(function () {
+                Editor = editormd.markdownToHTML("editormd", {
+                    path: '/static/admin/editormd/lib/',
+                    htmlDecode: "style,script,iframe|on*",
+                    emoji: true,
+                    taskList: true,
+                    tocm: true,
+                    tex: true,
+                });
+        });
+    </script>
 {% endblock %}
