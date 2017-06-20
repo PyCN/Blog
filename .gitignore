@@ -60,10 +60,11 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
-blog_project/mysettings.py
+configs/mysettings.py
 blog/media
 requirementall.txt
 Blog.sql
+media/
 
 # Flask stuff:
 instance/
