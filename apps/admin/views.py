@@ -56,6 +56,11 @@ class ArticleAddView(LoginRequiredMixin, View):
         d = dict(request.POST)
         title = d['title'][0]
         status = d['status'][0]
+        topped = d['topped'][0]
+        if topped == '1':
+            topped = True
+        else:
+            topped = False
         abstract = d.get('abstract', [None])[0]
         editormd = d['editormd-markdown-doc'][0]
         tags = d.get('tags', '')
@@ -66,6 +71,7 @@ class ArticleAddView(LoginRequiredMixin, View):
             article.title = title
             article.body = editormd
             article.status = status
+            article.topped = topped
             article.abstract = abstract
             article.views = d['views'][0]
             exist_tag = d['exist_tag'][0].split(',')
@@ -79,7 +85,7 @@ class ArticleAddView(LoginRequiredMixin, View):
             category = Category.objects.get(name=categories)
             article = Article.objects.create(
                 title=title, body=editormd, status=status, abstract=abstract,
-                category=category)
+                category=category, topped=topped)
         if tags:
             for tag in tags:
                 t = Tag.objects.get(name=tag)
