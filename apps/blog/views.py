@@ -47,7 +47,7 @@ DEFAULT_USER_IMG = 'defaultuser.png'
 # 首页显示的评论字数
 LENGTH_IN_RIGHT_INDEX = 14
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('web')
 
 
 def add_views_or_likes(target_article, views_or_likes):
@@ -184,6 +184,7 @@ def upload(request, article_id):
         if not myfile:
             return HttpResponse('No upload files!')
         myfilename = myfile.name
+        logger.info('upload filename: %s', myfilename)
         filename_error = os.path.sep in myfilename
         if filename_error:
             return HttpResponse('File name error!')
@@ -193,6 +194,7 @@ def upload(request, article_id):
         except OSError, e:
             logging.error(e)
         filepath = os.path.join(folderpath, myfilename)
+        logger.info('upload filepath: %s', filepath)
         with open(filepath, 'wb') as f:
             if myfile.multiple_chunks():
                 f.write(myfile.read())
@@ -241,6 +243,7 @@ def download(request, param1, param2):
         except IndexError:
             logging.error('No such file!')
         file_path = os.path.join(ATTACHMENT_PATH, article_id, file_name)
+        logger.info('download file: %s', file_path)
         response = FileResponse(file_iterator(file_path))
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename=%s' % file_name.encode(

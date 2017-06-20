@@ -1,6 +1,6 @@
 log_setting = {
     "version": 1,
-    "disable_existing_loggers": True,
+    "disable_existing_loggers": False,
     "handlers": {
         "console": {
             "formatter": "detail",
@@ -10,7 +10,7 @@ log_setting = {
         },
         "file": {
             "formatter": "standard",
-            "filename": "crterbot.log",
+            "filename": "logs/blog.log",
             "class": "logging.handlers.RotatingFileHandler",
             "level": "DEBUG"
         },
@@ -58,7 +58,7 @@ log_setting = {
     },
     "loggers": {
         "web": {
-            "handlers": ["console", "file", "socket"],
+            "handlers": ["console", "file"],
             "propagate": False,
             "level": "DEBUG"
         }
