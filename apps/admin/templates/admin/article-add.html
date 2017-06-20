@@ -49,8 +49,10 @@
                                 <div class="col-xs-1">
                                     <div class="form-group">
                                         <select class="form-control" name="topped">
+                                            {% block topped_show %}
                                             <option value="0">不置顶</option>
                                             <option value="1">置顶</option>
+                                            {% endblock %}
                                         </select>
                                     </div>
                                 </div>
