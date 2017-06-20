@@ -129,8 +129,13 @@ class IndexView(ListView):
 
     def get_queryset(self):
         # models中已经定义了meta类，所以可以不用.order_by('name')
-        article_list = Article.objects.filter(
-            created_time__lte=timezone.now(), status='p')
+        # request在self中已经传入
+        if self.request.user.is_superuser:
+            article_list = Article.objects.filter(
+                created_time__lte=timezone.now())
+        else:
+            article_list = Article.objects.filter(
+                created_time__lte=timezone.now(), status='p')
         client_ip = get_client_ip(self.request)
         save_client_ip.delay(client_ip)
         # cache.set('tcdlejl', 'value', timeout=100)
@@ -151,7 +156,7 @@ class ArticleDetailView(DetailView):
     def get_object(self, queryset=None):
         obj = super(ArticleDetailView, self).get_object()
         # 未发表文章不能显示
-        if obj.status == 'd':
+        if obj.status == 'd' and not self.request.user.is_superuser:
             raise Http404
         add_views_or_likes(target_article=obj, views_or_likes='views')
         obj.save()
