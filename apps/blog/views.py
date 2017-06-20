@@ -367,7 +367,7 @@ class MySearchView(SearchView, ListView):
         return context
 
 
-@login_required
+# @login_required
 def praise(request, article_id):
     # 前一个访问的页面，要去除/praise'
     # current_url = request.get_full_path()[:-7]
