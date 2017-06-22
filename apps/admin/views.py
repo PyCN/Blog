@@ -7,6 +7,7 @@ from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.views.generic import View, ListView, FormView
 from django.contrib.auth import logout
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
 
@@ -36,7 +37,7 @@ __all__ = [
 ]
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('web')
 
 # Create your views here.
 
@@ -246,9 +247,22 @@ class LinkView(LoginRequiredMixin, View):
 
 
 class UsersView(LoginRequiredMixin, ListView):
-    queryset = UserProfile.objects.all()
+    # queryset = UserProfile.objects.all()
     template_name = 'admin/users.html'
     context_object_name = 'users'
+
+    def get_queryset(self):
+        users = User.objects.all()
+        logger.debug('users: %s', users)
+        for user in users:
+            try:
+                user_profile = UserProfile.objects.get(user_id=user.id)
+                user.phone = user_profile.phone
+                user.nickname = user_profile.nickname
+            except Exception, e:
+                logger.warn('user has no userprofile: %s', user.id)
+                logger.warn(e)
+        return users
 
 
 class ProfileView(LoginRequiredMixin, View):
