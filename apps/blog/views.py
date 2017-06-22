@@ -4,6 +4,7 @@ import os
 import sys
 import logging
 import json
+import base64
 
 from django.shortcuts import render_to_response, render, get_object_or_404, \
     HttpResponseRedirect, Http404
@@ -35,6 +36,7 @@ from blog.tasks import save_client_ip
 from .forms import RegistForm, UserForm, RetrieveForm, SearchForm, BlogCommentForm
 from permission import check_blog_permission
 from configs import settings
+from utils.util import runTime
 
 # 代表本文件的绝对目录
 BASEPATH = sys.path[0]
@@ -50,6 +52,7 @@ LENGTH_IN_RIGHT_INDEX = 14
 logger = logging.getLogger('web')
 
 
+@runTime
 def add_views_or_likes(target_article, views_or_likes):
     # A likes add two weight, a view add one weight
     if views_or_likes == 'views':
@@ -61,6 +64,7 @@ def add_views_or_likes(target_article, views_or_likes):
     return True
 
 
+@runTime
 def get_context_data_all(**kwargs):
     kwargs['category_list'] = Category.objects.all()
     kwargs['date_archive'] = Article.objects.archive()
@@ -153,6 +157,7 @@ class ArticleDetailView(DetailView):
     context_object_name = "article"
     pk_url_kwarg = 'article_id'
 
+    @runTime
     def get_object(self, queryset=None):
         obj = super(ArticleDetailView, self).get_object()
         # 未发表文章不能显示
@@ -165,9 +170,9 @@ class ArticleDetailView(DetailView):
         obj.attachment_url = obj.attachment_url.split('/')
         client_ip = get_client_ip(self.request)
         save_client_ip.delay(client_ip, obj.id)
-
         return obj
 
+    @runTime
     def get_context_data(self, **kwargs):
         kwargs['comment_list'] = self.object.comment.all()
         kwargs['comment_nums'] = self.object.comment.count()
@@ -176,6 +181,7 @@ class ArticleDetailView(DetailView):
 
 
 @login_required
+@runTime
 def upload(request, article_id):
     article_url = reverse('blog:detail', args=(article_id,))
     result = {'error_code': 0, 'msg': 'upload success'}
@@ -368,6 +374,7 @@ class MySearchView(SearchView, ListView):
 
 
 # @login_required
+@runTime
 def praise(request, article_id):
     # 前一个访问的页面，要去除/praise'
     # current_url = request.get_full_path()[:-7]
@@ -541,7 +548,6 @@ def generate_qrcode(request):
         buf = StringIO()
         img.save(buf)
         image_stream = buf.getvalue()
-        import base64
         image_stream = base64.b64encode(image_stream)
 
         response = HttpResponse(image_stream, content_type='image/png')
