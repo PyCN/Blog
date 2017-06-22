@@ -5,7 +5,7 @@ pytz==2016.4
 # 搜索依赖库
 jieba==0.37
 whoosh==2.7.0
-django-haystack==2.4.0
+django-haystack==2.5.0
 
 # redis依赖库
 # Redis 2.8.4
