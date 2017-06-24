@@ -102,20 +102,23 @@
         });
 
         function DeleteTag(Name) {
-            $.ajax({
-                type: "DELETE",
-                url: "{% url 'admin:tag' %}",
-                headers: {
-                    "X-CSRFToken": '{{ csrf_token }}'
-                },
-                data: JSON.stringify({
-                    name: Name
-                }),
-                success: function (data) {
-                    data = JSON.parse(data);
-                    $('#TagID' + data.tid).remove();
-                }
-            });
+			var response = confirm('确定删除吗？');
+			if (response==true){
+                $.ajax({
+                    type: "DELETE",
+                    url: "{% url 'admin:tag' %}",
+                    headers: {
+                        "X-CSRFToken": '{{ csrf_token }}'
+                    },
+                    data: JSON.stringify({
+                        name: Name
+                    }),
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        $('#TagID' + data.tid).remove();
+                    }
+                });
+            }
         }
         function HideElements(ID) {
 

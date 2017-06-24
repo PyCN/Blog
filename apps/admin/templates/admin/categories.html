@@ -102,20 +102,23 @@
             $("#articleList").DataTable();
         });
         function DeleteCategories(Name) {
-            $.ajax({
-                type: "DELETE",
-                url: "{% url 'admin:categories' %}",
-                headers: {
-                    "X-CSRFToken": '{{ csrf_token }}'
-                },
-                data: JSON.stringify({
-                    name: Name
-                }),
-                success: function (data) {
-                    data = JSON.parse(data);
-                    $('#CategoriesID' + data.cid).remove();
-                }
-            });
+			var response = confirm('确定删除吗？');
+			if (response==true){
+                $.ajax({
+                    type: "DELETE",
+                    url: "{% url 'admin:categories' %}",
+                    headers: {
+                        "X-CSRFToken": '{{ csrf_token }}'
+                    },
+                    data: JSON.stringify({
+                        name: Name
+                    }),
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        $('#CategoriesID' + data.cid).remove();
+                    }
+                });
+            }
         }
         function HideElements(ID) {
 
