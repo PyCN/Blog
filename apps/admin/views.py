@@ -166,7 +166,8 @@ class TagView(LoginRequiredMixin, View):
         return HttpResponse(json.dumps({'tid': tid}))
 
     def put(self, request):
-        data = json.loads(str(request.body, encoding='utf-8'))
+        data = json.loads(request.body)
+        logger.debug("tag put data: %s", data)
         tag = Tag.objects.get(pk=data['id'])
         tag.name = data['val']
         tag.save()
@@ -197,7 +198,7 @@ class CategoryView(LoginRequiredMixin, View):
         return HttpResponse(json.dumps({'cid': cid}))
 
     def put(self, request):
-        data = json.loads(str(request.body, encoding='utf-8'))
+        data = json.loads(request.body)
         categories = Category.objects.get(pk=data['id'])
         categories.name = data['val']
         categories.save()
@@ -230,14 +231,14 @@ class LinkView(LoginRequiredMixin, View):
             return HttpResponse(link_form.errors)
 
     def delete(self, request):
-        link = json.loads(str(request.body, encoding='utf-8'))
+        link = json.loads(request.body)
         l = Link.objects.get(pk=link['lid'])
         lid = l.id
         l.delete()
         return HttpResponse(json.dumps({'lid': lid}))
 
     def put(self, request):
-        data = json.loads(str(request.body, encoding='utf-8'))
+        data = json.loads(request.body)
         link = Link.objects.get(pk=data['lid'])
         link.description = data['description']
         link.url = data['url']
