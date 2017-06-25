@@ -401,9 +401,9 @@ def regist(request):
         form = RegistForm(request.POST, request.FILES)
         if form.is_valid():
             username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
             password1 = form.cleaned_data['password1']
             password2 = form.cleaned_data['password2']
-            nickname = form.cleaned_data['nickname']
             phone = form.cleaned_data['phone']
             userimg = form.cleaned_data['userimg']
             logger.info(userimg.size)
@@ -411,11 +411,9 @@ def regist(request):
                 regist_info = 'user img too big'
                 return render_to_response("blog/regist.html", RequestContext(request, {'form': form, 'regist_info': regist_info}))
             if password1 == password2:
-                user_filter_result = User.objects.filter(username=username)
-                nickname_filter_result = UserProfile.objects.filter(
-                    nickname=nickname)
-                if user_filter_result or nickname_filter_result:
-                    regist_info = "邮箱或昵称已存在"
+                user_filter_result = User.objects.filter(email=email)
+                if user_filter_result :
+                    regist_info = "邮箱已存在"
                     return render_to_response("blog/regist.html", RequestContext(request, {'form': form, 'regist_info': regist_info}))
                 else:
                     user_profile = UserProfile()
@@ -427,10 +425,9 @@ def regist(request):
                         user_profile.userimg = username
 
                     user = User.objects.create_user(
-                        username=username, password=password1)
+                        username=username, password=password1, email=email)
                     user_profile.user_id = user.id
                     user_profile.phone = phone
-                    user_profile.nickname = nickname
                     user_profile.save()
                     regist_info = '注册成功'
                     user = auth.authenticate(

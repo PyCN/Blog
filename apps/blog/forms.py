@@ -4,9 +4,9 @@ from .models import Article, BlogComment
 
 
 class RegistForm(forms.Form):
-    username = forms.EmailField(
+    email = forms.EmailField(
         required=True, label='邮箱', error_messages={'required': '请输入邮箱'})
-    nickname = forms.CharField(
+    username = forms.CharField(
         required=True, label='昵称 ', error_messages={'required': '请输入昵称'})
     password1 = forms.CharField(required=True, label='密码   ', widget=forms.PasswordInput(),
                                 error_messages={'required': '请输入密码'})
