@@ -16,7 +16,7 @@ body {
     background-repeat:no-repeat;
     background-attachment: fixed;
     background-position:center;
-    background-image:url(../img/background-img.jpg)
+    /*background-image:url(../img/background-img.jpg)*/
 }
 
 body.mac {

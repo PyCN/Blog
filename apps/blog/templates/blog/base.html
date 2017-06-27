@@ -10,13 +10,16 @@
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'blog/img/favicon.ico' %}" media="screen" />
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'lib/css/bootstrap.min.css' %}">
+	<style type="text/css">
+		body { background: #000; margin: 0; padding:0; }
+		canvas {  position: fixed;  }
+	</style>
     <script type="text/javascript" src="{% static 'blog/js/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'blog/js/django.js' %}"></script>
-    <script type="text/javascript" src="{% static 'blog/js/base.js' %}"></script>
 	 {% block custom_css %}{% endblock %}
     <!--script type="text/javascript" src="{% static 'blog/js/ajaxdebug.js' %}"></script-->
 </head>
 <body>
+<canvas id='canvas'></canvas>
 <div id="header">
     <div id="header-warp">
         <a href="/admin" title="我的博客" id="logo"></a>
@@ -62,7 +65,6 @@
 </div>
 
 {% block content %}{% endblock %}
-{% block custom_js %}{% endblock %}
 
 <div class="row">
   <div class="col-md-1 col-md-offset-1">
@@ -112,4 +114,9 @@
   </div>
 </div>
 </body>
+
+<script type="text/javascript" src="{% static 'blog/js/django.js' %}"></script>
+<script type="text/javascript" src="{% static 'blog/js/base.js' %}"></script>
+<script type="text/javascript" src="{% static 'lib/js/canvas-background.js' %}"></script>
+{% block custom_js %}{% endblock %}
 </html>
