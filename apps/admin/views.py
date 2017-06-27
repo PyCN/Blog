@@ -175,6 +175,9 @@ class TagView(LoginRequiredMixin, View):
 
 
 class CategoryView(LoginRequiredMixin, View):
+
+    default_category = 'default'
+
     def get(self, request):
         categories = Category.objects.all()
         return render(request, 'admin/categories.html', {'categories': categories})
@@ -192,8 +195,26 @@ class CategoryView(LoginRequiredMixin, View):
     @myLog
     def delete(self, request):
         categories = json.loads(request.body)
+        if categories['name'] == self.default_category:
+            return HttpResponse(json.dumps({'code': -1, 'msg': "Can't delete default category"}))
         c = Category.objects.get(name=categories['name'])
         cid = c.id
+        # article category should change to default
+        articles = Article.objects.filter(category=cid)
+        if articles:
+            try:
+                target_category = Category.objects.get(name=self.default_category)
+            except Exception, e:
+                logger.warn("default category doesn't exist, try to create")
+                logger.warn(e)
+                target_category = Category.objects.create(name=self.default_category)
+                logger.info("create category: %s", target_category)
+            for article in articles:
+                logger.info('"save article :%s"', article.id)
+                article.category = target_category
+                article.save()
+        else:
+            logger.info("Category(%s) doesn't hava any articles", c.name)
         c.delete()
         return HttpResponse(json.dumps({'cid': cid}))
 
