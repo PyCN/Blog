@@ -83,7 +83,7 @@
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="{{ MEDIA_URL }}{{ request.user.image }}" class="img-circle" alt="User Image">
+                                <img src="{{ MEDIA_URL }}{{ request.session.userimg }}" class="img-circle" alt="User Image">
                                 <p>
                                     {{ request.user.email }}
                                     <small>注册日期：{{ request.user.date_joined }}</small>
@@ -113,7 +113,7 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="{{ MEDIA_URL }}{{ request.user.image }}" class="img-circle" alt="User Image">
+                    <img src="{{ MEDIA_URL }}{{ request.session.userimg }}" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
                     <p>{{ request.user.nickname }}</p>
