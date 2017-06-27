@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{% static 'lib/css/bootstrap.min.css' %}">
 	<style type="text/css">
 		body { background: #000; margin: 0; padding:0; }
-		canvas {  position: fixed;  }
+		canvas {position: fixed; z-index: -1}
 	</style>
     <script type="text/javascript" src="{% static 'blog/js/jquery.min.js' %}"></script>
 	 {% block custom_css %}{% endblock %}
