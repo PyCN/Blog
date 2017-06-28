@@ -419,10 +419,10 @@ def regist(request):
                     user_profile = UserProfile()
                     user_profile.userimg = DEFAULT_USER_IMG
                     if userimg:
-                        imgpath = os.path.join(USER_IMG_PATH, username)
+                        imgpath = os.path.join(USER_IMG_PATH, email)
                         with open(imgpath, 'wb') as img:
                             img.write(userimg.read())
-                        user_profile.userimg = username
+                        user_profile.userimg = email
 
                     user = User.objects.create_user(
                         username=username, password=password1, email=email)
