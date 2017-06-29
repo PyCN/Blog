@@ -4,6 +4,8 @@ import logging
 import time
 import functools
 
+logger = logging.getLogger('web')
+
 
 # 字符串转时间戳
 def str2timestamp(d, f="%Y-%m-%d %H:%M:%S"):
@@ -27,5 +29,18 @@ def runTime(func):
         run_time = time.time() - time1
         logger.info('%s run time: %f' %
                     (func.__name__, run_time))
+        return result
+    return wrapper
+
+
+def alwaysLog(func):
+    '''Log exception message when func run error
+    Remember, this func only use to decorate simple func'''
+    @functools.wraps(func)
+    def wrapper(*args, **kw):
+        try:
+            result = func(*args, **kw)
+        except Exception, e:
+            logger.exception(e)
         return result
     return wrapper
