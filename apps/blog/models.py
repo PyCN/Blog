@@ -44,8 +44,7 @@ class Article(models.Model):
     attachment_url = models.CharField(
         '附件地址', blank=True, default='', max_length=255)
 
-    category = models.ForeignKey(
-        'Category', verbose_name='分类', null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey('Category', verbose_name='分类')
     tags = models.ManyToManyField('Tag', verbose_name='标签集合', blank=True)
 
     def __unicode__(self):
