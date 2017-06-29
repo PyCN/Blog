@@ -34,12 +34,13 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
 使用说明:
 
 1、安装依赖包  
-   $ sudo pip install -r requirements.txt  
+   `$ sudo pip install -r requirements.txt`
 
    **ubuntu**  
+```
    $ sudo apt-get install redis-server  
    $ sudo apt-get install rabbitmq-server  
-
+```
    **centos**
 ```
    $ sudo yum install nginx
@@ -69,12 +70,13 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
    $ sudo vim /etc/my.cnf # 在[mysqld]下添加:default-time-zone='+8:00'
    $ mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -D mysql -u root -p 
    在linux shell中登陆mysql: $mysql -u root -p  
-   创建Blog数据库:           myql>CREATE DATABASE `Blog` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;  
+   创建Blog数据库:           mysql>CREATE DATABASE `Blog` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;  
    为用户授权:               mysql>grant all on Blog.* to your_username@localhost identified by 'your_password';  
    退出数据库:               mysql>exit  
 ```
    
 3、在settings.py所在目录创建个人配置文件mysettings.py(或者直接修改settings.py中的DATABASE配置)  
+```
    #coding:utf-8  
    DEBUG = True  
    DATABASES = {  
@@ -84,15 +86,17 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
            'USER': 'your_username',  
            'PASSWORD': 'your_password',  
            'HOST': '127.0.0.1',  
-           'PORT': '3306'  
+           'PORT': '3306',
+           'OPTIONS': {'charset': 'utf8mb4'}
         }  
    }  
+```
    
 4、创建数据库table  
-   在manage.py目录执行:python manage.py migrate
+   在manage.py目录执行:`$ python manage.py migrate`
    
 5、运行服务器  
-   python manage.py runserver 8080
+   `$ python manage.py runserver 8080`
    
 接下来就可以在浏览器访问localhost:8080
 

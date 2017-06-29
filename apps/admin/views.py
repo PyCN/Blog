@@ -15,9 +15,9 @@ from .forms import LinkForm, SettingForm
 from blog.models import Article, BlogComment, Category, Permission,\
         Link, Tag, UserProfile, UserProfile
 from .models import *
-from logs.mylogger import myLog
 # from users.models import *
 from utils.mixin_utils import LoginRequiredMixin
+from utils.util import alwaysLog
 
 __all__ = [
     'ArticleAddView',
@@ -93,7 +93,11 @@ class ArticleAddView(LoginRequiredMixin, View):
                 article.tags.add(t)
         if categories:
             article.category = Category.objects.get(name=categories)
-        article.save()
+        try:
+            article.save()
+        except Exception, e:
+            logger.error(e)
+            article.save()
         return HttpResponseRedirect(reverse('admin:article-list'))
 
     def delete(self, request):
@@ -155,7 +159,7 @@ class TagView(LoginRequiredMixin, View):
                 pass
         return HttpResponseRedirect(reverse('admin:tag'))
 
-    @myLog
+    @alwaysLog
     def delete(self, request):
         logger.info('Try to delete tag')
         tag = json.loads(request.body)
@@ -192,7 +196,7 @@ class CategoryView(LoginRequiredMixin, View):
                 pass
         return HttpResponseRedirect(reverse('admin:categories'))
 
-    @myLog
+    @alwaysLog
     def delete(self, request):
         categories = json.loads(request.body)
         if categories['name'] == self.default_category:
