@@ -406,8 +406,9 @@ def regist(request):
             password2 = form.cleaned_data['password2']
             phone = form.cleaned_data['phone']
             userimg = form.cleaned_data['userimg']
-            logger.info(userimg.size)
-            if userimg.size > USER_IMG_MAX_SIZE:
+            sex = form.cleaned_data['sex']
+            if userimg and userimg.size > USER_IMG_MAX_SIZE:
+                logger.info(userimg.size)
                 regist_info = 'user img too big'
                 return render_to_response("blog/regist.html", RequestContext(request, {'form': form, 'regist_info': regist_info}))
             if password1 == password2:
@@ -428,6 +429,7 @@ def regist(request):
                         username=username, password=password1, email=email)
                     user_profile.user_id = user.id
                     user_profile.phone = phone
+                    user_profile.sex = sex
                     user_profile.save()
                     regist_info = '注册成功'
                     user = auth.authenticate(

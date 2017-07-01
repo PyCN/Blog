@@ -126,6 +126,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True, verbose_name=('用户'))
     phone = models.CharField(max_length=20)
     nickname = models.CharField(max_length=255)
+    sex = models.CharField(max_length=12)
     userimg = models.CharField('用户头像', default='', max_length='100')
 
     def __unicode__(self):
