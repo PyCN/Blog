@@ -44,7 +44,11 @@
                                         <td>{{ user.id }}</td>
                                         <td>{{ user.username }}</td>
                                         <td>{{ user.email }}</td>
-                                        <td>{{ user.get_gender_display }}</td>
+																				{% if user.sex == "male" %}
+                                          <td>男</td>
+																				{% else %}
+                                          <td>女</td>
+                                        {% endif %}
                                         <td>{{ user.date_joined }}</td>
                                         <td>{{ user.last_login }}</td>
                                         <td>{{ user.is_active }}</td>

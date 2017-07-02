@@ -345,15 +345,24 @@ class LoginView(FormView):
     template_name = 'blog/login.html'
 
     def form_valid(self, form):
-        username = form.cleaned_data['username']
+        email = form.cleaned_data['email']
         password = form.cleaned_data['password']
-        user = auth.authenticate(username=username, password=password)
-        # print user
-        if user and user.is_active:
+        try:
+            user = User.objects.get(email=email)
+        except Exception, e:
+            logger.error(e)
+            login_info = "The email is conflicting, please connect with superuser"
+            return render(self.request, 'blog/login.html', {'form': form, 'login_info': login_info})
+        logger.info("user(%s) try to login", user)
+        if user.check_password(password) and user.is_active:
+            # django不支持email authenticate.所以此处改成check_password进行
+            # 需要手动添加backend
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth.login(self.request, user)
             # 利用session传递信息给模板层
-            self.request.session['username'] = username
-            self.request.session['userimg'] = os.path.join(USER_IMG_URL, user.userprofile.userimg)
+            userprofile = UserProfile.objects.get(user_id=user.id)
+            self.request.session['username'] = user.username
+            self.request.session['userimg'] = os.path.join(USER_IMG_URL, userprofile.userimg)
             return HttpResponseRedirect('/')
         else:
             login_info = "Username or password is error"

@@ -284,6 +284,7 @@ class UsersView(LoginRequiredMixin, ListView):
             try:
                 user_profile = UserProfile.objects.get(user_id=user.id)
                 user.phone = user_profile.phone
+                user.sex = user_profile.sex
             except Exception, e:
                 logger.warn('user has no userprofile: %s', user.id)
                 logger.warn(e)

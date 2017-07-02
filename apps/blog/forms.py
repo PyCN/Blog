@@ -27,7 +27,7 @@ class RegistForm(forms.Form):
 
 
 class UserForm(forms.Form):
-    username = forms.EmailField(
+    email = forms.EmailField(
         required=True, label='邮箱', error_messages={'required': '请输入邮箱'})
     password = forms.CharField(required=True, label='密码  ', widget=forms.PasswordInput(),
                                error_messages={'required': '请输入密码'})
