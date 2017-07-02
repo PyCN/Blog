@@ -1,6 +1,6 @@
 <div id="pagenavi" class="noselect">
     {% if article_list.has_previous %}
-        <a class="previous-page" href="?page={{ article_list.previous_page_number }}">
+        <a class="previous-page pages" href="?page={{ article_list.previous_page_number }}">
             <span class="icon-previous"></span>上一页
         </a>
     {% endif %}
@@ -19,7 +19,7 @@
         {% if page == current_page %}
             <span class="current">{{ page }}</span>
         {% else %}
-            <a href="?page={{ page }}">{{ page }}</a>
+            <a class="pages" href="?page={{ page }}">{{ page }}</a>
         {% endif %}
     {% endfor %}
 
@@ -31,12 +31,12 @@
         {% if last_page == current_page %}
             <span class="current">{{ last_page }}</span>
         {% else %}
-            <a href="?page={{ last_page }}">{{ last_page }}</a>
+            <a class="pages" href="?page={{ last_page }}">{{ last_page }}</a>
         {% endif %}
     {% endif %}
 
     {% if article_list.has_next %}
-        <a class="next-page" href="?page={{ article_list.next_page_number }}">
+        <a class="next-page pages" href="?page={{ article_list.next_page_number }}">
             下一页<span class="icon-next"></span>
         </a>
     {% endif %}
