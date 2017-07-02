@@ -31,7 +31,7 @@ from haystack.views import SearchView
 from rest_framework import viewsets
 
 from blog.serializers import UserSerializer, GroupSerializer
-from blog.models import Article, Category, Tag, BlogComment, UserProfile, VisitorIP
+from blog.models import Article, Category, Tag, BlogComment, UserProfile, VisitorIP, Link 
 from blog.tasks import save_client_ip
 from .forms import RegistForm, UserForm, RetrieveForm, SearchForm, BlogCommentForm
 from permission import check_blog_permission
@@ -69,6 +69,8 @@ def get_context_data_all(**kwargs):
     kwargs['category_list'] = Category.objects.all()
     kwargs['date_archive'] = Article.objects.archive()
     kwargs['tag_list'] = Tag.objects.all()
+    kwargs['link_list'] = Link.objects.all()
+    logger.debug('link list: %s', kwargs['link_list'])
     visitor_ip = VisitorIP.objects.all()[:5]
     for visitor in visitor_ip:
         ip_split = visitor.ip.split('.')
