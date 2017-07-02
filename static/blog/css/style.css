@@ -1384,3 +1384,11 @@ img.aligncenter, img.alignright, img.alignleft {
   -khtml-opacity: 0.6;
   opacity: 0.6;
 }
+
+#pagenavi .pages {
+	color: white
+}
+
+#friend .friend-url {
+	color: #A8A8A8
+}
