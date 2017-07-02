@@ -65,43 +65,14 @@
 </div>
 
 {% block content %}{% endblock %}
-
-<div class="row">
-  <div class="col-md-1 col-md-offset-1">
-      <a href="https://github.com/caitinggui" target="_blank">GitHub</a>
-  </div>
+<div class="row" id="friend">
+  {% for link in link_list %}
   <div class="col-md-1">
-      <a href="https://www.zhihu.com/" target="_blank">知乎</a>
+    <a class="friend-url" href="{{ link.url }}" target="_blank">{{ link.name }}</a>
   </div>
-
-  <div class="col-md-1">
-      <a href="https://leetcode.com/problemset/algorithms/" target="_blank">leetcode</a>
-  </div>
-  <div class="col-md-1">
-      <a href="http://www.cnblogs.com/" target="_blank">博客园</a>
-  </div>
-  <div class="col-md-1">
-      <a href="http://www.runoob.com/" target="_blank">菜鸟教程</a>
-  </div>
-  <div class="col-md-1">
-      <a href="http://blog.csdn.net/" target="_blank">csdn</a>
-  </div>
-  <div class="col-md-1">
-      <a href="http://www.yiibai.com/" target="_blank">易百教程</a>
-  </div>
-  <div class="col-md-1">
-      <a href="http://www.51cto.com/" target="_blank">51cto</a>
-  </div>
-  <div class="col-md-1">
-      <a href="http://www.jianshu.com/" target="_blank">简书</a>
-  </div>
-  <div class="col-md-1">
-      <a href="https://segmentfault.com/" target="_blank">SegmentFault </a>
-  </div>
-  <div class="col-md-1">
-      <a href="http://stackoverflow.com/" target="_blank">stackoverflow</a>
-  </div>
+  {% endfor %}
 </div>
+
 <div class="row">
   <div class="col-md-5 col-md-offset-3">Copyright © 2006-2016 caitinggui(caitinggui@qq.com).All Rights Reserved</div>
 </div>

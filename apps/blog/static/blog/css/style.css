@@ -1388,3 +1388,7 @@ img.aligncenter, img.alignright, img.alignleft {
 #pagenavi .pages {
 	color: white
 }
+
+#friend .friend-url {
+	color: #A8A8A8
+}
