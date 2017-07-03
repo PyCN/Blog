@@ -33,7 +33,7 @@
             {#%  if user.is_authenticated %#}
             {% if request.session.username %}
                 <div id='userimgdiv'>
-                    <img id='userimg' src="{{ MEDIAURL }}{{ request.session.userimg }}" alt='头像'>
+                    <img class='img-circle' id='userimg' src="{{ MEDIAURL }}{{ request.session.userimg }}" alt='头像'>
                 </div>
                 <a id='username' href="{% url 'blog:logout' %}" float:left>{{ request.session.username }}</a>
                 <a id='usercomment' href="{% url 'blog:account' %}">评论过的文章</a>
