@@ -70,7 +70,7 @@ def get_context_data_all(**kwargs):
     kwargs['date_archive'] = Article.objects.archive()
     kwargs['tag_list'] = Tag.objects.all()
     kwargs['link_list'] = Link.objects.all()
-    logger.debug('link list: %s', kwargs['link_list'])
+    # logger.debug('link list: %s', kwargs['link_list'])
     visitor_ip = VisitorIP.objects.all()[:5]
     for visitor in visitor_ip:
         ip_split = visitor.ip.split('.')
@@ -179,6 +179,7 @@ class ArticleDetailView(DetailView):
         kwargs['comment_list'] = self.object.comment.all()
         kwargs['comment_nums'] = self.object.comment.count()
         kwargs['form'] = BlogCommentForm()
+        kwargs['link_list'] = Link.objects.all()
         return super(ArticleDetailView, self).get_context_data(**kwargs)
 
 

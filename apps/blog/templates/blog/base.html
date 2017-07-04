@@ -68,7 +68,7 @@
 <div class="row" id="friend">
   {% for link in link_list %}
   <div class="col-md-1">
-    <a class="friend-url" href="{{ link.url }}" target="_blank">{{ link.name }}</a>
+		<a class="friend-url" href="{{ link.url }}" target="_blank" title={{ link.description }}>{{ link.name }}</a>
   </div>
   {% endfor %}
 </div>
