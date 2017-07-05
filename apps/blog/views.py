@@ -174,6 +174,7 @@ class ArticleDetailView(DetailView):
         obj.attachment_url = obj.attachment_url.split('/')
         client_ip = get_client_ip(self.request)
         save_client_ip.delay(client_ip, obj.id)
+        logger.debug("get article: %s", self.kwargs[self.pk_url_kwarg])
         return obj
 
     @runTime
@@ -182,6 +183,14 @@ class ArticleDetailView(DetailView):
         kwargs['comment_nums'] = self.object.comment.count()
         kwargs['form'] = BlogCommentForm()
         kwargs['link_list'] = Link.objects.all()
+        visitor_ip = VisitorIP.objects.filter(article=self.kwargs[self.pk_url_kwarg])[:5]
+        visitor_ip = visitor_ip
+        for visitor in visitor_ip:
+            ip_split = visitor.ip.split('.')
+            visitor.ip = '%s.*.*.%s' % (ip_split[0], ip_split[3])
+            if not visitor.city:
+                visitor.city = visitor.country
+        kwargs['visitor_ip'] = visitor_ip
         return super(ArticleDetailView, self).get_context_data(**kwargs)
 
 

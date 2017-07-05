@@ -1,63 +1,74 @@
 {% extends 'blog/base.html' %}
 {% load staticfiles %}
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div id="bd" class="wrp clear-fix transparent ">
-                <div id="main">
-                    <div id="detail-title">
-                        <ul id="single-nav">
-                            <li><a href="{% url 'blog:index' %}">首页</a></li>
-                            <li>&gt;</li>
-                            <li>
-                                <ul class="post-categories">
-                                    <li><a href="{% url 'blog:category' article.category.id %}" title=""
-                                           rel="category">{{ article.category.name }}</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>&gt;</li>
-                            <li class="title-active"><a href="{% url 'blog:detail' article.pk %}"
-                                                        rel="bookmark">{{ article.title }}</a>
-                            </li>
-                        </ul>
+<div class="container">
+    <div class="row">
+        <div id="bd" class="wrp clear-fix transparent ">
+            <div id="main">
+                <div id="detail-title">
+                    <ul id="single-nav">
+                        <li><a href="{% url 'blog:index' %}">首页</a></li>
+                        <li>&gt;</li>
+                        <li>
+                            <ul class="post-categories">
+                                <li><a href="{% url 'blog:category' article.category.id %}" title=""
+                                       rel="category">{{ article.category.name }}</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>&gt;</li>
+                        <li class="title-active"><a href="{% url 'blog:detail' article.pk %}"
+                                                    rel="bookmark">{{ article.title }}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="post-1951"
+                     class="post-1951 post type-post status-publish format-standard hentry category-meida-report">
+                    <div class="post-hd">
+                        <h1 class="title">{{ article.title }}</h1>
                     </div>
-                    <div id="post-1951"
-                         class="post-1951 post type-post status-publish format-standard hentry category-meida-report">
-                        <div class="post-hd">
-                            <h1 class="title">{{ article.title }}</h1>
-                        </div>
-                        <div class="date-read">
-                            <i class="icon-date"></i><span
-                                class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
-                            <a href="/admin/article/edit/?aid={{ article.pk }}">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type='image' class='praise' src="{% static 'blog/img/gb21.png' %}" href="{% url 'blog:detail' article.id %}/praise">
-                            <span class='likes_num'>{{ article.likes}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span>阅读量:{{ article.views}}</span>
-                        </div>
-                        <div class='upload' >
-                            <form class="form" action="{% url 'blog:detail' article.pk %}/upload" method="post" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <input name='uploadfile' type='file'>
-                                <input type="submit" value="附件上传" >
-                            </form>
-                        </div>
-                        <div id="editormd">
-							<textarea style="display:none">{{ article.body }}</textarea>
-						</div>
-                        <div class="post-bd">
-                            <h3 class="title">附件:</h3>
-                            {% for files in article.attachment_url %}
-                                <a href="{% url 'blog:detail' article.pk %}/download/{{ forloop.counter }}">{{ files }}</a><br>
-                            {% endfor %}  
-                        </div>
+                    <div class="date-read">
+                        <i class="icon-date"></i><span
+                            class="date">{{ article.last_modified_time|date:"Y年n月d日" }}</span>
+                        <a href="/admin/article/edit/?aid={{ article.pk }}">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type='image' class='praise' src="{% static 'blog/img/gb21.png' %}" href="{% url 'blog:detail' article.id %}/praise">
+                        <span class='likes_num'>{{ article.likes}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>阅读量:{{ article.views}}</span>
+                    </div>
+                    <div class='upload' >
+                        <form class="form" action="{% url 'blog:detail' article.pk %}/upload" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input name='uploadfile' type='file'>
+                            <input type="submit" value="附件上传" >
+                        </form>
+                    </div>
+                    <div id="editormd">
+          <textarea style="display:none">{{ article.body }}</textarea>
+        </div>
+                    <div class="post-bd">
+                        <h3 class="title">附件:</h3>
+                        {% for files in article.attachment_url %}
+                            <a href="{% url 'blog:detail' article.pk %}/download/{{ forloop.counter }}">{{ files }}</a><br>
+                        {% endfor %}  
                     </div>
                 </div>
             </div>
-         
-           {% include 'blog/comment.html' %}
-			</div>
-		</div>
+        </div>
+     
+       {% include 'blog/comment.html' %}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <p>最近访客</p>
+  </div>
+  {% for visitor in visitor_ip %}
+  <div class="col-md-2">
+    <p>{{ visitor.ip }}[{{ visitor.city }}]  <sup>{{ visitor.visited_time | date:'m-j H:i'}}</sup></p>
+  </div>
+  {% endfor %}
+</div>
             
 {% endblock %}
 {% block custom_css %}
