@@ -75,6 +75,8 @@ def get_context_data_all(**kwargs):
     for visitor in visitor_ip:
         ip_split = visitor.ip.split('.')
         visitor.ip = '%s.*.*.%s' % (ip_split[0], ip_split[3])
+        if not visitor.city:
+            visitor.city = visitor.country
     kwargs['visitor_ip'] = visitor_ip
     kwargs['visitor_num'] = cache.get('visitor_num')
     recent_comment = BlogComment.objects.order_by('-created_time')[:5]
