@@ -41,7 +41,7 @@ class Article(models.Model):
     user_likes = models.TextField('点赞用户', blank=True, default='')
     weight = models.PositiveIntegerField('权重', default=0)
     topped = models.BooleanField('置顶', default=False)
-    attachment_url = models.CharField(
+    attachment_url = models.TextField(
         '附件地址', blank=True, default='', max_length=255)
 
     category = models.ForeignKey('Category', verbose_name='分类')
