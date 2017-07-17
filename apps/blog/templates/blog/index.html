@@ -68,6 +68,7 @@
                                         <!--i class='icon-praise'></i>-->
                                         <input type='image' class='praise' src="{% static 'blog/img/gb21.png' %}" href="{% url 'blog:detail' article.id %}/praise">
                                         <span class='likes_num'>{{ article.likes}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="/admin/article/edit/?aid={{ article.pk }}">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
                                         <span>阅读量:{{ article.views}}</span>
                                     </div>
                                 </div>
