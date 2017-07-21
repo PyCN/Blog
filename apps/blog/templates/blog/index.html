@@ -43,9 +43,12 @@
 
                             {% if page.has_previous or page.has_next %}  
                                 <div>  
-                                    {% if page.has_previous %}<a href="?q={{ query }}&page={{ page.previous_page_number }}">{% endif %}« Previous{% if page.has_previous %}</a>{% endif %}  
-                                    |  
-                                    {% if page.has_next %}<a href="?q={{ query }}&page={{ page.next_page_number }}">{% endif %}Next »{% if page.has_next %}</a>{% endif %}  
+                                    {% if page.has_previous %}
+																		  <a class='obvious-color' href="?q={{ query }}&page={{ page.previous_page_number }}">« Previous |</a>
+																		{% endif %}  
+                                    {% if page.has_next %}
+																		  <a class='obvious-color' href="?q={{ query }}&page={{ page.next_page_number }}">Next »</a>
+																		{% endif %}  
                                 </div>  
                             {% endif %}  
                         {% else %}  
