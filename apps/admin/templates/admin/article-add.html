@@ -121,7 +121,7 @@
                         </div>
                     </div>
                     <div class="box-footer" style="background-color: #ecf0f5">
-                        <button type="submit" class="btn btn-primary pull-right btn-lg">保存</button>
+                        <button type="submit" class="btn btn-primary pull-right btn-lg" onclick="setConfirm();">保存</button>
                     </div>
                     <input style="display: none" type="text" name="id" value="{{ article.id }}">
                 </form>
@@ -157,5 +157,14 @@
             });
             $(".select2").select2();
         });
+
+			function setConfirm() {
+				is_confirm = true;
+			}
+
+			window.onbeforeunload = function(){
+				if(window.is_confirm !== true)
+				 return "文章尚未保存";
+			}
     </script>
 {% endblock %}

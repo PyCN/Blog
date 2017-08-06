@@ -71,5 +71,14 @@
             exist_tags = exist_tags.split(',');
             $("select[name='tags']").val(exist_tags).change()
         })
+
+			function setConfirm() {
+				is_confirm = true;
+			}
+
+			window.onbeforeunload = function(){
+				if(window.is_confirm !== true)
+				 return "文章尚未保存";
+			}
     </script>
 {% endblock %}
