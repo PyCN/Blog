@@ -44,7 +44,7 @@
                                 <tbody>
                                 {% for article in articles %}
                                     <tr id="Article{{ article.id }}">
-                                        <td>{{ article.title }}</td>
+																			  <td><a onclick="EditArticle({{ article.id }})">{{ article.title }}</a></td>
                                         <td>{{ article.created_time }}</td>
                                         <td>{{ article.last_modified_time }}</td>
                                         <td>{{ article.views }}</td>
