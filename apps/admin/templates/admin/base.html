@@ -182,9 +182,6 @@
                     <li {% if request.path == '/admin/link/' %}class="active"{% endif %}><a href="{% url 'admin:link' %}"><i class="fa fa-circle-o text-aqua"></i> <span>友情链接</span></a></li>
                 {% endif %}
                 <li {% if request.path == '/admin/profile/' %}class="active"{% endif %}><a href="{% url 'admin:profile' %}"><i class="fa fa-circle-o text-red"></i> <span>个人信息</span></a></li>
-                {% if request.user.is_superuser %}
-                    <li {% if request.path == '/admin/setting/' %}class="active"{% endif %}><a href="{% url 'admin:setting' %}"><i class="fa fa-circle-o text-yellow"></i> <span>全局设置</span></a></li>
-                {% endif %}
             </ul>
         </section>
         <!-- /.sidebar -->

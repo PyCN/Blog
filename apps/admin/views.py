@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
 
-from .forms import LinkForm, SettingForm
+from .forms import LinkForm
 from blog.models import Article, BlogComment, Category, Permission,\
         Link, Tag, UserProfile, UserProfile, VisitorIP
 from .models import *
@@ -33,7 +33,6 @@ __all__ = [
     'DashboardView',
     'MessageOSView',
     'MessageCommentView',
-    'SettingView',
     "VisitorListView",
     "VisitorBodyView"
 ]
@@ -295,16 +294,17 @@ class UsersView(LoginRequiredMixin, ListView):
 
 class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'admin/profile.html')
+        user_profile, create_flag = UserProfile.objects.get_or_create(user_id=request.user.pk)
+        return render(request, 'admin/profile.html', {"user": user_profile})
 
     def post(self, request):
         nickname = request.POST.get('nickname')
-        gender = request.POST.get('gender')
+        sex = request.POST.get('sex')
         user_profile, create_flag = UserProfile.objects.get_or_create(user_id=request.user.pk)
         if nickname:
             user_profile.nickname = nickname
-        if gender:
-            user_profile.gender = gender
+        if sex:
+            user_profile.sex = sex
         user_profile.save()
         return HttpResponseRedirect(reverse('admin:profile'))
 
@@ -336,38 +336,3 @@ class MessageCommentView(LoginRequiredMixin, View):
         BlogComment.objects.filter(status=False).update(status=True)
         comments = BlogComment.objects.all().order_by('-add_time')
         return render(request, 'admin/message-comment.html', {'comments': comments})
-
-
-class SettingView(View):
-    def get(self, request):
-        try:
-            setting = Setting.objects.get(pk=1)
-        except Setting.DoesNotExist:
-            setting = None
-        return render(request, 'admin/setting.html', {'setting': setting})
-
-    def post(self, request):
-        setting_form = SettingForm(request.POST)
-        if setting_form.is_valid():
-            title = request.POST.get('title')
-            keywords = request.POST.get('keywords')
-            description = request.POST.get('description')
-            nickname = request.POST.get('nickname')
-            avatar = request.FILES.get('avatar')
-            homedescription = request.POST.get('homedescription')
-            recordinfo = request.POST.get('recordinfo')
-            statisticalcode = request.POST.get('statisticalcode')
-            setting, flag = Setting.objects.get_or_create(pk=1)
-            setting.title = title
-            setting.keywords = keywords
-            setting.description = description
-            setting.nickname = nickname
-            if avatar:
-                setting.avatar = avatar
-            setting.homedescription = homedescription
-            setting.recordinfo = recordinfo
-            setting.statisticalcode = statisticalcode
-            setting.save()
-            return HttpResponseRedirect(reverse('admin:setting'))
-        else:
-            return HttpResponse(setting_form.errors)
