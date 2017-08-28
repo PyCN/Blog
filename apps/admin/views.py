@@ -298,29 +298,15 @@ class ProfileView(LoginRequiredMixin, View):
         return render(request, 'admin/profile.html')
 
     def post(self, request):
-        image = request.FILES.get('image')
         nickname = request.POST.get('nickname')
         gender = request.POST.get('gender')
-        email = request.POST.get('email')
-        user = UserProfile.objects.get(pk=request.user.pk)
-        flag = False
-        if image:
-            user.image = image
-        if nickname and nickname != user.nickname:
-            user.nickname = nickname
-        if gender and gender != user.gender:
-            user.gender = gender
-        if email and email != user.email:
-            user.email = email
-            flag = True
-        user.save()
-        Message.objects.create(body="用户%s于%s通过后台修改了个人信息" %
-                               (user.email, timezone.now()))
-        if flag:
-            logout(request)
-            return HttpResponseRedirect(reverse('login'))
-        else:
-            return HttpResponseRedirect(reverse('admin:profile'))
+        user_profile, create_flag = UserProfile.objects.get_or_create(user_id=request.user.pk)
+        if nickname:
+            user_profile.nickname = nickname
+        if gender:
+            user_profile.gender = gender
+        user_profile.save()
+        return HttpResponseRedirect(reverse('admin:profile'))
 
 class VisitorListView(LoginRequiredMixin, ListView):
     # 仅允许查看前200个ip记录
