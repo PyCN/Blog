@@ -13,7 +13,7 @@ from django.conf import settings
 
 from .forms import LinkForm, SettingForm
 from blog.models import Article, BlogComment, Category, Permission,\
-        Link, Tag, UserProfile, UserProfile
+        Link, Tag, UserProfile, UserProfile, VisitorIP
 from .models import *
 # from users.models import *
 from utils.mixin_utils import LoginRequiredMixin
@@ -33,7 +33,9 @@ __all__ = [
     'DashboardView',
     'MessageOSView',
     'MessageCommentView',
-    'SettingView'
+    'SettingView',
+    "VisitorListView",
+    "VisitorBodyView"
 ]
 
 
@@ -320,6 +322,18 @@ class ProfileView(LoginRequiredMixin, View):
         else:
             return HttpResponseRedirect(reverse('admin:profile'))
 
+class VisitorListView(LoginRequiredMixin, ListView):
+    # 仅允许查看前200个ip记录
+    queryset = VisitorIP.objects.all()[:200]
+    template_name = 'admin/visitor-list.html'
+    context_object_name = 'visitors'
+
+class VisitorBodyView(LoginRequiredMixin, View):
+    def get(self, request):
+        vid = request.GET.get('vid')
+        visitor_body = Article.objects.get(pk=vid)
+        # logger.debug("visitor body: %s", visitor_body)
+        return HttpResponse(visitor_body)
 
 class MessageOSView(LoginRequiredMixin, ListView):
     template_name = 'admin/message-os.html'

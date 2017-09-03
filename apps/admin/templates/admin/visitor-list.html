@@ -1,0 +1,77 @@
+{% extends 'admin/base.html' %}
+{% load staticfiles %}
+{% block title %}低调诺 | 仪表板{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'admin/plugins/datatables/dataTables.bootstrap.css' %}">
+{% endblock %}
+
+{% block content-wrapper %}
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                访客列表
+                <small>包含访客的相关信息</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li><a href="#">访客管理</a></li>
+                <li class="active">访客列表</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="visitorList" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>访客IP</th>
+                                    <th>国家</th>
+                                    <th>城市</th>
+                                    <th>时间</th>
+                                    <th>文章</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for visitor in visitors %}
+                                    <tr id="{{ visitor.id }}">
+																			  <td><a >{{ visitor.ip }}</a></td>
+                                        <td>{{ visitor.country }}</td>
+                                        <td>{{ visitor.city }}</td>
+                                        <td>{{ visitor.visited_time }}</td>
+                                        <td>{{ visitor.article }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+{% endblock %}
+{% block custom_js %}
+    <!-- DataTables -->
+    <script src="{% static 'admin/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'admin/plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <!-- page script -->
+    <script>
+        $(function () {
+			$("#visitorList").DataTable({
+					'bStateSave': true, //记录所在页数
+					'aLengthMenu': [[20, 40, 80, -1], [20, 40, 80, "All"]], //定义每页显示数据数量
+			});
+        });
+    </script>
+{% endblock %}

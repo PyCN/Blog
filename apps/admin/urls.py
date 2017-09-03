@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^users/$', UsersView.as_view(), name='users'),
     url(r'^profile/$', ProfileView.as_view(), name='profile'),
     url(r'^setting/$', SettingView.as_view(), name='setting'),
+    url(r'^visitor/$', VisitorListView.as_view(), name='visitor'),
     url(r'^upload/$', csrf_exempt(UploadView.as_view()), name='upload'),
     url(r'^categories/$', CategoryView.as_view(), name='categories'),
     url(r'^article/add/$', ArticleAddView.as_view(), name='article-add'),

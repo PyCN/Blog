@@ -170,6 +170,7 @@
                             {% endif %}
                         </ul>
                     </li>
+                    <li {% if request.path == '/admin/visitor/' %}class="active"{% endif %}><a href="{% url 'admin:visitor' %}"><i class="fa fa-circle-o"></i> 访客列表</a></li>
                 {% endif %}
                 <li class="header">系统配置</li>
                 {% if request.user.is_superuser %}
