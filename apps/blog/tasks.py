@@ -13,6 +13,8 @@ from configs import settings
 
 IP_INFO_URL = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip='
 
+logger = logging.getLogger('web')
+
 
 @shared_task
 def add(x, y):
@@ -25,8 +27,10 @@ def save_client_ip(client_ip, article=None):
     city = ''
     ip_info = ''
     visitor_num = cache.get('visitor_num')
+    logger.info("visitor_num: %s", visitor_num)
     if not visitor_num:
         visitor_num = VisitorIP.objects.count()
+        logger.info("visitor_num in redis is None, and visitor_num is: %s", visitor_num)
         cache.set('visitor_num', visitor_num, settings.REDIS_TIMEOUT)
     last_ip = VisitorIP.objects.first()
     if not last_ip or last_ip.ip != client_ip or last_ip.article != article:
@@ -48,3 +52,4 @@ def save_client_ip(client_ip, article=None):
     VisitorIP.objects.create(ip=client_ip, country=country, city=city,
                              article=article)
     cache.set('visitor_num', visitor_num + 1, settings.REDIS_TIMEOUT)
+    logger.info("update visitor_num success")
