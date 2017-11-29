@@ -1,3 +1,4 @@
 {{ object.title }}  
 {{ object.abstract }}  
 {{ object.body }} 
+{{ object.attachment_url }} 
