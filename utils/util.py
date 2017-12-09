@@ -44,3 +44,12 @@ def alwaysLog(func):
             logger.exception(e)
         return result
     return wrapper
+
+
+def safeInt(num):
+    """return None if num is not a number"""
+    try:
+        num = int(num)
+    except Exception:
+        return None
+    return num
