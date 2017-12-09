@@ -162,6 +162,7 @@ class VisitorIP(models.Model):
     visited_time = models.DateTimeField('访问时间', default=timezone.now)
     article = models.ForeignKey(
         'Article', verbose_name='文章', null=True, on_delete=models.SET_NULL)
+    referer = models.CharField("来源", max_length=128)
 
     def __unicode__(self):
         return self.ip

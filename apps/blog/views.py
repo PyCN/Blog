@@ -36,7 +36,7 @@ from blog.tasks import save_client_ip
 from .forms import RegistForm, UserForm, RetrieveForm, SearchForm, BlogCommentForm
 from permission import check_blog_permission
 from configs import settings
-from utils.util import runTime
+from utils.util import runTime, safeInt
 
 # 代表本文件的绝对目录
 BASEPATH = sys.path[0]
@@ -94,10 +94,12 @@ def get_context_data_all(**kwargs):
 
 
 def get_client_ip(request):
+    referer = request.META.get("HTTP_REFERER")
     if 'HTTP_X_FORWARDED_FOR' in request.META:
-        return request.META['HTTP_X_FORWARDED_FOR']
+        ip = request.META['HTTP_X_FORWARDED_FOR']
     else:
-        return request.META['REMOTE_ADDR']
+        ip = request.META['REMOTE_ADDR']
+    return ip, referer
 
 
 class CachePageMixin(object):
@@ -144,8 +146,8 @@ class IndexView(ListView):
         else:
             article_list = Article.objects.filter(
                 created_time__lte=timezone.now(), status='p')
-        client_ip = get_client_ip(self.request)
-        save_client_ip.delay(client_ip)
+        client_ip, referer = get_client_ip(self.request)
+        save_client_ip.delay(client_ip, referer=referer)
         # cache.set('tcdlejl', 'value', timeout=100)
         # logging.info(cache.get('tcdlejl'))
         return article_list
@@ -172,8 +174,8 @@ class ArticleDetailView(DetailView):
         # obj.body = markdown2.markdown(
             # obj.body, ['codehilite'], extras=['fenced-code-blocks'])
         obj.attachment_url = obj.attachment_url.split('/')
-        client_ip = get_client_ip(self.request)
-        save_client_ip.delay(client_ip, obj.id)
+        client_ip, referer = get_client_ip(self.request)
+        save_client_ip.delay(client_ip, obj.id, referer=referer)
         logger.debug("get article: %s", self.kwargs[self.pk_url_kwarg])
         return obj
 
@@ -242,7 +244,8 @@ def upload(request, article_id):
 # or can use permission.py, @perm_check
 # @permission_required('blog.download_file', raise_exception=True)
 
-@check_blog_permission
+@login_required
+@runTime
 def download(request, param1, param2):
     article_id = param1
     file_id = int(param2)
@@ -262,6 +265,13 @@ def download(request, param1, param2):
                         yield c
                     else:
                         break
+        user_id = str(request.user.id)
+        cache_key = user_id + article_id
+        download_freq = safeInt(cache.get(cache_key))
+        logger.info("user: %s has download attachment of article: %s about %s times",
+                   user_id, article_id, download_freq)
+        if download_freq > 5 and not request.user.is_superuser:
+            return HttpResponse("您在本文档下载次数已超出上限")
 
         try:
             file_name = target_article.attachment_url.split('/')[file_id - 1]
@@ -269,6 +279,11 @@ def download(request, param1, param2):
             logging.error('No such file!')
         file_path = os.path.join(ATTACHMENT_PATH, article_id, file_name)
         logger.info('download file: %s', file_path)
+        if download_freq:
+            download_freq += 1
+        else:
+            download_freq = 1
+        cache.set(cache_key, download_freq)
         response = FileResponse(file_iterator(file_path))
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename=%s' % file_name.encode(

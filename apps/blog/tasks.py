@@ -22,7 +22,7 @@ def add(x, y):
 
 
 @shared_task
-def save_client_ip(client_ip, article=None):
+def save_client_ip(client_ip, article=None, referer=None):
     country = ''
     city = ''
     ip_info = ''
@@ -50,6 +50,6 @@ def save_client_ip(client_ip, article=None):
     if article:
         article = Article.objects.get(id=article)
     VisitorIP.objects.create(ip=client_ip, country=country, city=city,
-                             article=article)
+                             article=article, referer=referer)
     cache.set('visitor_num', visitor_num + 1, settings.REDIS_TIMEOUT)
     logger.info("update visitor_num success")
