@@ -279,7 +279,7 @@ class UsersView(LoginRequiredMixin, ListView):
     context_object_name = 'users'
 
     def get_queryset(self):
-        users = User.objects.all()
+        users = User.objects.all().order_by("-last_login")
         logger.debug('users: %s', users)
         for user in users:
             try:

@@ -76,7 +76,10 @@
     <!-- page script -->
     <script>
         $(function () {
-            $("#articleList").DataTable();
+						$("#articleList").DataTable({
+							"bSort": false
+							//'order': [[5, 'desc']], //第6列降序排序
+							});
         });
     </script>
 {% endblock %}
