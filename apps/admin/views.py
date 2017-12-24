@@ -85,9 +85,15 @@ class ArticleAddView(LoginRequiredMixin, View):
                 article.tags.remove(t)
         except Exception:
             category = Category.objects.get(name=categories)
-            article = Article.objects.create(
-                title=title, body=editormd, status=status, abstract=abstract,
-                category=category, topped=topped)
+            try:
+                article = Article.objects.create(
+                    title=title, body=editormd, status=status, abstract=abstract,
+                    category=category, topped=topped)
+            except Exception as e:
+                logger.exception(e)
+                article = Article.objects.create(
+                    title=title, body=editormd, status=status, abstract=abstract,
+                    category=category, topped=topped)
         if tags:
             for tag in tags:
                 t = Tag.objects.get(name=tag)
