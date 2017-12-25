@@ -63,7 +63,7 @@ class ArticleAddView(LoginRequiredMixin, View):
             topped = True
         else:
             topped = False
-        abstract = d.get('abstract', [None])[0]
+        abstract = d.get('abstract', [''])[0]
         editormd = d['editormd-markdown-doc'][0]
         tags = d.get('tags', '')
         categories = d.get('categories', [''])[0]
@@ -74,7 +74,7 @@ class ArticleAddView(LoginRequiredMixin, View):
             article.body = editormd
             article.status = status
             article.topped = topped
-            article.abstract = abstract
+            article.abstract = abstract[:54]
             article.views = d['views'][0]
             exist_tag = d['exist_tag'][0].split(',')
             old_tag = article.get_tag().strip(',').split(',')
