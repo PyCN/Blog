@@ -27,8 +27,8 @@ SECRET_KEY = '_lho^m33w-!qkhmqe2n2cwovcouiw(l++%&^(w5x@171pbm7_4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'itech.kim', 'www.itech.kim'
-                 '120.24.191.19', 'cblog.xyz', 'www.cblog.xyz']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'itech.kim', 'www.itech.kim',
+                 '120.24.191.19', 'cblog.xyz', 'www.cblog.xyz', '120.79.224.215']
 
 # Application definition
 
@@ -200,5 +200,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 # MEDIAFILES = os.path.join(BASE_DIR, 'blog/media')
 
-BROKER_URL = 'amqp://guest:guest@localhost:5672/'
-CELERY_RESULT_BACKEND = 'amqp'
+CELERY_BROKER_URL = 'redis://localhost:6379/2'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/2'
