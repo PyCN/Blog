@@ -1,5 +1,5 @@
 Django==1.8.13
-MySQL-python==1.2.3
+MySQL-python==1.2.5
 pytz==2016.4
 
 # 搜索依赖库
@@ -23,3 +23,5 @@ celery==4.0.2
 qrcode==5.3
 Pillow
 
+markdown2
+pygments
