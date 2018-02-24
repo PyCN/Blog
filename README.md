@@ -3,7 +3,7 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
 
 目前已实现功能：
 
-1、用户注册、登陆、上传用户头像
+1、用户注册、登陆、上传用户头像, 用户权限控制
 
 2、文章发表，分类，标签集合,最热文章、最新评论展示
 
@@ -11,23 +11,19 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
 
 4、文件上传、下载
 
-5、用户权限控制
+5、haystack + whoosh + jieba全文搜索
 
-6、二维码转换
+6、celery + redis异步消息队列
 
-7、站点缓存
+7、主从数据库(详情可以进入网站http://cblog.xyz)
 
 8、完整的测试
 
 9、jQuery, bootstrap, markdown支持
 
-10、haystack + whoosh + jieba 搜索
+10、二维码转换
 
-11、logging记录log信息
-
-12、主从数据库(详情可以进入网站http://cblog.xyz)
-
-目前项目已部署在阿里云服务器中，<a href='http://cblog.xyz' target='_blank'>网址</a>为http://cblog.xyz
+目前项目已部署在阿里云服务器中，<a href='https://cblog.xyz' target='_blank'>网址</a>为https://cblog.xyz
 
 
 
@@ -39,7 +35,6 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
    **ubuntu**  
 ```
    $ sudo apt-get install redis-server  
-   $ sudo apt-get install rabbitmq-server  
 ```
    **centos**
 ```
@@ -55,12 +50,6 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
    $ sudo yum install mysql-community-devel
    $ sudo service mysqld restart
    $ sudo systemctl enable mysql.service # 开机启动
-
-   $ wget https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_10/rabbitmq-server-3.6.10-1.el7.noarch.rpm
-   $ rpm --import https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
-   $ sudo yum install rabbitmq-server-3.6.10-1.el7.noarch.rpm
-   $ sudo systemctl enable rabbitmq-server.service # 开机启动
-
  ```
 
 2、创建MySQL数据库  
@@ -71,7 +60,7 @@ A free, open-source blog system based on Django + MySQL + jQuery + bootstrap + m
    $ mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -D mysql -u root -p 
    在linux shell中登陆mysql: $mysql -u root -p  
    创建Blog数据库:           mysql>CREATE DATABASE `Blog` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;  
-   为用户授权:               mysql>grant all on Blog.* to your_username@localhost identified by 'your_password';  
+   创建用户并授权:           mysql>grant all on Blog.* to your_username@localhost identified by 'your_password';  
    退出数据库:               mysql>exit  
 ```
    
