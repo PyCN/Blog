@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name='keywords' content="技术博客,低调诺,程序员,码农,">
+    <meta name='author' content="低调诺">
+    <meta name='description' content="一个程序员的技术积累，包括各种各样的问题">
+    <title>低调诺的博客</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'blog/img/favicon.ico' %}" media="screen" />
+    <script type="text/javascript" src="{% static 'blog/js/jquery.min.js' %}"></script>
+    <script type="text/javascript">
+      $(function () {
+            setTimeout(ChangeTime, 1000);
+          });
+        function ChangeTime() {
+          var time;
+          time = $("#time").text();    
+          time = parseInt(time);
+          time--;
+          if (time <= 0) {
+            window.location.href = window.location.href;
+          } else {
+            $("#time").text(time);
+            setTimeout(ChangeTime, 1000);
+          }
+        }
+    </script>
+</head>
+<body>
+<div>
+  <h3>{{ upload_info }}</h3>
+  <h3><span id="time">3</span>秒钟自动跳到文章页面...</h3>
+</div>
+</body>
+</html>

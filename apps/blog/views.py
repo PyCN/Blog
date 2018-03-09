@@ -200,21 +200,23 @@ class ArticleDetailView(DetailView):
 @runTime
 def upload(request, article_id):
     article_url = reverse('blog:detail', args=(article_id,))
-    result = {'error_code': 0, 'msg': 'upload success'}
+    result = {"upload_info": "上传成功"}
     if request.method == 'GET':
         return HttpResponseRedirect(article_url)
     else:
         target_article = get_object_or_404(Article, pk=article_id)
-        if target_article.status == 'd':
+        if target_article.status == 'd' and not request.user.is_superuser:
             return HttpResponseRedirect('/')
         myfile = request.FILES.get('uploadfile', None)
         if not myfile:
-            return HttpResponse('No upload files!')
+            result["upload_info"] = 'No upload files!'
+            return render(request, 'blog/upload.html', result)
         myfilename = myfile.name
         logger.info('upload filename: %s', myfilename)
         filename_error = os.path.sep in myfilename
         if filename_error:
-            return HttpResponse('File name error!')
+            result["upload_info"] = 'File name error!'
+            return render(request, 'blog/upload.html', result)
         folderpath = os.path.join(ATTACHMENT_PATH, str(article_id))
         try:
             os.mkdir(folderpath)
@@ -237,7 +239,7 @@ def upload(request, article_id):
             target_article.attachment_url = myfilename + '/' \
                     + target_article.attachment_url
         target_article.save()
-        return HttpResponse(json.dumps(result))
+        return render(request, 'blog/upload.html', result)
 
 
 # arguments can be:login_url, raise_exception
