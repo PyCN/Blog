@@ -256,7 +256,7 @@ def download(request, param1, param2):
         return HttpResponseRedirect(article_url)
     else:
         target_article = get_object_or_404(Article, pk=article_id)
-        if target_article.status == 'd':
+        if target_article.status == 'd' and not request.user.is_superuser:
             return HttpResponseRedirect('/')
 
         def file_iterator(file_name, chunk_size=512):
