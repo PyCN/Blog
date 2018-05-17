@@ -85,7 +85,7 @@ def get_context_data_all(**kwargs):
             comment.body = comment.body[:LENGTH_IN_RIGHT_INDEX + 1] + '...'
     kwargs['recent_comment'] = recent_comment
     hot_article = Article.objects.filter(
-        status='p').order_by('-weight', '-created_time')[:5]
+        status='p').order_by('-weight', '-created_time')[:10]
     for article in hot_article:
         if len(article.title) > LENGTH_IN_RIGHT_INDEX:
             article.title = article.title[:LENGTH_IN_RIGHT_INDEX + 1] + '...'
